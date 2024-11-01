@@ -21,16 +21,16 @@ public class DBA {
         {
           statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
-          statement.executeUpdate("drop table if exists person");
-          statement.executeUpdate("create table person (id integer, name string)");
-          statement.executeUpdate("insert into person values(1, 'leo')");
-          statement.executeUpdate("insert into person values(2, 'yui')");
-          ResultSet rs = statement.executeQuery("select * from person");
+          statement.executeUpdate("drop table if exists events");
+          statement.executeUpdate("create table events (event_id integer, event_name string)");
+          statement.executeUpdate("insert into events values(1, 'leo')");
+          statement.executeUpdate("insert into events values(2, 'yui')");
+          ResultSet rs = statement.executeQuery("select * from events");
           while(rs.next())
           {
             // read the result set
-            System.out.println("name = " + rs.getString("name"));
-            System.out.println("id = " + rs.getInt("id"));
+            System.out.println("name = " + rs.getString("event_name"));
+            System.out.println("id = " + rs.getInt("event_id"));
           }
         }
         catch(SQLException e)
