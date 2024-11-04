@@ -10,8 +10,8 @@ public class DBA {
 
 	//code from https://github.com/xerial/sqlite-jdbc?tab=readme-ov-file#download
 	
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+	public static void dbConnection() {
+		
 		try
         (
           // create a database connection
@@ -20,7 +20,7 @@ public class DBA {
         )
         {
           statement.setQueryTimeout(30);  // set timeout to 30 sec.
-
+          System.out.println("Connected.");
           statement.executeUpdate("drop table if exists events");
           statement.executeUpdate("create table events (event_id integer, event_name string)");
           statement.executeUpdate("insert into events values(1, 'leo')");
@@ -32,6 +32,8 @@ public class DBA {
             System.out.println("name = " + rs.getString("event_name"));
             System.out.println("id = " + rs.getInt("event_id"));
           }
+          
+          
         }
         catch(SQLException e)
         {
@@ -39,5 +41,45 @@ public class DBA {
           // it probably means no database file is found
           e.printStackTrace(System.err);
         }
+		
 	}
+	
+	public static String dbConnection(String hashPass, String hashStringUID) {
+		
+		String username = null;
+		try
+        (
+          // create a database connection
+          Connection connection = DriverManager.getConnection("jdbc:sqlite:a00326288.db");
+          Statement statement = connection.createStatement();
+        )
+        {
+          statement.setQueryTimeout(30);  // set timeout to 30 sec.
+          ResultSet rs = statement.executeQuery("SELECT * FROM uam WHERE UID ='"+hashStringUID+"' and password='"+hashPass+"';");
+          
+          while(rs.next())
+          {
+        	username=rs.getString("username");
+          }
+          
+          return username;
+          
+        }
+        catch(SQLException e)
+        {
+          // if the error message is "out of memory",
+          // it probably means no database file is found
+          e.printStackTrace(System.err);
+        }
+		return null;
+	}
+	
+	
+	
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
 }

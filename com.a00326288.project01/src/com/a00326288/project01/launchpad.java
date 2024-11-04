@@ -11,6 +11,24 @@ public class launchpad {
 		int ScannerValue = start();
 		System.out.println(ScannerValue );
 		
+		switch(ScannerValue) {
+		  case 1:
+			  UserAccessControl.Login();
+		    break;
+		  case 2:
+		      UserAccessControl.Register();
+		    break;
+		  case 3:
+			  Events.ViewListings();
+			  break;
+		  case 4:
+			 break;
+		  case 5:
+		  default:
+		    // code block
+		}
+		
+		
 	}
  
 	
@@ -18,17 +36,19 @@ public class launchpad {
 
         int selection;
         
-
         /***************************************************/
-
-        System.out.println("Choose from these choices");
-        System.out.println("-------------------------\n");
-        System.out.println("1 - Enter an original number");
-        System.out.println("2 - Encrypt a number");
-        System.out.println("3 - Decrypt a number");
+        
+        System.out.println("---------------------------");
+        System.out.println("-Choose from these choices-");
+        System.out.println("---------------------------\n");
+        System.out.println("1 - Login");
+        System.out.println("2 - Register");
+        System.out.println("3 - View Listings");
         System.out.println("4 - Quit");
 
         selection = sc.nextInt();
         return selection;    
+        
+        
     }
 }
