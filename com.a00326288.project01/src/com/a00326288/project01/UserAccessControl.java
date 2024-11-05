@@ -13,9 +13,9 @@ public class UserAccessControl {
 		// TODO Auto-generated method stub
 		
 		//DBA.dbConnection();
-		//Login();
+		Login();
 		
-		Register();
+		//Register();
 	}
  
 

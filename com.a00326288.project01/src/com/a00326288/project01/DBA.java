@@ -15,7 +15,7 @@ public class DBA {
 		try
         (
           // create a database connection
-          Connection connection = DriverManager.getConnection("jdbc:sqlite:a00326288.db");
+          Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
           Statement statement = connection.createStatement();
         )
         {
