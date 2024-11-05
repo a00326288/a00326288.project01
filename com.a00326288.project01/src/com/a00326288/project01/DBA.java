@@ -9,7 +9,7 @@ import java.sql.Statement;
 public class DBA {
 
 	//code from https://github.com/xerial/sqlite-jdbc?tab=readme-ov-file#download
-	
+	/*
 	public static void dbConnection() {
 		
 		try
@@ -42,15 +42,59 @@ public class DBA {
           e.printStackTrace(System.err);
         }
 		
+	}*/
+	
+
+	
+	public static boolean dbConnection(String Username) {
+		try
+        (
+          // create a database connection
+        Connection connection = DriverManager.getConnection("jdbc:sqlite:/Users/jmclaugh/git/a00326288.project01/com.a00326288.project01/db/a00326288.db");
+		Statement statement = connection.createStatement();
+          
+        )
+        {
+			
+			statement.setQueryTimeout(30);
+	        ResultSet rs = statement.executeQuery("SELECT * FROM uam WHERE username ='"+Username+"';");
+	        if(rs.getRowId(1)==null) {
+	        	return true;
+	        	
+	        }else{
+	        	
+	        	return false;
+	        }
+	            
+	       
+        }
+        catch(SQLException e)
+        {
+          // if the error message is "out of memory",
+          // it probably means no database file is found
+          e.printStackTrace(System.err);
+        }
+		return false;
+				
 	}
 	
-	public static String dbConnection(String hashPass, String hashStringUID) {
+	
+	public static Integer checkUser(String Input) {
+		
+		
+		
+		
+		return 0;
+		
+	}
+	
+	public static String dbConnection(String hashStringUID,String hashPass) {
 		
 		String username = null;
 		try
         (
           // create a database connection
-          Connection connection = DriverManager.getConnection("jdbc:sqlite:a00326288.db");
+          Connection connection = DriverManager.getConnection("jdbc:sqlite:/Users/jmclaugh/git/a00326288.project01/com.a00326288.project01/db/a00326288.db");
           Statement statement = connection.createStatement();
         )
         {

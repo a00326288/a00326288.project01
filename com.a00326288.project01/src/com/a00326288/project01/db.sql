@@ -10,3 +10,6 @@ acc_lock_ind smallint
 
 insert into uam values('am1jbGF1Z2hpbmZvcm1hdGljYTIwMTkh','jmclaugh','aW5mb3JtYXRpY2EyMDE5IQ==','admin',1,DATE() ,0);
 
+INSERT INTO uam
+(uid, username, password, usr_role, admin_flg, last_login, acc_lock_ind)
+VALUES('am1jbGF1Z2hsaW4zMSFpbmZvcm1hdGlhMjAzOSE=', 'jmclaughlin31!', 'aW5mb3JtYXRpYTIwMzkh', '', 0, '', 0);

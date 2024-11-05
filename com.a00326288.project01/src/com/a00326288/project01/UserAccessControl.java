@@ -1,50 +1,111 @@
 package com.a00326288.project01;
+import java.io.Console;
+import java.sql.Date;
 import java.util.Base64;
 import java.util.Scanner; 
-
 
 
 public class UserAccessControl {
 	
 	
+	private static String username;
+	private static String password;
+	
+	
+	static Console cnsl = System.console();
 	static Scanner sc = new Scanner(System.in);
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		
-		//DBA.dbConnection();
-		Login();
-		
-		//Register();
-	}
- 
 
+	
+	public static void main(String[] args) {
+	
+		if (cnsl == null) {
+	         System.out.println("No console available");
+	         // exit(): Terminates the currently running Java Virtual Machine.
+	         // The argument serves as a status code; by convention,
+	         // a nonzero status code indicates abnormal termination.
+	         System.exit(0);
+	     }
+	
+
+		// Declaring an array of student
+
+	}
+	
+	
+
+	// Getter
+		public static String getUsername() {
+			return username;
+		}
+
+		 // Setter
+		public void setUsername(String username) {
+			UserAccessControl.username = username;
+		}
+		
+		// Getter
+		public static String getPassword() {
+			return password;
+		}
+
+		 // Setter
+		public void setPassword(String password) {
+			UserAccessControl.password = password;
+		}
+ 
+	
+	
+	public static String encode(String username, String password) {
+		
+		//Combine the Username and Password into Single String
+		String Input = username + password;
+		String hashString = Base64.getEncoder().encodeToString(Input.getBytes());
+		System.out.println(hashString);
+		return hashString;
+	}
+	
+	public static String encode(String password) {
+		
+		String hashString = Base64.getEncoder().encodeToString(password.getBytes());
+		System.out.println(hashString);
+		return hashString;
+	}
+	
+
+	
+	
 
 	public static void Login() {
 		
 		System.out.println("Login");
 		
+	
+		
 		try {
 			//Get the Username and Password from Scanner
-			System.out.println("Enter you username:");
-			String Username = sc.next();
-			System.out.println("Enter you password:");
-			String Password = sc.next();
+			username = cnsl.readLine( 
+					"Enter username : ");
 			
-			//Combine the Username and Password into Single String
-			String originalInput = Username + Password;
+			char[] consolePass = cnsl.readPassword( 
+					"Enter password : ");
 			
-			//Hash the Username and Password into an Encoded String (will be used as Unique Identifier).
-			String hashStringUID = Base64.getEncoder().encodeToString(originalInput.getBytes());
+			String pass = new String();
 			
-			//Hash the password to insert into DB to avoid plaintext. 
-			String hashPass = Base64.getEncoder().encodeToString(Password.getBytes());
-
+			password = String.valueOf(consolePass);
+			
+			User usr = new User(username,password);
+			
+			usr.display();
+			
+			
 			//Invoke DB Connection method passing both Hashed Values to Check DB.
-			String username=DBA.dbConnection(hashPass,hashStringUID);
+			String dbGetUser=DBA.dbConnection(encode(getUsername(),getPassword()),encode(getPassword()));
+			
+			
 			
 			//Check if User Found (If null = User Not Found, Throw Username or Password Invalid -> Try Again)
-			if (username != null) {
+			if (dbGetUser != null) {
 				System.out.println("Welcome back "+username);			    
 			}else {
 				System.out.println("Invalid Username or Password");
@@ -62,22 +123,58 @@ public class UserAccessControl {
 
 	public static void Register() {
 		
-		
-	    
+			
+		    
 		// TODO Auto-generated method stub
 		System.out.println("Register");
+		System.out.println("Enter a username:");
+		
+        User[] arr;
+
+        // Allocating memory for 2 objects
+        // of type student
+        arr = new User[1];
+
+       
+		
+		int flag=1;
 		
 		
-		try(Scanner in = new Scanner(System.in)){
-			System.out.println("Enter a username:");
-			String UsrInput = in.next(); 
-			inputValidation.validateInput(UsrInput);
-				
-		}catch(Exception e){
-			e.printStackTrace();
+		do {
+			System.out.println("Please enter between 10 - 15 characters, comprising of 1 special char, 1 digit and no spaces.");
+			String UsrInput = sc.nextLine();	
+			flag=inputValidation.validateInput(UsrInput);
 			
+		}while(flag==0);
+		
+		if(flag==1) {
+			System.out.println("Success");
+		}else {
+			launchpad.main(null);
 		}
 		
+		
+		
+		 // Initializing the first element
+        // of the array
+		//arr[0] = new User("UID", UsrInput);
+		
+		  // Displaying the student data
+        //System.out.println(
+        //    "Student data in student arr 0: ");
+        //arr[0].display();
+		
+	}
+	
+	
+
+	
+	
+
+
+	
+	
+			
 		/*
 		
 		int length = Username.length();
@@ -85,11 +182,6 @@ public class UserAccessControl {
 			
 			
 		}*/
-			
 		
-		
-		
-		
-	}
 
 }

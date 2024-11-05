@@ -1,7 +1,7 @@
 package com.a00326288.project01;
 
 enum validation {
-TOOMANYCHAR,TOOFEWCHAR,NOSPECIALCHAR,NOUPPERCHAR,NOLOWERCHAR,CONTAINSWHITEPACE,NODIGIT,SUCCESS;
+TOOMANYCHAR,TOOFEWCHAR,NOSPECIALCHAR,NOUPPERCHAR,NOLOWERCHAR,CONTAINSWHITEPACE,NODIGIT,SUCCESS,QUIT,USERALREADYTAKEN;
 }
 
 public class inputValidation {
@@ -11,9 +11,11 @@ public class inputValidation {
 		
 		
 		
-		int Valid=0;
+		
 		
 		try {
+			
+			
 			final int minimum_chars = 10;
 		    final int maximum_chars= 15;
 		    final int minSpecialChars= 1;
@@ -52,16 +54,19 @@ public class inputValidation {
 					
 			}
 			
-			System.out.println("Total number of characters = " + InputLength);
-			System.out.println("Total number of lowercase = " + lower_chars);
-			System.out.println("Total number of uppercase = " + upper_chars);
-			System.out.println("Total number of uppercase = " + upper_chars);
-			System.out.println("Total number of digits = " + digit_count);
-			System.out.println("Total number of special characters = " + specialChar);
+			//System.out.println("Total number of characters = " + InputLength);
+			//System.out.println("Total number of lowercase = " + lower_chars);
+			//System.out.println("Total number of uppercase = " + upper_chars);
+			//System.out.println("Total number of uppercase = " + upper_chars);
+			//System.out.println("Total number of digits = " + digit_count);
+			//System.out.println("Total number of special characters = " + specialChar);
 			
 			validation Validation = validation.SUCCESS;
 			
-			if(InputLength < minimum_chars) {
+			
+			if(input.contentEquals("Quit")) {
+				Validation=validation.QUIT;}
+			else if(InputLength < minimum_chars) {
 				Validation=validation.TOOFEWCHAR;
 			}else if(InputLength > maximum_chars) {
 				Validation=validation.TOOMANYCHAR;
@@ -71,41 +76,46 @@ public class inputValidation {
 				Validation=validation.NODIGIT;
 			}else if(specialChar < minSpecialChars) {
 				Validation=validation.NOSPECIALCHAR;
-			}else {
+			}else if(DBA.dbConnection(input)==false) {
+				Validation=validation.USERALREADYTAKEN;
+			}
+			
+			else {
 				Validation=validation.SUCCESS;
 			}
 	 
-			
 			switch(Validation) {
-			  case TOOFEWCHAR :
-				  System.out.println("Your username has too few characters");
-			    break;
-			  case TOOMANYCHAR:
-				  System.out.println("Your username has too many characters");
-			    break;
-			  case CONTAINSWHITEPACE:
-				  System.out.println("Your username cannot contain white space");
-				  break;
-			  case NODIGIT:
-				  System.out.println("Your username doesn't contain any digits");
-				 break;
-			  case NOSPECIALCHAR:
-				  System.out.println("Your username doesn't contain any special characters");
-				  break;
-			  default:
+			case TOOFEWCHAR:
+				  System.out.println("Your username has too few characters. Please try again or Type 'Quit' to finish.");
+				  return 0;
+			case TOOMANYCHAR:
+				  System.out.println("Your username has too many characters. Please try again or Type 'Quit' to finish.");
+				  return 0;
+			case CONTAINSWHITEPACE:
+				  System.out.println("Your username cannot contain white space. Please try again or Type 'Quit' to finish.");
+				  return 0;
+			case NODIGIT:
+				  System.out.println("Your username doesn't contain any digits. Please try again or Type 'Quit' to finish.");
+				  return 0;
+			case NOSPECIALCHAR:
+				  System.out.println("Your username doesn't contain any special characters. Please try again or Type 'Quit' to finish.");
+				  return 0;
+			case USERALREADYTAKEN:
+				  System.out.println("Sorry. "+input+" is already taken. Please try again or Type 'Quit' to finish.");
+				  return 0;
+			case QUIT:
+				  return -1; 
+			case SUCCESS:
+				  return 1;
+			default:
 			    // code block
-				  System.out.println("Your username looks good!");
-				  
+				  return 0;	  
 			}
-			Valid=1;
+			
 		}catch(Exception e) {
-			Valid=0;
+			return 0;
 		}
 		
-		
-		
-		
-		return Valid;
 	}
 	
 	
