@@ -143,7 +143,7 @@ public class UserAccessControl {
 		do {
 			System.out.println("Please enter between 10 - 15 characters, comprising of 1 special char, 1 digit and no spaces.");
 			String UsrInput = sc.nextLine();	
-			flag=inputValidation.validateInput(UsrInput);
+			flag=InputValidation.validateInput(UsrInput);
 			
 		}while(flag==0);
 		
@@ -155,33 +155,11 @@ public class UserAccessControl {
 		
 		
 		
-		 // Initializing the first element
-        // of the array
-		//arr[0] = new User("UID", UsrInput);
-		
-		  // Displaying the student data
-        //System.out.println(
-        //    "Student data in student arr 0: ");
-        //arr[0].display();
+
 		
 	}
 	
 	
-
-	
-	
-
-
-	
-	
-			
-		/*
-		
-		int length = Username.length();
-		while(Username != null && length < 10 &&  ) {
-			
-			
-		}*/
 		
 
 }

@@ -4,7 +4,7 @@ enum validation {
 TOOMANYCHAR,TOOFEWCHAR,NOSPECIALCHAR,NOUPPERCHAR,NOLOWERCHAR,CONTAINSWHITEPACE,NODIGIT,SUCCESS,QUIT,USERALREADYTAKEN;
 }
 
-public class inputValidation {
+public class InputValidation {
 
 
 	public static int validateInput(String input) {
