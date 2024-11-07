@@ -2,6 +2,7 @@ package com.a00326288.project01;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -48,6 +49,10 @@ public class DBA {
         }
 		
 	}*/
+
+	
+	
+	
 	
 	public static List<Map<String, Object>> dbConnection(String SQL) {
 		try
@@ -79,9 +84,6 @@ public class DBA {
           }
           return rows;
           
-          
-
-
         	  
           }
         catch(SQLException e)

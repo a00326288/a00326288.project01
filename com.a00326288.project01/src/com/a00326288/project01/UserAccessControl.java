@@ -1,14 +1,25 @@
 package com.a00326288.project01;
 import java.io.Console;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner; 
 
 
-public class UserAccessControl {
+public class UserAccessControl extends User {
 	
 	
-	public static String username;
+	public UserAccessControl(String username, String password) {
+		super(username, password);
+		// TODO Auto-generated constructor stub
+		
+		
+	}
+
+
+	private static String username;
 	private static String password;
 	
 	
@@ -31,45 +42,7 @@ public class UserAccessControl {
 		// Declaring an array of student
 
 	}
-	
-	
 
-	// Getter
-		public static String getUsername() {
-			return username;
-		}
-
-		 // Setter
-		public void setUsername(String username) {
-			User.username = username;
-		}
-		
-		// Getter
-		public static String getPassword() {
-			return password;
-		}
-
-		 // Setter
-		public void setPassword(String password) {
-			User.password = password;
-		}
- 
-	
-	
-	public static String encode(String username, String password) {
-		
-		//Combine the Username and Password into Single String
-		String Input = username + password;
-		String hashString = Base64.getEncoder().encodeToString(Input.getBytes());
-		return hashString;
-	}
-	
-	public static String encode(String password) {
-		
-		String hashString = Base64.getEncoder().encodeToString(password.getBytes());
-		return hashString;
-	}
-	
 
 	
 	
@@ -93,21 +66,27 @@ public class UserAccessControl {
 			password = String.valueOf(consolePass);
 			
 			
-			//Invoke DB Connection method passing both Hashed Values to Check DB.
-			String dbGetUser=DBA.dbConnection(encode(getUsername(),getPassword()),encode(getPassword()));
+			User user  = new User(username,password);
+			
+			
+			if(user.dbCheckUser()==true) {
+					System.out.println("Welcome back " + user.getUsername() );
+			}else {
+					System.out.println("Invalid details or User does not Exists");
+			
+			}
+			
+			
+			//System.out.println(MyUser.getUsername());
+			//System.out.println(MyUser.getPassword());
+			
+			launchpad.menu();
+			
 			
 			
 			
 			//Check if User Found (If null = User Not Found, Throw Username or Password Invalid -> Try Again)
-			if (dbGetUser != null) {
-				System.out.println("Hello "+username);
-				User user = new User(username, password);
-				launchpad.menu();
-				
-			}else {
-				System.out.println("Invalid Username or Password");
-				launchpad.menu();
-			}
+			
 			
 		}catch(Exception e){
 			System.out.println("Invalid Username or Password.");
