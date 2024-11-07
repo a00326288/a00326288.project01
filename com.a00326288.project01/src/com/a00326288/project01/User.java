@@ -3,32 +3,36 @@ package com.a00326288.project01;
 
 import java.sql.Date;
 
-public class User {
+public class User extends UserAccessControl {
 
-		private String UID;
-		private String username;
-		private String password;
+		String UID;
+		static String username;
+		static String password;
 
 
 	    // User class constructor
-	    User(String username, String password)
+	    public User(String username, String password)
 	    {
 	        this.UID = null;
-	        this.username = username; 
-	        this.password = password;
+	        User.username = username; 
+	        User.password = password;
 	       
 	    }
 
 	    // display() method to display
 	    // the student data
 	    
-	    public String getUsername() {
-			return username;
-		}
+	    public String getUID() {
+	    	return UID;
+	    	
+	    }
+ 
+	    
 	    
 	    public void display()
 	    {
-	        System.out.printf(username);
+	        System.out.printf(User.username);
+	        
 	    }
 	    
 }

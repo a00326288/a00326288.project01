@@ -40,8 +40,8 @@ public class UserAccessControl {
 		}
 
 		 // Setter
-		public static void setUsername(String username) {
-			UserAccessControl.username = username;
+		public void setUsername(String username) {
+			User.username = username;
 		}
 		
 		// Getter
@@ -51,7 +51,7 @@ public class UserAccessControl {
 
 		 // Setter
 		public void setPassword(String password) {
-			UserAccessControl.password = password;
+			User.password = password;
 		}
  
 	
