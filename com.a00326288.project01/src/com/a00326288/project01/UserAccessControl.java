@@ -8,7 +8,7 @@ import java.util.Scanner;
 public class UserAccessControl {
 	
 	
-	private static String username;
+	public static String username;
 	private static String password;
 	
 	
@@ -40,7 +40,7 @@ public class UserAccessControl {
 		}
 
 		 // Setter
-		public void setUsername(String username) {
+		public static void setUsername(String username) {
 			UserAccessControl.username = username;
 		}
 		
@@ -61,14 +61,12 @@ public class UserAccessControl {
 		//Combine the Username and Password into Single String
 		String Input = username + password;
 		String hashString = Base64.getEncoder().encodeToString(Input.getBytes());
-		System.out.println(hashString);
 		return hashString;
 	}
 	
 	public static String encode(String password) {
 		
 		String hashString = Base64.getEncoder().encodeToString(password.getBytes());
-		System.out.println(hashString);
 		return hashString;
 	}
 	
@@ -94,10 +92,6 @@ public class UserAccessControl {
 			
 			password = String.valueOf(consolePass);
 			
-			User usr = new User(username,password);
-			
-			usr.display();
-			
 			
 			//Invoke DB Connection method passing both Hashed Values to Check DB.
 			String dbGetUser=DBA.dbConnection(encode(getUsername(),getPassword()),encode(getPassword()));
@@ -106,10 +100,13 @@ public class UserAccessControl {
 			
 			//Check if User Found (If null = User Not Found, Throw Username or Password Invalid -> Try Again)
 			if (dbGetUser != null) {
-				System.out.println("Welcome back "+username);			    
+				System.out.println("Hello "+username);
+				User user = new User(username, password);
+				launchpad.menu();
+				
 			}else {
 				System.out.println("Invalid Username or Password");
-				launchpad.main(null);
+				launchpad.menu();
 			}
 			
 		}catch(Exception e){

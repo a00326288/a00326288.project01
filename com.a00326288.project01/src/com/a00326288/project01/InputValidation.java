@@ -10,9 +10,6 @@ public class InputValidation {
 	public static int validateInput(String input) {
 		
 		
-		
-		
-		
 		try {
 			
 			
@@ -76,8 +73,8 @@ public class InputValidation {
 				Validation=validation.NODIGIT;
 			}else if(specialChar < minSpecialChars) {
 				Validation=validation.NOSPECIALCHAR;
-			}else if(DBA.dbConnection(input)==false) {
-				Validation=validation.USERALREADYTAKEN;
+		//	}else if(DBA.dbConnection(input)==false) {
+		//		Validation=validation.USERALREADYTAKEN;
 			}
 			
 			else {
