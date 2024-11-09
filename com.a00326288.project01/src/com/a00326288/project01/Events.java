@@ -1,14 +1,15 @@
 package com.a00326288.project01;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Scanner;
 
 
 
-public class Events {
 
-	//public String username = User.getUsername();
+public class Events {
 		
 	
 	static Scanner sc = new Scanner(System.in);
@@ -91,24 +92,55 @@ public class Events {
 		// TODO Auto-generated method stub
 		
 		
-		String SQL = "SELECT * FROM events;";
-		
 		System.out.println("-----------------------------");
         System.out.println("- Current Event Listings -");
         System.out.println("-----------------------------\n");
 
-		
-		
-		List<Map<String, Object>> eventlist = new ArrayList<Map<String, Object>>();
-		
-		eventlist.addAll(DBA.dbConnection(SQL));
 	
+        
+        String SQL = ("SELECT * FROM events;");
+        try {
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+  		  	Statement statement = connection.createStatement();
+  		    statement.setQueryTimeout(30); 
+  		  	ResultSet rs = statement.executeQuery(SQL);
+  		  	String delimiter = ",";
+  		  	
+  		  	System.out.println(String.format("%-10s %-25s %8s %20s" , "Event ID", "Event Name", "Event Start", "Event Ends" ));
+  		  	while(rs.next())
+  		  	{
+  		  		Events event = new Events();
+  		  		
+  		  		event.setEventId(rs.getInt("event_id"));
+  		  		event.setEventName(rs.getString("event_name"));	            	
+  		  		event.setEventDescription(rs.getString("event_description"));
+  		  		event.setEventStartDate(rs.getString("event_start_date"));
+  		  		event.setEventEndDate(rs.getString("event_end_date"));
+  		  		System.out.format("%-10s %-25s %8s %22s\n",event.eventId,event.eventName,event.eventStartDate,event.eventEndDate);
+  		  		System.out.println();
+  		  	}
+  		  	
+            connection.close();
+        
+            {
+            }
+     
+          }
+        catch(SQLException e)
+        {
+          // if the error message is "out of memory",
+          // it probably means no database file is found
+          e.printStackTrace(System.err);
+        }
+		 
 		
-		for(int i=0; i < eventlist.size(); i++ )
- 		{
-			System.out.println(eventlist.get(i));
 		
-		}
+        
+       
+    	
+        // print the results
+        //
+		
 		
 		System.out.println();
 
@@ -116,20 +148,52 @@ public class Events {
 	
 		
 	
-	private void createEvent() {
+	public static void createEvent() {
 		
-		System.out.println("Input name for Event:");
-		String event_name = sc.next();
-	
+		Events event = new Events();
+		
+		System.out.println("Input a name for the Event:");
+		event.setEventName(sc.next());
+		sc.nextLine();
+		
+		System.out.println("Input a description of the Event:");
+		event.setEventDescription(sc.next());
+		sc.nextLine();
+		
+		System.out.println("Enter a date whenever the event starts:");
+		event.setEventStartDate(sc.next());
+		sc.nextLine();
+		
+		System.out.println("Enter a date for whenever the event finishes:");
+		event.setEventEndDate(sc.next());
+		sc.nextLine();
+		
+		event.dbCreateEvent();
+		
 		
 		
 	}
 	
-	public static void updateEvent() {
+	private void dbCreateEvent() {
 		
+		String SQL = ("INSERT INTO events (event_name, event_description, event_start_date, event_end_date) VALUES ('"+this.eventName+"','"+this.eventDescription+"','"+this.eventStartDate+"','"+this.eventEndDate+"');");
+        try {
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+  		  	Statement statement = connection.createStatement();
+            statement.executeUpdate(SQL);
+            connection.close();
+        
+            {
+            }
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }   
+        
+        menu();
 		
 	}
-	
+
 	
 	 
 	
@@ -143,8 +207,9 @@ public class Events {
         System.out.println("-Choose from the choices below -");
         System.out.println("---------------------------\n");
         System.out.println("1 - Book Event");
-        System.out.println("2 - View Event");
-        System.out.println("3 - Main Menu");
+        System.out.println("2 - View Event"); 
+        System.out.println("3 - Create Event");
+        System.out.println("4 - Main Menu");
 
         selection = sc.nextInt();
         
@@ -162,8 +227,11 @@ public class Events {
 			  viewEvent();
 		    break;
 		  case 3:
+			  createEvent();
+			break;
+		  case 4:
 			  launchpad.menu();
-			  break;
+			break;
 		  default:
 		    // code block
 		}
@@ -194,6 +262,8 @@ public class Events {
 	private static void viewEvent() {
 		// TODO Auto-generated method stub
 		System.out.println("Please input event ID you wish to view");
+		
+		EventDetails.displayEvents();
 		
 	}
 }

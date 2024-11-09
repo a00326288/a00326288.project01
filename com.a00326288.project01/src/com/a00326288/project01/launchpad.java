@@ -35,7 +35,12 @@ public class launchpad {
 			  UserAccessControl.Login();
 		    break;
 		  case 2:
-		      UserAccessControl.Register();
+			  if(User.readSession()!=null && !User.readSession().isEmpty() ) {
+				  System.out.println("You are already logged in.");
+				  launchpad.menu();
+			  }else {
+				  UserAccessControl.Register(); 
+			  }
 		    break;
 		  case 3:
 			  Events.main(null);

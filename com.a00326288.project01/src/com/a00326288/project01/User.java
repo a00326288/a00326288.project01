@@ -220,20 +220,7 @@ public class User {
 	            	setLastLogin(rs.getString("last_login"));
 	            	setAccountLockedInd(rs.getByte("acc_lock_ind"));
 	            	
-	            	/*
-	                int id = rs.getInt("id");
-	                String UID = rs.getString("uid");
-	                String username = rs.getString("username");
-	                String password = rs.getString("password");
-	                String role = rs.getString("usr_role");
-	                byte admin_flg = rs.getByte("admin_flg");
-	                String last_login = rs.getString("last_login");
-	                Byte acc_lock_ind = rs.getByte("acc_lock_ind");
-	               */
-	               
 	            	
-	                // print the results
-	                //System.out.format("%s, %s, %s, %s, %s, %s, %s, %s\n", id, UID,username, password, role, admin_flg, last_login, acc_lock_ind);
 	            }
 	            connection.close();
 	        } catch (SQLException e) {
@@ -310,17 +297,13 @@ public class User {
 	    
 		}
 	    
-	    
-	    
+
 	    public static void clearSession() {
 	    	
 	    	File sessionfile = new File("session.txt");
 			sessionfile.delete();
 	    }
 	    	
-	    
-	    
-	   
 
 		private void show() 
 	    { 

@@ -20,3 +20,30 @@ INSERT INTO uam
 
  
 SELECT * FROM uam;
+
+
+CREATE TABLE events(
+event_id INTEGER PRIMARY KEY,
+event_name VARCHAR(100),
+event_description VARCHAR(500),
+event_start_date DATE,
+event_end_date DATE
+);
+
+INSERT INTO events (event_name, event_description, event_start_date, event_end_date) SELECT 'Snow White', 'Snow white and 7 dwarfs is a classic', '15/07/2023', '20/09/2023';
+
+INSERT INTO events (event_name, event_description, event_start_date, event_end_date) SELECT 'Lion King', 'Follow Simba on his epic adventure', '27/09/2023', '20/11/2023';
+
+SELECT * FROM events;
+
+
+CREATE TABLE  event_bookings_xref
+(id INTEGER PRIMARY KEY,
+event_id INTEGER,
+booking_id INTEGER);
+
+CREATE TABLE bookings (
+id INTEGER PRIMARY KEY,
+booking_id integer,
+booking_date date,
+user_id integer);
