@@ -1,11 +1,10 @@
 package com.a00326288.project01;
 import java.io.Console;
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner; 
+ 
+import java.util.Scanner;
+
+
+
 
 
 public class UserAccessControl extends User {
@@ -43,7 +42,7 @@ public class UserAccessControl extends User {
 
 	}
 
-
+	
 	
 	
 
@@ -76,16 +75,8 @@ public class UserAccessControl extends User {
 			
 			}
 			
-			
-			//System.out.println(MyUser.getUsername());
-			//System.out.println(MyUser.getPassword());
-			
+		
 			launchpad.menu();
-			
-			
-			
-			
-			//Check if User Found (If null = User Not Found, Throw Username or Password Invalid -> Try Again)
 			
 			
 		}catch(Exception e){
@@ -103,39 +94,44 @@ public class UserAccessControl extends User {
 		    
 		// TODO Auto-generated method stub
 		System.out.println("Register");
-		System.out.println("Enter a username:");
+				
+		int flg = 0;
 		
-        User[] arr;
-
-        // Allocating memory for 2 objects
-        // of type student
-        arr = new User[1];
-
-       
-		
-		int flag=1;
-		
-		
-		do {
-			System.out.println("Please enter between 10 - 15 characters, comprising of 1 special char, 1 digit and no spaces.");
-			String UsrInput = sc.nextLine();	
-			flag=InputValidation.validateInput(UsrInput);
-			
-		}while(flag==0);
-		
-		if(flag==1) {
-			System.out.println("Success");
-		}else {
-			launchpad.main(null);
+		while(flg==0) {
+			System.out.println("Enter a username:");
+			username = sc.nextLine();	
+			if(dbCheckUser(username)==true) {
+				System.out.println("Username "+ username + " is accepted.");
+				flg=1;
+			}else
+			{
+			System.out.println("Username " + username + " is already taken. Please try again.");
+			flg=0;
+			}
 		}
 		
+	
+		
+		flg=0;
 		
 		
+		
+		while(flg==0) {
+			System.out.println("Enter a password:");
+			password = sc.nextLine();	
+			if(InputValidation.validateInput(password)==1)
+			{
+				User newUser = new User(username, password);
+				newUser.dbCreateUser(username, password);
+				flg=1;
+			}else
+			{
+				System.out.println("Please enter between 10 - 15 characters, comprising of 1 special char, 1 digit and no spaces.");
+			}
+			
+		}
+		launchpad.main(null);		
 
-		
 	}
 	
-	
-		
-
 }

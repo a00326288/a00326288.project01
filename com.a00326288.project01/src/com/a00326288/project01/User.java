@@ -1,5 +1,13 @@
 package com.a00326288.project01;
 
+
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -9,7 +17,8 @@ import java.util.Base64;
 
 
 public class User {
-	
+		
+		public String session;
 		private Integer id;
 		private String UID;
 		private String username;
@@ -29,6 +38,7 @@ public class User {
 	    // User class constructor
 	    public User(String username, String password )
 	    {
+	    	this.session = null;
 	    	this.id = null;
 	        this.UID = encode(username,password);
 	        this.username = username; 
@@ -42,6 +52,13 @@ public class User {
 	    
 	    //getters and setters
 
+	    public String getSession() {
+	    	return session;
+	    }
+	    
+	    public void setSession(String session) {
+	    	this.session = session;
+	    }
 
 		public Integer getID() {
 	    	return id;
@@ -125,7 +142,7 @@ public class User {
 	    
 	    // Encoding the Password and creating a Unique User ID from Username and Password
 	    
-	    public String encode(String username, String password) {
+	    private String encode(String username, String password) {
 			
 
 			String Input = username + password;
@@ -133,23 +150,63 @@ public class User {
 			return hashString;
 		}
 		
-		public String encode(String password) {
+		private String encode(String password) {
 			
 			String hashString = Base64.getEncoder().encodeToString(password.getBytes());
 			return hashString;
 		}
+		
+		private String encode(Integer id, String UID, String username, String password, String role,Byte admin_flg, String last_login,Byte acc_lock_ind) {
+			String Input = id.toString()+UID+username+password+role+admin_flg.toString()+last_login+acc_lock_ind.toString();
+			String hashString = Base64.getEncoder().encodeToString(Input.getBytes());
+			return hashString;
+		}
+	    
 	    
 	    
 	    // Check user exists in DB. Return bool (true, false).
 	    
-	 
+		public static boolean dbCheckUser(String username) {
+	        
+	        String SQL = ("SELECT * FROM uam where username ='"+username+"';");
+	        String user_register = null;
+			try {
+	        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+	  		  	Statement statement = connection.createStatement();
+	            ResultSet rs = statement.executeQuery(SQL);
+	        
+	            while (rs.next()) 
+	            
+	            {
+	            	user_register = rs.getString("username");
+	                // print the results
+	        
+	            }
+	            connection.close();
+	            
+	        } catch (SQLException e) {
+	            // TODO Auto-generated catch block
+	            e.printStackTrace();
+	        }
+	        
+	        if(user_register==null) {    	
+	        
+	        	return true;
+	        	
+	        }else 
+	        {
+	        	return false;
+	        }
+	       
+	    }
+	    
 	    
 	    
 	    public boolean dbCheckUser() {
 	        
 	        String SQL = ("SELECT * FROM uam where uid ='"+this.UID+"' and password='"+this.password+"';");
 	        try {
-	        	Connection connection = DriverManager.getConnection("jdbc:sqlite:/Users/jmclaugh/git/a00326288.project01/com.a00326288.project01/db/a00326288.db");
+	        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
 	  		  	Statement statement = connection.createStatement();
 	            ResultSet rs = statement.executeQuery(SQL);
 	        
@@ -178,13 +235,17 @@ public class User {
 	                // print the results
 	                //System.out.format("%s, %s, %s, %s, %s, %s, %s, %s\n", id, UID,username, password, role, admin_flg, last_login, acc_lock_ind);
 	            }
+	            connection.close();
 	        } catch (SQLException e) {
 	            // TODO Auto-generated catch block
 	            e.printStackTrace();
 	        }
 	        
 	        if(getID()!=null) {
+	        	this.session=encode(this.id,this.UID,this.username,this.password,this.usr_role,this.admin_flg,this.last_login,this.acc_lock_ind);
+	        	writeSession();
 	        	return true;
+	        	
 	        }else 
 	        {
 	        	return false;
@@ -192,9 +253,78 @@ public class User {
 	       
 	    }
 	    
+	    public void dbCreateUser(String username, String password) {
+	    	
+	    	
+
+	        String SQL = ("INSERT INTO uam (uid,username,password,usr_role,admin_flg,last_login,acc_lock_ind) VALUES ('"+this.UID+"','"+this.username+"','"+this.password+"','"+this.usr_role+"',"+this.admin_flg+",'"+this.last_login+"',"+this.acc_lock_ind+");");
+	        try {
+	        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+	  		  	Statement statement = connection.createStatement();
+	            statement.executeUpdate(SQL);
+	            connection.close();
+	        
+	            {
+	            }
+	        } catch (SQLException e) {
+	            // TODO Auto-generated catch block
+	            e.printStackTrace();
+	        }   	
+	    	
+	    	
+	    }
 	    
-	    public void show() 
+	    
+	    public static String readSession() {
+	    	
+	    	try {
+	    		FileReader fileReader = new FileReader("session.txt");
+	    		fileReader.close();
+	    		return fileReader.toString();
+	    		
+	    	} catch (IOException e) {
+	    		// TODO Auto-generated catch block
+	    		return null;
+	    	}
+	    	
+	    }
+	    
+	    private void writeSession() {
+			// TODO Auto-generated method stub
+	    	
+	    	PrintWriter writer;
+			try {
+				writer = new PrintWriter("session.txt", "UTF-8");
+				
+				writer.println(this.session);
+		    	writer.close();
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    	
+
+	    
+		}
+	    
+	    
+	    
+	    public static void clearSession() {
+	    	
+	    	File sessionfile = new File("session.txt");
+			sessionfile.delete();
+	    }
+	    	
+	    
+	    
+	   
+
+		private void show() 
 	    { 
+	    	System.out.println("sessionId = " + getSession()); 
 	    	System.out.println("id = " + getID()); 
 	        System.out.println("UID = " + getUID()); 
 	        System.out.println("username = " + getUsername()); 
@@ -208,13 +338,6 @@ public class User {
 	    } 
 	    
 	   
-	   
-	    @Override
-	    public String toString() {
-	          return "User [id=" + UID + ", Name=" + username + ", password=" + password+"]";
-	      }
-
-
 	    
 	    
 }

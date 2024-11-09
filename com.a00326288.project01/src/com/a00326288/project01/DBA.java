@@ -59,7 +59,7 @@ public class DBA {
         (
        
           // create a database connection
-          Connection connection = DriverManager.getConnection("jdbc:sqlite:/Users/jmclaugh/git/a00326288.project01/com.a00326288.project01/db/a00326288.db");
+          Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
           Statement statement = connection.createStatement();
         )
         {
@@ -142,7 +142,7 @@ public class DBA {
 		try
         (
           // create a database connection
-          Connection connection = DriverManager.getConnection("jdbc:sqlite:/Users/jmclaugh/git/a00326288.project01/com.a00326288.project01/db/a00326288.db");
+          Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
           Statement statement = connection.createStatement();
         )
         {

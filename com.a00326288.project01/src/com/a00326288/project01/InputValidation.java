@@ -12,7 +12,6 @@ public class InputValidation {
 		
 		try {
 			
-			
 			final int minimum_chars = 10;
 		    final int maximum_chars= 15;
 		    final int minSpecialChars= 1;
@@ -51,12 +50,6 @@ public class InputValidation {
 					
 			}
 			
-			//System.out.println("Total number of characters = " + InputLength);
-			//System.out.println("Total number of lowercase = " + lower_chars);
-			//System.out.println("Total number of uppercase = " + upper_chars);
-			//System.out.println("Total number of uppercase = " + upper_chars);
-			//System.out.println("Total number of digits = " + digit_count);
-			//System.out.println("Total number of special characters = " + specialChar);
 			
 			validation Validation = validation.SUCCESS;
 			
@@ -73,8 +66,6 @@ public class InputValidation {
 				Validation=validation.NODIGIT;
 			}else if(specialChar < minSpecialChars) {
 				Validation=validation.NOSPECIALCHAR;
-		//	}else if(DBA.dbConnection(input)==false) {
-		//		Validation=validation.USERALREADYTAKEN;
 			}
 			
 			else {
@@ -97,15 +88,11 @@ public class InputValidation {
 			case NOSPECIALCHAR:
 				  System.out.println("Your username doesn't contain any special characters. Please try again or Type 'Quit' to finish.");
 				  return 0;
-			case USERALREADYTAKEN:
-				  System.out.println("Sorry. "+input+" is already taken. Please try again or Type 'Quit' to finish.");
-				  return 0;
 			case QUIT:
 				  return -1; 
 			case SUCCESS:
 				  return 1;
 			default:
-			    // code block
 				  return 0;	  
 			}
 			

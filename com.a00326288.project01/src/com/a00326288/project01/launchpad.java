@@ -8,6 +8,8 @@ public class launchpad {
 	
 	public static void main(String[] args) {
 		
+		User.clearSession();
+		
 		menu();
 	
 		
