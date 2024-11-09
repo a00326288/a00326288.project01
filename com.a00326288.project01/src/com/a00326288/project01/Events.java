@@ -4,6 +4,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 
@@ -19,7 +21,9 @@ public class Events {
 		displayEvents();
 		menu();
 	}
-
+	
+	
+	public static List<Events> eventlist =new ArrayList<Events>();
 
 	private Integer eventId;
 	private String eventName;
@@ -39,7 +43,9 @@ public class Events {
 		 
 	}
 	
-	public Integer getEventId(Integer eventId) {
+	
+	
+	public Integer getEventId() {
 		return eventId;		
 	}
 	
@@ -47,7 +53,7 @@ public class Events {
 		this.eventId = eventId;
 	}
 	
-	public String getEventName(String eventName) {
+	public String getEventName() {
 		return eventName;		
 	}
 	
@@ -55,7 +61,7 @@ public class Events {
 		this.eventName = eventName;
 	}
 	
-	public String getEventDescription(String eventDescription) {
+	public String getEventDescription() {
 		return eventDescription;		
 	}
 	
@@ -104,23 +110,35 @@ public class Events {
   		  	Statement statement = connection.createStatement();
   		    statement.setQueryTimeout(30); 
   		  	ResultSet rs = statement.executeQuery(SQL);
-  		  	String delimiter = ",";
+  		  	
+  		  	
   		  	
   		  	System.out.println(String.format("%-10s %-25s %8s %20s" , "Event ID", "Event Name", "Event Start", "Event Ends" ));
   		  	while(rs.next())
   		  	{
-  		  		Events event = new Events();
   		  		
-  		  		event.setEventId(rs.getInt("event_id"));
-  		  		event.setEventName(rs.getString("event_name"));	            	
-  		  		event.setEventDescription(rs.getString("event_description"));
-  		  		event.setEventStartDate(rs.getString("event_start_date"));
-  		  		event.setEventEndDate(rs.getString("event_end_date"));
-  		  		System.out.format("%-10s %-25s %8s %22s\n",event.eventId,event.eventName,event.eventStartDate,event.eventEndDate);
+  		  		
+  		  		Events newEvent = new Events();
+  		  		
+  		  		newEvent.setEventId(rs.getInt("event_id"));
+  		  		newEvent.setEventName(rs.getString("event_name"));	            	
+  		  		newEvent.setEventDescription(rs.getString("event_description"));
+  		  		newEvent.setEventStartDate(rs.getString("event_start_date"));
+  		  		newEvent.setEventEndDate(rs.getString("event_end_date"));
+  		  		
+  		  		eventlist.add(newEvent);
+  		  		
+  		  		
+  		  		
+  		  		
+  		  		
+  		  		System.out.format("%-10s %-25s %8s %22s\n",newEvent.eventId,newEvent.eventName,newEvent.eventStartDate,newEvent.eventEndDate);
   		  		System.out.println();
   		  	}
   		  	
             connection.close();
+      
+
         
             {
             }
@@ -198,8 +216,10 @@ public class Events {
 	 
 	
 	public static void menu() {
-
+		
         int selection;
+        
+        selection = 0;
         
         /***************************************************/
         
@@ -263,8 +283,13 @@ public class Events {
 		// TODO Auto-generated method stub
 		System.out.println("Please input event ID you wish to view");
 		
-		EventDetails.displayEvents();
+		int selection = sc.nextInt();
+		
+		EventDetails.EventDetails(selection);
 		
 	}
+	
+
+     
 }
 
