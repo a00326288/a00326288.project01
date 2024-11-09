@@ -1,8 +1,8 @@
 package com.a00326288.project01;
 
-public class Booking extends Events {
+public class Bookings extends Events {
 
-	public Booking() {
+	public Bookings() {
 		// TODO Auto-generated constructor stub
 		super();
 		
