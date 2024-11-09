@@ -3,7 +3,7 @@
 DROP TABLE uam;
 
 create table uam (
-id INTEGER PRIMARY KEY,
+user_id INTEGER PRIMARY KEY,
 uid VARCHAR(100), --combine username and UID, calculate value and insert into field - create user can not result in same user being created with same password,
 username VARCHAR(50),
 password VARCHAR(100),
@@ -22,6 +22,8 @@ INSERT INTO uam
 SELECT * FROM uam;
 
 
+DROP TABLE events;
+
 CREATE TABLE events(
 event_id INTEGER PRIMARY KEY,
 event_name VARCHAR(100),
@@ -37,13 +39,39 @@ INSERT INTO events (event_name, event_description, event_start_date, event_end_d
 SELECT * FROM events;
 
 
-CREATE TABLE  event_bookings_xref
-(id INTEGER PRIMARY KEY,
-event_id INTEGER,
-booking_id INTEGER);
+DROP TABLE bookings;
+
+DELETE FROM bookings;
 
 CREATE TABLE bookings (
-id INTEGER PRIMARY KEY,
-booking_id integer,
+booking_id INTEGER PRIMARY KEY,
 booking_date date,
-user_id integer);
+venue_id integer,
+event_id integer,
+user_id integer
+);
+
+INSERT INTO bookings (booking_date,venue_id,event_id,user_id) VALUES('30/08/2023',1,2,1);
+
+SELECT * FROM bookings;
+
+DROP TABLE venue;
+
+CREATE TABLE venue (
+venue_id integer PRIMARY KEY,
+venue_name varchar(100),
+venue_address varchar(200),
+city varchar(100)
+)
+
+SELECT * FROM venue;
+
+INSERT INTO VENUE (venue_name, venue_address,city) values('Bord Gáis Energy Theatre','Bord Gáis Energy Theatre Grand Canal Square Docklands Dublin 2 D02 PA03 Ireland','Dublin' );
+INSERT INTO VENUE (venue_name, venue_address,city) values('Gaiety Theatre','King St South, Dublin 2','Dublin' );
+INSERT INTO VENUE (venue_name, venue_address,city) values('Grand Opera House','2-4 Great Victoria St, Belfast BT2 7HR','Belfast' );
+INSERT INTO VENUE (venue_name, venue_address,city) values('Town Hall Theatre','393 (Main Auditorium); 52 (Studio Space)','Galway' );
+
+
+
+
+SELECT a.username, b.booking_id, e.event_name,v.venue_name FROM uam a INNER JOIN bookings b ON a.user_id = b.user_id INNER JOIN events e ON b.event_id = e.event_id INNER JOIN venue v ON b.venue_id = v.venue_id ;

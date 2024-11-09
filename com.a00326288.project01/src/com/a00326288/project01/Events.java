@@ -285,6 +285,8 @@ public class Events {
 		
 		int selection = sc.nextInt();
 		
+		EventDetails.dbVenueDetails();
+		
 		EventDetails.EventDetails(selection);
 		
 	}

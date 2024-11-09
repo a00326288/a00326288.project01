@@ -214,7 +214,7 @@ public class User {
 	            
 	            {
 	            	
-	            	setID(rs.getInt("id"));
+	            	setID(rs.getInt("user_id"));
 	            	setUserRole(rs.getString("usr_role"));	            	
 	            	setAdminFlag(rs.getByte("admin_flg"));
 	            	setLastLogin(rs.getString("last_login"));
