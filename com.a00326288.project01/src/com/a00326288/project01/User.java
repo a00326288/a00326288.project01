@@ -81,8 +81,8 @@ public class User {
 		}
 
 
-		public void setUID(String uID) {
-			UID = uID;
+		public void setUID(String UID) {
+			this.UID = UID;
 		}
 
 
@@ -174,6 +174,36 @@ public class User {
 	    // Check user exists in DB. Return bool (true, false).	    
 	    
 	    
+		public static boolean dbCheckUser(String username) {
+			
+			String SQL = ("SELECT * FROM uam where username='"+username+"';");
+			int id = 0;
+			try {
+	        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+	  		  	Statement statement = connection.createStatement();
+	            ResultSet rs = statement.executeQuery(SQL);
+	            statement.setQueryTimeout(30); 
+	            while (rs.next()) 
+	            
+	            {
+	            	id=rs.getInt("user_id");
+	            }
+	            
+	            statement.closeOnCompletion();
+	            connection.close();
+	        	
+	        } catch (SQLException e) {
+	            // TODO Auto-generated catch block
+	            e.printStackTrace();
+	        }
+			if(id==1) {
+				return true;
+			}else {
+				return false;
+			}
+			
+		}
+		
 	    public static boolean dbCheckUser(String username,String password) {
 	
 	    	User myuser = new User(username, password);
@@ -232,11 +262,19 @@ public class User {
 	       
 	    }
 	    
-	    public void dbCreateUser(String username, String password) {
+	    public static void dbCreateUser(String username, String password) {
 	    	
 	    	
-
-	        String SQL = ("INSERT INTO uam (uid,username,password,usr_role,admin_flg,last_login,acc_lock_ind) VALUES ('"+this.UID+"','"+this.username+"','"+this.password+"','"+this.usr_role+"',"+this.admin_flg+",'"+this.last_login+"',"+this.acc_lock_ind+");");
+	    	User newUser = new User(username,password);
+	    	newUser.setUID(encode(username,password));
+	    	newUser.setPassword(encode(password));
+	    	newUser.setUsr_role("user");
+	    	newUser.setAdmin_flg((byte) 0);
+	    	newUser.setLast_login("01/01/2020");
+	    	newUser.setAcc_lock_ind((byte) 0);
+	    	
+	    	
+	        String SQL = ("INSERT INTO uam (uid,username,password,usr_role,admin_flg,last_login,acc_lock_ind) VALUES ('"+newUser.getUID()+"','"+username+"','"+password+"','"+newUser.getUsr_role()+"',"+newUser.getAdmin_flg()+",'"+newUser.getLast_login()+"',"+newUser.getAcc_lock_ind()+");");
 	        try {
 	        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
 	  		  	Statement statement = connection.createStatement();

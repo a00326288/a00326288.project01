@@ -114,7 +114,7 @@ public class UserAccessControl {
 		// TODO Auto-generated method stub
 		System.out.println("Register");
 				
-		/*
+		
 		
 		int flg = 0;
 		
@@ -123,21 +123,17 @@ public class UserAccessControl {
 			
 			username = sc.nextLine();	
 			
-			User myuser = new User();
-			
-			if(myuser.dbCheckUser(username)==true) {
-				System.out.println("Username "+ username + " is accepted.");
-				flg=1;
-			}else
+		if(User.dbCheckUser(username)==true) 
 			{
 			System.out.println("Username " + username + " is already taken. Please try again.");
 			flg=0;
 			}
+			else{
+				System.out.println("Username "+ username + " is accepted.");
+				flg=1;
+			}
 		}
-		
-		*/
-		
-		/*
+	
 		
 		flg=0;
 		
@@ -146,17 +142,17 @@ public class UserAccessControl {
 		while(flg==0) {
 			System.out.println("Enter a password:");
 			password = sc.nextLine();	
+			
 			if(InputValidation.validateInput(password)==1)
 			{
-				User newUser = new User(username, password);
-				newUser.dbCreateUser(username, password);
+				User.dbCreateUser(username, password);
 				flg=1;
 			}else
 			{
 				System.out.println("Please enter between 10 - 15 characters, comprising of 1 special char, 1 digit and no spaces.");
 			}
 			
-		}*/
+		}
 		launchpad.main(null);		
 		}
 		
