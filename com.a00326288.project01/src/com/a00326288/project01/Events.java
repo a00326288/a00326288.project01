@@ -14,85 +14,30 @@ import java.util.Scanner;
 public class Events {
 		
 	
-	static Scanner sc = new Scanner(System.in);
+	private static Scanner sc = new Scanner(System.in);
 	
 	public static void main(String[] args) {	
-		
+		sc.useDelimiter("\r?\n");
 		displayEvents();
-		menu();
+		launchpad.user_menu_events();
 	}
 	
 	
-	public static List<Events> eventlist =new ArrayList<Events>();
-
-	private Integer eventId;
-	private String eventName;
-	private String eventDescription;
-	private String eventStartDate;
-	private String eventEndDate;	
-	private Integer eventPrice;	
+	//public static List<Events> eventlist =new ArrayList<Events>();
 	
-	public Events() {
+	
+	record Event(Integer eventId,String eventName, String eventDescription, String eventStartDate, String eventEndDate) {
+		public Event{
 		
-		Integer eventId = 0;
-		String eventName = null; 
-		String eventDescription = null;
-		String eventStartDate = null;
-		String eventEndDate = null;
-		Integer eventPrice = 0;
-		 
+			if(eventId==null) {
+				eventId=null;
+				
+			}
+			
+		}
 	}
 	
-	
-	
-	public Integer getEventId() {
-		return eventId;		
-	}
-	
-	public void setEventId(Integer eventId) {
-		this.eventId = eventId;
-	}
-	
-	public String getEventName() {
-		return eventName;		
-	}
-	
-	public void setEventName(String eventName) {
-		this.eventName = eventName;
-	}
-	
-	public String getEventDescription() {
-		return eventDescription;		
-	}
-	
-	public void setEventDescription(String eventDescription) {
-		this.eventDescription = eventDescription;
-	}
-	
-	public String getEventStartDate() {
-		return eventStartDate;
-	}
 
-	public void setEventStartDate(String eventStartDate) {
-		this.eventStartDate = eventStartDate;
-	}
-
-	public String getEventEndDate() {
-		return eventEndDate;
-	}
-
-	public void setEventEndDate(String eventEndDate) {
-		this.eventEndDate = eventEndDate;
-	}
-
-	public Integer getEventPrice() {
-		return eventPrice;
-	}
-
-	public void setEventPrice(Integer eventPrice) {
-		this.eventPrice = eventPrice;
-	}
-	
 	
 	public static void displayEvents() {
 		// TODO Auto-generated method stub
@@ -101,8 +46,6 @@ public class Events {
 		System.out.println("-----------------------------");
         System.out.println("- Current Event Listings -");
         System.out.println("-----------------------------\n");
-
-	
         
         String SQL = ("SELECT * FROM events;");
         try {
@@ -113,161 +56,74 @@ public class Events {
   		  	
   		  	
   		  	
-  		  	System.out.println(String.format("%-10s %-25s %8s %20s" , "Event ID", "Event Name", "Event Start", "Event Ends" ));
+  		  	System.out.println(String.format("%-10s %-40s %8s %20s" , "Event ID", "Event Name", "Event Start", "Event Ends" ));
   		  	while(rs.next())
   		  	{
   		  		
+  		  		Event eventRecord = new Event(rs.getInt("event_id"),rs.getString("event_name"),rs.getString("event_description"),rs.getString("event_start_date"),rs.getString("event_end_date"));
   		  		
-  		  		Events newEvent = new Events();
-  		  		
-  		  		newEvent.setEventId(rs.getInt("event_id"));
-  		  		newEvent.setEventName(rs.getString("event_name"));	            	
-  		  		newEvent.setEventDescription(rs.getString("event_description"));
-  		  		newEvent.setEventStartDate(rs.getString("event_start_date"));
-  		  		newEvent.setEventEndDate(rs.getString("event_end_date"));
-  		  		
-  		  		eventlist.add(newEvent);
-  		  		
-  		  		
-  		  		
-  		  		
-  		  		
-  		  		System.out.format("%-10s %-25s %8s %22s\n",newEvent.eventId,newEvent.eventName,newEvent.eventStartDate,newEvent.eventEndDate);
-  		  		System.out.println();
+  		  		System.out.format("%-10s %-40s %8s %21s\n",eventRecord.eventId(),eventRecord.eventName(),eventRecord.eventStartDate(),eventRecord.eventEndDate());
   		  	}
   		  	
             connection.close();
-      
-
-        
-            {
-            }
-     
           }
         catch(SQLException e)
         {
-          // if the error message is "out of memory",
-          // it probably means no database file is found
           e.printStackTrace(System.err);
         }
-		 
-		
-		
-        
-       
-    	
-        // print the results
-        //
-		
-		
 		System.out.println();
-
 	}
 	
 		
 	
 	public static void createEvent() {
 		
-		Events event = new Events();
-		
 		System.out.println("Input a name for the Event:");
-		event.setEventName(sc.next());
-		sc.nextLine();
+		String eventname = sc.next();
 		
 		System.out.println("Input a description of the Event:");
-		event.setEventDescription(sc.next());
-		sc.nextLine();
+		String eventDescription=sc.next();
 		
 		System.out.println("Enter a date whenever the event starts:");
-		event.setEventStartDate(sc.next());
-		sc.nextLine();
-		
+		String eventStartDate = sc.next();
+
 		System.out.println("Enter a date for whenever the event finishes:");
-		event.setEventEndDate(sc.next());
-		sc.nextLine();
+		String eventEndDate=sc.next();
+
+		Event newevent = new Event(null,eventname,eventDescription,eventStartDate,eventEndDate);
 		
-		event.dbCreateEvent();
-		
-		
-		
+		dbCreateEvent(newevent);
 	}
 	
-	private void dbCreateEvent() {
+	private static void dbCreateEvent(Event newevent) {
 		
-		String SQL = ("INSERT INTO events (event_name, event_description, event_start_date, event_end_date) VALUES ('"+this.eventName+"','"+this.eventDescription+"','"+this.eventStartDate+"','"+this.eventEndDate+"');");
+		String SQL = ("INSERT INTO events (event_name, event_description, event_start_date, event_end_date) VALUES ('"+newevent.eventName+"','"+newevent.eventDescription+"','"+newevent.eventStartDate+"','"+newevent.eventEndDate+"');");
         try {
         	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
   		  	Statement statement = connection.createStatement();
             statement.executeUpdate(SQL);
             connection.close();
-        
-            {
-            }
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }   
-        
-        menu();
-		
+        launchpad.user_menu_events();	
 	}
 
 	
 	 
 	
-	public static void menu() {
-		
-        int selection;
-        
-        selection = 0;
-        
-        /***************************************************/
-        
-        System.out.println("---------------------------");
-        System.out.println("-Choose from the choices below -");
-        System.out.println("---------------------------\n");
-        System.out.println("1 - Book Event");
-        System.out.println("2 - View Event"); 
-        System.out.println("3 - Create Event");
-        System.out.println("4 - Main Menu");
-
-        selection = sc.nextInt();
-        
- 
-		switch(selection) {
-		  case 1:
-			  if(User.readSession()!=null && !User.readSession().isEmpty() ) {
-				  bookEvent();
-			  }else {
-				  System.out.println("Please login/register first before trying to book.");
-				  launchpad.menu();
-			  }
-		    break;
-		  case 2:
-			  viewEvent();
-		    break;
-		  case 3:
-			  createEvent();
-			break;
-		  case 4:
-			  launchpad.menu();
-			break;
-		  default:
-		    // code block
-		}
-        
-        
-    }
+	
 	
 
 
-	private static void bookEvent() {
+	public static void bookEvent() {
 		// TODO Auto-generated method stub
 		System.out.println("-----------------------------");
         System.out.println("- Book Event -");
         System.out.println("-----------------------------\n");
         
-		System.out.println("Please input event ID you wish to book:");
+		System.out.println("Please input the ID of the event you wish to book:");
 		System.out.println();
 		
 		int option = sc.nextInt();
@@ -279,15 +135,13 @@ public class Events {
 	}
 
 
-	private static void viewEvent() {
+	public static void viewEvent() {
 		// TODO Auto-generated method stub
-		System.out.println("Please input event ID you wish to view");
+		System.out.println("Please input the ID of the event you wish to view");
 		
 		int selection = sc.nextInt();
 		
-		EventDetails.dbVenueDetails();
-		
-		EventDetails.EventDetails(selection);
+		EventDetails.EventVenueDetails(selection);
 		
 	}
 	

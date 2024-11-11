@@ -10,12 +10,41 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Stream;
 
-public class EventDetails extends Events
-
+public class EventDetails 
 {
-	public static List<EventDetails> venuelist = new ArrayList<EventDetails>();
 	
-	static Scanner sc = new Scanner(System.in);
+	private Integer eventId;
+	private String eventName;
+	private String eventDescription;
+	private String eventStartDate;
+	private String eventEndDate;
+	private Integer venueId;
+	private String venueName;
+	private String venueAddress;
+	private String venueCity;
+	private Integer priceId;
+	private Integer eventPrice;
+
+	
+	private static Scanner sc = new Scanner(System.in);
+
+	
+	public EventDetails(){
+		super();
+		
+		Integer eventId;
+		String eventName;
+		String eventDescription;
+		String eventStartDate;
+		String eventEndDate;
+		Integer venueId;
+		String venueName;
+		String venueAddress;
+		String venueCity;
+		Integer priceId;
+		Integer price;
+		
+	}
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -23,42 +52,70 @@ public class EventDetails extends Events
 	}
 	
 	
-	private Integer eventId;
-	private Integer venueId;
-	private String venueName;
-	private String venueAddress;
-	private String venueCity;
-	
-	
-	public EventDetails(){
-		super();
-
-		Integer	venueId = 0;
-		String venueName = "";
-		String venueAddress = "";
-		String venueCity = "";
-		
-	
+	public Integer getEventId() {
+		return eventId;
 	}
-	
+
+	public void setEventId(Integer eventId) {
+		this.eventId = eventId;
+	}
+
+	public String getEventName() {
+		return eventName;
+	}
+
+	public void setEventName(String eventName) {
+		this.eventName = eventName;
+	}
+
+	public String getEventDescription() {
+		return eventDescription;
+	}
+
+	public void setEventDescription(String eventDescription) {
+		this.eventDescription = eventDescription;
+	}
+
+	public String getEventStartDate() {
+		return eventStartDate;
+	}
+
+	public void setEventStartDate(String eventStartDate) {
+		this.eventStartDate = eventStartDate;
+	}
+
+	public String getEventEndDate() {
+		return eventEndDate;
+	}
+
+	public void setEventEndDate(String eventEndDate) {
+		this.eventEndDate = eventEndDate;
+	}
+
 	public Integer getVenueId() {
 		return venueId;
 	}
+
 	public void setVenueId(Integer venueId) {
 		this.venueId = venueId;
 	}
+
 	public String getVenueName() {
 		return venueName;
 	}
+
 	public void setVenueName(String venueName) {
 		this.venueName = venueName;
 	}
+
 	public String getVenueAddress() {
 		return venueAddress;
 	}
+
 	public void setVenueAddress(String venueAddress) {
 		this.venueAddress = venueAddress;
 	}
+
 	public String getVenueCity() {
 		return venueCity;
 	}
@@ -67,14 +124,28 @@ public class EventDetails extends Events
 		this.venueCity = venueCity;
 	}
 
-	
-	
-	
-	public static void dbVenueDetails() {
+	public Integer getPriceId() {
+		return priceId;
+	}
+
+	public void setPriceId(Integer priceId) {
+		this.priceId = priceId;
+	}
+
+	public Integer getEventPrice() {
+		return eventPrice;
+	}
+
+	public void setEventPrice(Integer eventPrice) {
+		this.eventPrice = eventPrice;
+	}
+
+	private static ArrayList<EventDetails> dbVenueDetails(int eventIdSelection) {
 		// TODO Auto-generated method stub
 		
+		ArrayList<EventDetails> event_details = new ArrayList<EventDetails>();
         
-        String SQL = ("SELECT a.event_id, b.* FROM bookings a inner join venue b on a.venue_id=b.venue_id;");
+        String SQL = ("SELECT a.event_id,a.event_name,a.event_description,a.event_start_date,a.event_end_date,b.venue_id,c.venue_name,c.venue_address,c.city,d.price_id, d.price FROM events a inner JOIN events_x_venue_x_price b on a.event_id=b.event_id INNER JOIN venues c ON b.venue_id = c.venue_id INNER JOIN prices d ON b.price_id = d.price_id where a.event_id="+eventIdSelection+";");
         try {
         	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
   		  	Statement statement = connection.createStatement();
@@ -82,113 +153,77 @@ public class EventDetails extends Events
   		  	ResultSet rs = statement.executeQuery(SQL);
   		  	
   		  	
-  		  	
-  		  	System.out.println(String.format("%-10s %-10s %-25s %8s %20s" , "Event ID","Venue ID", "Venue Name", "Venue Address", "Venue City" ));
   		  	while(rs.next())
   		  	{
-  		  		
-  		  		
-  		  	EventDetails venue = new EventDetails();
-  		  		
+  		  	EventDetails venue = new EventDetails();   	
+
   		  	venue.setEventId(rs.getInt("event_id"));
-  		  	
+  		  	venue.setEventName(rs.getString("event_name"));
+  		  	venue.setEventDescription(rs.getString("event_description"));
+  		    venue.setEventStartDate(rs.getString("event_start_date"));
+  		    venue.setEventEndDate(rs.getString("event_end_date"));
   		  	venue.setVenueId(rs.getInt("venue_id"));
-  		  	
-  		  	venue.setVenueName(rs.getString("venue_name"));	            	
-  		  	
+  		  	venue.setVenueName(rs.getString("venue_name"));	            
   		  	venue.setVenueAddress(rs.getString("venue_address"));
+  		  	venue.setVenueCity(rs.getString("city"));	
+  		  	venue.setPriceId(rs.getInt("price_id"));	
+  		  	venue.setEventPrice(rs.getInt("price"));	
   		  	
-  		  	venue.setVenueCity(rs.getString("city"));
-  		  		
-  		  		
-  		  	venuelist.add(venue);
-  		  	
-  		  	
-  		  	
+  		  	event_details.add(venue);
+  		
   		  	System.out.println();
   		  	}
-  		  	
-            connection.close();
-      
-
-        
-            {
-            }
-     
+  		  	connection.close();
           }
         catch(SQLException e)
         {
-          // if the error message is "out of memory",
-          // it probably means no database file is found
           e.printStackTrace(System.err);
         }
-		 
-		
-		
-        
-       
-    	
-        // print the results
-        //
-		
-		
-		System.out.println();
-
+		return event_details;
 	}
 
 
 
-	public static void EventDetails(int eventIdSelection) {
+
+
+	public static void EventVenueDetails(int eventIdSelection) {
 		// TODO Auto-generated method stub
 		
-		int eventIdx = 0;
+		
+		ArrayList<EventDetails> event_details = dbVenueDetails(eventIdSelection);
 
-		for (Events e : eventlist) {
-		    if (e.getEventId().equals(eventIdSelection)) {
-		     eventIdx=eventlist.indexOf(e);
-		    break;
-		    }
+		int i=0;
+		
+		System.out.println("-----------------------------");
+        System.out.println("- Event Details  -");
+        System.out.println("-----------------------------\n");
+		
+        
+		for(i=0;i<event_details.size();i++) {
+			
+			
+			System.out.print("Event Name	:	");
+			System.out.println(event_details.get(i).getEventName());
+			System.out.print("Event Description :	");
+			System.out.println(event_details.get(i).getEventDescription());
+			System.out.print("Event Start Date :	");
+			System.out.println(event_details.get(i).getEventStartDate());
+			System.out.print("Event Last Date :	");
+			System.out.println(event_details.get(i).getEventEndDate());
+			System.out.print("Event Venue	:	");
+			System.out.println(event_details.get(i).getVenueName());
+			System.out.print("Venue Address	:	");
+			System.out.println(event_details.get(i).getVenueAddress());
+			System.out.print("Venue City	:	");
+			System.out.println(event_details.get(i).getVenueCity());
+			System.out.print("Venue Price	:	");
+			System.out.println(event_details.get(i).getEventPrice());
+			System.out.println();
+			
+			
 		}
 		
-		System.out.println("Below are the details of the event;");
-		System.out.println(eventlist.get(eventIdx).getEventId());
-		System.out.println(eventlist.get(eventIdx).getEventName());
-		System.out.println(eventlist.get(eventIdx).getEventDescription());
-		System.out.println(eventlist.get(eventIdx).getEventStartDate());
-		System.out.println(eventlist.get(eventIdx).getEventEndDate());
-	
-		
-		
-		List<Events> newList = Stream.concat(eventlist.stream(),venuelist.stream()).toList();  	
-		  	
-		
-		/*
-		System.out.println(venuelist.get(venueIdx).getVenueId());
-		System.out.println(venuelist.get(venueIdx).getVenueName());
-		System.out.println(venuelist.get(venueIdx).getVenueAddress());
-		System.out.println(venuelist.get(venueIdx).getVenueCity());
-		*/
-		/*
-		
-		int venueIdx = 0;
-		
-		for (EventDetails e : venuelist) {
-			System.out.println(e.getEventId());
-		    if (e.getEventId().equals(eventlist.get(eventIdx).getEventId())) {
-		    	venueIdx=venuelist.indexOf(e);
-		    	System.out.println(venueIdx);
-		    break;
-		    }
-		}
-		
-		*/
-		
-		//System.out.println(venuelist.get(eventIdx).getVenueName());
-		
-		
-		
-		menu();
-		
+		launchpad.user_menu_events();
 		
 	}
 

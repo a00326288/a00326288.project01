@@ -22,19 +22,30 @@ INSERT INTO uam
 SELECT * FROM uam;
 
 
+CREATE TABLE events_x_venue_x_price
+(
+event_id integer,
+venue_id integer,
+price_id integer
+)
+
+INSERT INTO events_x_venue_x_price values(1,2,2);
+
+SELECT * FROM events_x_venue_x_price
+
 DROP TABLE events;
 
 CREATE TABLE events(
-event_id INTEGER PRIMARY KEY,
+event_id INTEGER,
 event_name VARCHAR(100),
 event_description VARCHAR(500),
 event_start_date DATE,
 event_end_date DATE
 );
 
-INSERT INTO events (event_name, event_description, event_start_date, event_end_date) SELECT 'Snow White', 'Snow white and 7 dwarfs is a classic', '15/07/2023', '20/09/2023';
+INSERT INTO events (event_id,event_name, event_description, event_start_date, event_end_date) SELECT 1,'Snow White', 'Snow white and 7 dwarfs is a classic', '15/07/2023', '20/09/2023';
 
-INSERT INTO events (event_name, event_description, event_start_date, event_end_date) SELECT 'Lion King', 'Follow Simba on his epic adventure', '27/09/2023', '20/11/2023';
+INSERT INTO events (event_id,event_name, event_description, event_start_date, event_end_date) SELECT 2,'Lion King', 'Follow Simba on his epic adventure', '27/09/2023', '20/11/2023';
 
 SELECT * FROM events;
 
@@ -55,23 +66,43 @@ INSERT INTO bookings (booking_date,venue_id,event_id,user_id) VALUES('30/08/2023
 
 SELECT * FROM bookings;
 
-DROP TABLE venue;
+DROP TABLE venues;
 
-CREATE TABLE venue (
-venue_id integer PRIMARY KEY,
+CREATE TABLE venues (
+venue_id integer ,
 venue_name varchar(100),
 venue_address varchar(200),
 city varchar(100)
 )
 
-SELECT * FROM venue;
+DELETE FROM venues;
 
-INSERT INTO VENUE (venue_name, venue_address,city) values('Bord Gáis Energy Theatre','Bord Gáis Energy Theatre Grand Canal Square Docklands Dublin 2 D02 PA03 Ireland','Dublin' );
-INSERT INTO VENUE (venue_name, venue_address,city) values('Gaiety Theatre','King St South, Dublin 2','Dublin' );
-INSERT INTO VENUE (venue_name, venue_address,city) values('Grand Opera House','2-4 Great Victoria St, Belfast BT2 7HR','Belfast' );
-INSERT INTO VENUE (venue_name, venue_address,city) values('Town Hall Theatre','393 (Main Auditorium); 52 (Studio Space)','Galway' );
+SELECT * FROM venues;
+
+INSERT INTO venues (venue_id,venue_name, venue_address,city) values(1,'Bord Gáis Energy Theatre','Bord Gáis Energy Theatre Grand Canal Square Docklands Dublin 2 D02 PA03 Ireland','Dublin' );
+INSERT INTO venues (venue_id,venue_name, venue_address,city) values(2,'Gaiety Theatre','King St South, Dublin 2','Dublin');
+INSERT INTO venues (venue_id,venue_name, venue_address,city) values(3,'Grand Opera House','2-4 Great Victoria St, Belfast BT2 7HR','Belfast');
+INSERT INTO venues (venue_id,venue_name, venue_address,city) values(4,'Town Hall Theatre','393 (Main Auditorium); 52 (Studio Space)','Galway');
 
 
 
 
-SELECT a.username, b.booking_id, e.event_name,v.venue_name FROM uam a INNER JOIN bookings b ON a.user_id = b.user_id INNER JOIN events e ON b.event_id = e.event_id INNER JOIN venue v ON b.venue_id = v.venue_id ;
+
+SELECT a.event_id,a.event_name,a.event_description,a.event_start_date,a.event_end_date,b.venue_id,c.venue_name,c.venue_address,c.city,d.price_id, d.price FROM events a inner JOIN events_x_venue_x_price b on a.event_id=b.event_id INNER JOIN venues c ON b.venue_id = c.venue_id INNER JOIN prices d ON b.price_id = d.price_id where a.event_id=1;
+     
+DROP TABLE prices;
+
+CREATE TABLE prices(
+price_id INTEGER,
+price integer
+)
+
+
+
+INSERT INTO prices values(2,150)
+
+
+SELECT * FROM events;
+SELECT * FROM venues;
+SELECT * FROM prices;
+

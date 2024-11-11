@@ -1,22 +1,12 @@
 package com.a00326288.project01;
 import java.io.Console;
- 
 import java.util.Scanner;
 
 
 
 
 
-public class UserAccessControl extends User {
-	
-	
-	public UserAccessControl(String username, String password) {
-		super(username, password);
-		// TODO Auto-generated constructor stub
-		
-		
-	}
-
+public class UserAccessControl {
 
 	private static String username;
 	private static String password;
@@ -43,16 +33,33 @@ public class UserAccessControl extends User {
 	}
 
 	
+	private static Boolean checkLoggedIn() {
+		
+		if(User.readSession()!=null) {
+			return false;
+		}else {
+			
+			return true;
+		}
+		
+	}
+	
 	
 	
 
 	public static void Login() {
 		
-		System.out.println("Login");
 		
-	
+		if(checkLoggedIn()==false) {
+			System.out.println("You are already logged in.");	
+			launchpad.menu();
+		}else
+		{
+		
 		
 		try {
+			
+			
 			//Get the Username and Password from Scanner
 			username = cnsl.readLine( 
 					"Enter username : ");
@@ -65,11 +72,17 @@ public class UserAccessControl extends User {
 			password = String.valueOf(consolePass);
 			
 			
-			User user  = new User(username,password);
+		
 			
 			
-			if(user.dbCheckUser()==true) {
-					System.out.println("Welcome back " + user.getUsername() );
+			if(User.dbCheckUser(username,password)==true) {
+			
+				
+			
+					System.out.println("-----------------------------");
+					System.out.println("- Welcome Back - " + User.myuserlist.get(0).getUsername()+" -");
+					System.out.println("-----------------------------\n");
+					
 			}else {
 					System.out.println("Invalid details or User does not Exists");
 			
@@ -86,21 +99,33 @@ public class UserAccessControl extends User {
 			
 		}
 	}
+	
+	}
 
 
 	public static void Register() {
 		
 			
-		    
+		if(checkLoggedIn()==false) {
+			System.out.println("You are already logged in.");	
+			launchpad.menu();
+		}else
+		{    
 		// TODO Auto-generated method stub
 		System.out.println("Register");
 				
+		/*
+		
 		int flg = 0;
 		
 		while(flg==0) {
 			System.out.println("Enter a username:");
+			
 			username = sc.nextLine();	
-			if(dbCheckUser(username)==true) {
+			
+			User myuser = new User();
+			
+			if(myuser.dbCheckUser(username)==true) {
 				System.out.println("Username "+ username + " is accepted.");
 				flg=1;
 			}else
@@ -110,7 +135,9 @@ public class UserAccessControl extends User {
 			}
 		}
 		
-	
+		*/
+		
+		/*
 		
 		flg=0;
 		
@@ -129,9 +156,11 @@ public class UserAccessControl extends User {
 				System.out.println("Please enter between 10 - 15 characters, comprising of 1 special char, 1 digit and no spaces.");
 			}
 			
-		}
+		}*/
 		launchpad.main(null);		
-
+		}
+		
+		
 	}
 	
 }
