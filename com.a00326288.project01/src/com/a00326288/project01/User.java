@@ -272,9 +272,9 @@ public class User {
 	    	newUser.setAdmin_flg((byte) 0);
 	    	newUser.setLast_login("01/01/2020");
 	    	newUser.setAcc_lock_ind((byte) 0);
+	    	 
 	    	
-	    	
-	        String SQL = ("INSERT INTO uam (uid,username,password,usr_role,admin_flg,last_login,acc_lock_ind) VALUES ('"+newUser.getUID()+"','"+username+"','"+password+"','"+newUser.getUsr_role()+"',"+newUser.getAdmin_flg()+",'"+newUser.getLast_login()+"',"+newUser.getAcc_lock_ind()+");");
+	        String SQL = ("INSERT INTO uam (uid,username,password,usr_role,admin_flg,last_login,acc_lock_ind) VALUES ('"+newUser.getUID()+"','"+username+"','"+newUser.getPassword()+"','"+newUser.getUsr_role()+"',"+newUser.getAdmin_flg()+",'"+newUser.getLast_login()+"',"+newUser.getAcc_lock_ind()+");");
 	        try {
 	        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
 	  		  	Statement statement = connection.createStatement();
