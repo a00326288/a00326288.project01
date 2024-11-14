@@ -1,6 +1,13 @@
 package com.a00326288.project01;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Objects;
+
+import com.a00326288.project01.EventDetails.EventDetail;
 
 public class Venue {
 
@@ -86,7 +93,51 @@ public class Venue {
 	public String toString() {
 		return "Venue [venueId=" + venueId + ", venueName=" + venueName + ", venueAddress=" + venueAddress
 				+ ", venueCity=" + venueCity + "]";
-	}	
+	}
+	
+	
+	public static void getVenues() {
+		
+	        String SQL = ("SELECT * from venues;");
+	        try {
+	        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+	  		  	Statement statement = connection.createStatement();
+	  		    statement.setQueryTimeout(30); 
+	  		  	ResultSet rs = statement.executeQuery(SQL);
+	  		  	
+	  		  	
+	  		  	while(rs.next())
+	  		  	{
+	  		  
+	   
+	  		  	Venue venue = new Venue(rs.getInt("venue_id"), rs.getString("venue_name"), rs.getString("venue_address"), rs.getString("city"));
+	  		  	
+	  			System.out.println("-----------------------------");
+	  	        System.out.println("- Event Details  -");
+	  	        System.out.println("-----------------------------\n");
 
+				System.out.print("Venue Id	:	");
+				System.out.println(venue.getVenueId());
+				System.out.print("Venue Name:	");
+				System.out.println(venue.getVenueName());
+				System.out.print("Venue Address :	");
+				System.out.println(venue.getVenueAddress());
+				System.out.print("Venue City:	");
+				System.out.println(venue.getVenueCity());
+	 
+ 
+				System.out.println();
+	  		  	
+	  
+	  		  	}
+	  		  	connection.close();
+	          }
+	        catch(SQLException e)
+	        {
+	          e.printStackTrace(System.err);
+	        }
+		}
+	
+ 
 	
 }

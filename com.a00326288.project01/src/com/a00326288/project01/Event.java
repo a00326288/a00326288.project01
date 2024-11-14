@@ -4,16 +4,11 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 
-
-
-public class Events {
-		
-	
+public class Event {
 	
 	private Integer eventId;
 	private String eventName;
@@ -27,21 +22,23 @@ public class Events {
 	public static void main(String[] args) {	
 		sc.useDelimiter("\r?\n");
 		displayEvents();
-		launchpad.user_menu_events();
+		
+		
+		
+		
 	}
 	
-	public Events(int eventId, String eventName, String eventDescription, String eventStartDate, String eventEndDate) {
+	public Event(int eventId, String eventName, String eventDescription, String eventStartDate, String eventEndDate) {
 		this.eventId = eventId;
 		this.eventName = eventName;
 		this.eventDescription = eventDescription;
 		this.eventStartDate =  eventStartDate;
 		this.eventEndDate = eventEndDate;
 		
+		
 	}
 	
-	
-	
-	//public static List<Events> eventlist =new ArrayList<Events>();
+
 	
 	
 	public Integer getEventId() {
@@ -103,11 +100,6 @@ public class Events {
 	}
 
 
-
-
-	
-	
-
 	
 	public static void displayEvents() {
 		// TODO Auto-generated method stub
@@ -130,9 +122,9 @@ public class Events {
   		  	while(rs.next())
   		  	{
   		  		
-  		  		Events events = new Events(rs.getInt("event_id"),rs.getString("event_name"),rs.getString("event_description"),rs.getString("event_start_date"),rs.getString("event_end_date"));
+  		  		Event event = new Event(rs.getInt("event_id"),rs.getString("event_name"),rs.getString("event_description"),rs.getString("event_start_date"),rs.getString("event_end_date"));
   		  		
-  		  		System.out.format("%-10s %-40s %8s %21s\n",events.getEventId(),events.getEventName(),events.getEventStartDate(),events.getEventEndDate());
+  		  		System.out.format("%-10s %-40s %8s %21s\n",event.getEventId(),event.getEventName(),event.getEventStartDate(),event.getEventEndDate());
   		  	}
   		  	
             connection.close();
@@ -142,6 +134,8 @@ public class Events {
           e.printStackTrace(System.err);
         }
 		System.out.println();
+		
+		UserAccessControl.whichMenu();
 	}
 	
 		
@@ -160,14 +154,38 @@ public class Events {
 		System.out.println("Enter a date for whenever the event finishes:");
 		String eventEndDate=sc.next();
 
-		Events events = new Events((Integer) null,eventname,eventDescription,eventStartDate,eventEndDate);
+		Venue.getVenues();
 		
-		dbCreateEvent(events);
+		System.out.println("Specify a venue:");
+		
+		while (true) {
+			  try {
+				int venueId=sc.nextInt();
+			    break;
+			  } catch (InputMismatchException e ) {
+				  sc.next();
+				  System.out.println("Please enter valid number");
+		
+			  }
+			}
+	
+		System.out.println("Specify a Price:");
+		int price=sc.nextInt();
+		
+		Event event = new Event(0,eventname,eventDescription,eventStartDate,eventEndDate);
+		
+ 
+		//Prices price = new Prices(price, venueId);
+		
+		dbCreateEvent(event);
+		
+		UserAccessControl.whichMenu();
+		
 	}
 	
-	private static void dbCreateEvent(Events events) {
+	private static void dbCreateEvent(Event event) {
 		
-		String SQL = ("INSERT INTO events (event_name, event_description, event_start_date, event_end_date) VALUES ('"+events.getEventName()+"','"+events.getEventDescription()+"','"+events.getEventStartDate()+"','"+events.getEventEndDate()+"');");
+		String SQL = ("INSERT INTO events (event_name, event_description, event_start_date, event_end_date) VALUES ('"+event.getEventName()+"','"+event.getEventDescription()+"','"+event.getEventStartDate()+"','"+event.getEventEndDate()+"');");
         try {
         	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
   		  	Statement statement = connection.createStatement();
@@ -177,32 +195,10 @@ public class Events {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }   
-        launchpad.user_menu_events();	
+        //User.Menu();	
 	}
 
 	
-	 
-	
-	
-	
-
-
-	public static void bookEvent() {
-		// TODO Auto-generated method stub
-		System.out.println("-----------------------------");
-        System.out.println("- Book Event -");
-        System.out.println("-----------------------------\n");
-        
-		System.out.println("Please input the ID of the event you wish to book:");
-		System.out.println();
-		
-		int option = sc.nextInt();
-		
-		
-		
-		
-	
-	}
 
 
 	public static void viewEvent() {
@@ -212,6 +208,16 @@ public class Events {
 		int selection = sc.nextInt();
 		
 		EventDetails.EventVenueDetails(selection);
+		
+	}
+
+	public static void myBooking() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public static void modifyEvent() {
+		// TODO Auto-generated method stub
 		
 	}
 	

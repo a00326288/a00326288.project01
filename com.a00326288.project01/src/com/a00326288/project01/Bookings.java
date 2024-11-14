@@ -2,10 +2,11 @@ package com.a00326288.project01;
 
 import java.sql.Date;
 import java.util.Objects;
+import java.util.Scanner;
 
 public class Bookings {
 
-	
+	private static Scanner sc = new Scanner(System.in);
 	private int booking_id;
 	private Date booking_dte;
 	private int num_of_seats;
@@ -78,20 +79,41 @@ public class Bookings {
 
 	
 	
-	public static void createBooking() {
+	public static void bookEvent() {
+		// TODO Auto-generated method stub
+		System.out.println("-----------------------------");
+        System.out.println("- Book Event -");
+        System.out.println("-----------------------------\n");
+        
+		System.out.println("Please input the ID of the event you wish to book:");
+		System.out.println();
 		
+		int option = sc.nextInt();
+		
+		
+	
 	}
 	
+	public static void bookConference() {
+		// TODO Auto-generated method stub
+		System.out.println("-----------------------------");
+        System.out.println("- Book Event -");
+        System.out.println("-----------------------------\n");
+        
+		System.out.println("Please input the ID of the event you wish to book:");
+		System.out.println();
+		
+		int option = sc.nextInt();
+		
+		
+		
+		
 	
-	private static void cancelBooking() {
+	}
+
+	public static void modifyBooking() {
+		// TODO Auto-generated method stub
 		
 	}
-	
-	
-	private static void bookingDetails() {
-		
-	}
-	
-	
 
 }

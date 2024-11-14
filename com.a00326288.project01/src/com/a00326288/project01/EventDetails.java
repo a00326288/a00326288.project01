@@ -14,9 +14,6 @@ public class EventDetails
 {
 
 	
-	private static Scanner sc = new Scanner(System.in);
-
-	
 	record EventDetail(Integer eventId,String eventName, String eventDescription, String eventStartDate, String eventEndDate, Integer venueId, String venueName, String  venueAddress, String venueCity, Integer priceId, Integer eventPrice ) {
 	}
 	
@@ -33,7 +30,6 @@ public class EventDetails
 	private static void dbVenueDetails(int eventIdSelection) {
 		// TODO Auto-generated method stub
 		
-		ArrayList<EventDetails> event_details = new ArrayList<EventDetails>();
         
         String SQL = ("SELECT a.event_id,a.event_name,a.event_description,a.event_start_date,a.event_end_date,b.venue_id,c.venue_name,c.venue_address,c.city,d.price_id, d.price FROM events a inner JOIN events_x_venue_x_price b on a.event_id=b.event_id INNER JOIN venues c ON b.venue_id = c.venue_id INNER JOIN prices d ON b.price_id = d.price_id where a.event_id="+eventIdSelection+";");
         try {
@@ -89,7 +85,7 @@ public class EventDetails
 		
 		dbVenueDetails(eventIdSelection);
 		
-		launchpad.user_menu_events();
+		UserAccessControl.whichMenu();
 		
 	}
 

@@ -12,10 +12,25 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
+
 
 
 public class User {
+	
+	
+		public static void main(String[] args) {
+		// TODO Auto-generated method stub
+	
 		
+		}
+	
+	
+		private static Scanner sc = new Scanner(System.in);
+		
+		private Integer menu_cursor;
 		public static String session;
 		public Integer id;
 		public String UID;
@@ -28,12 +43,6 @@ public class User {
 
 
 		public static ArrayList<User> myuserlist = new ArrayList<User>();
-		
-		public static void main(String[] args) {
-			// TODO Auto-generated method stub
-		
-			
-		}
 		
 
 	    // User class constructor
@@ -217,7 +226,13 @@ public class User {
 	            while (rs.next()) 
 	            
 	            {
-	   
+
+	            	//this is important because for subsequent logins need to clear out the user and replace with new user.
+	            	try {
+	            	myuserlist.removeFirst();
+	            	}catch(Exception e)
+	            	{}
+	            	
 	            	myuser.setId(rs.getInt("user_id"));
 	            	myuser.setUID(rs.getString("uid"));
 		            myuser.setUsername(rs.getString("username"));
@@ -227,16 +242,7 @@ public class User {
 		            myuser.setLast_login(rs.getString("last_login"));
 		            myuser.setAcc_lock_ind(rs.getByte("acc_lock_ind"));
 		            
-		            /*
-		            System.out.println(myuser.getId());
-		            System.out.println(myuser.getUID());
-		            System.out.println(myuser.getUsername());
-		            System.out.println(myuser.getPassword());
-		            System.out.println(myuser.getUsr_role());
-		            System.out.println(myuser.getAdmin_flg());
-		            System.out.println(myuser.getLast_login());
-		            System.out.println(myuser.getAcc_lock_ind());
-		            */
+		          
 		          
 		            myuserlist.add(myuser);
 	            }
@@ -334,28 +340,156 @@ public class User {
 			sessionfile.delete();
 	    }
 	    	
-
-		private void show() 
-	    { 
-	    	System.out.println("sessionId = " + getSession()); 
-	    	System.out.println("id = " + getId()); 
-	        System.out.println("UID = " + getUID()); 
-	        System.out.println("username = " + getUsername()); 
-	        System.out.println("password = " + getPassword()); 
-	        System.out.println("role = " + getUsername()); 
-	        System.out.println("Admin Flag" + getAdmin_flg()); 
-	        System.out.println("Last Login = " + getLast_login()); 
-	        System.out.println("Account Locked = " + getAcc_lock_ind()); 
-	       
-	        
+	    
+	    public static Boolean checkUserRole() {
+	    	
+	    	try {
+	    	if(myuserlist.get(0).admin_flg==1) {
+	    		return true;
+	    	}else {
+	    		return false;
+	    	}}catch(Exception e){
+	    		return false;
+	    	}
+			
+	    	
+	    	
 	    }
 
+ 		
+		public void Menu() {
+		 
+	        
+	        
+	        while(true) {
+	        	
+	            try {
+	        
+				System.out.println("---------------------------");
+		        System.out.println("-Choose from the following options -");
+		        System.out.println("---------------------------\n");
+		        System.out.println("1 - Book Event");
+		        System.out.println("2 - View Event"); 
+		        System.out.println("3 - My Bookings"); 
+		        System.out.println("4 - Log Out");
+			
+		        setMenu_cursor(sc.nextInt());
+		        
+		       switch(getMenu_cursor()) {
+				  case 1:
+					  Bookings.bookEvent();
+				    break;
+				  case 2:
+					  Event.viewEvent();
+				    break;
+				  case 3:
+					  
+					  Event.myBooking();
+					break;
+				  case 4:
+					  clearSession();
+					  launchpad.menu();
+					break;
+				  default:
+					  System.out.println("Please select a valid option");
+				}
+			
+		}catch(InputMismatchException e) {
+			e.printStackTrace();
+			System.out.println("Please select a valid option");
+			sc.next();
+		}
+	        }
+		}
 
 
+		public Integer getMenu_cursor() {
+			return menu_cursor;
+		}
 
-	
-	    
-	   
-	    
+
+		public void setMenu_cursor(Integer menu_cursor) {
+			this.menu_cursor = menu_cursor;
+		}
+		
 	    
 }
+
+class Admin extends User {
+	Admin(String username, String password) {
+		super(username, password);
+		// TODO Auto-generated constructor stub
+	}
+	
+	private Scanner sc = new Scanner(System.in);
+	
+	private void ModifyUser() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void Menu() {
+				
+	        
+	        while(true) {
+	        	
+	        	 try {
+	        		 
+	        		 System.out.println("---------------------------");
+	     	        System.out.println("-Choose from the following options -");
+	     	        System.out.println("---------------------------\n");
+	     	        System.out.println("1 - Book Event");
+	     	        System.out.println("2 - View Event"); 
+	     	        System.out.println("3 - Create Event");
+	     	        System.out.println("4 - Modify Event");
+	     	        System.out.println("5 - Modify User");
+	     	        System.out.println("6 - Modify Booking");
+	     	        System.out.println("7 - Log Out");
+	      
+	        	
+	        setMenu_cursor(sc.nextInt());
+	        
+	        switch(getMenu_cursor()) {
+			  case 1:
+				  Bookings.bookEvent();
+			    break;
+			  case 2:
+				  Event.viewEvent();
+			    break;
+			  case 3:
+				  Event.createEvent();
+				break;
+			  case 4:
+				  Event.modifyEvent();
+				  break;
+			  case 5:
+				  ModifyUser();
+				  break;
+			  case 6:
+				  Bookings.modifyBooking();
+				  break;
+			  case 7:
+				  clearSession();
+				  launchpad.menu();
+				  break;
+			  default:
+				  System.out.println("Please select a valid option");
+			}
+	        
+	       }catch(InputMismatchException e) {
+	    	   e.printStackTrace();
+	    	   System.out.println("Please select a valid option");
+	    	   sc.next();
+	       }
+	       
+	   
+	        }
+	}
+		
+}
+
+	
+	
+
+

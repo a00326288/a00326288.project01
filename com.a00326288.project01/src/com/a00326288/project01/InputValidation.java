@@ -74,19 +74,19 @@ public class InputValidation {
 	 
 			switch(Validation) {
 			case TOOFEWCHAR:
-				  System.out.println("Your username has too few characters. Please try again or Type 'Quit' to finish.");
+				  System.out.println("Your password has too few characters. Please try again or Type 'Quit' to finish.");
 				  return 0;
 			case TOOMANYCHAR:
-				  System.out.println("Your username has too many characters. Please try again or Type 'Quit' to finish.");
+				  System.out.println("Your password has too many characters. Please try again or Type 'Quit' to finish.");
 				  return 0;
 			case CONTAINSWHITEPACE:
-				  System.out.println("Your username cannot contain white space. Please try again or Type 'Quit' to finish.");
+				  System.out.println("Your password cannot contain white space. Please try again or Type 'Quit' to finish.");
 				  return 0;
 			case NODIGIT:
-				  System.out.println("Your username doesn't contain any digits. Please try again or Type 'Quit' to finish.");
+				  System.out.println("Your password doesn't contain any digits. Please try again or Type 'Quit' to finish.");
 				  return 0;
 			case NOSPECIALCHAR:
-				  System.out.println("Your username doesn't contain any special characters. Please try again or Type 'Quit' to finish.");
+				  System.out.println("Your password doesn't contain any special characters. Please try again or Type 'Quit' to finish.");
 				  return 0;
 			case QUIT:
 				  return -1; 
@@ -99,6 +99,14 @@ public class InputValidation {
 		}catch(Exception e) {
 			return 0;
 		}
+		
+	}
+	
+	public boolean quit(String input) {
+		if(input=="Quit") {
+			return true;
+		}
+		return false;
 		
 	}
 	

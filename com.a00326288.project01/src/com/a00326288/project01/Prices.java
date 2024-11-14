@@ -4,11 +4,15 @@ import java.util.Objects;
 
 public class Prices {
 
-	private Integer priceId;
-	private Integer eventPrice;
+	public static Integer priceId;
+	public static Integer eventPrice;
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+	
+ 
+		Currency myc = new Currency(0, 0);
+		
 
 	}
 	
@@ -17,11 +21,8 @@ public class Prices {
 		this.priceId = priceId;
 		this.eventPrice = eventPrice;
 	}
-	
-	public Prices() {
-		// TODO Auto-generated constructor stub
-	}
 
+	
 	
 	
 	public Integer getPriceId() {
@@ -70,7 +71,33 @@ public class Prices {
 	@Override
 	public String toString() {
 		return "Prices [priceId=" + priceId + ", eventPrice=" + eventPrice + "]";
+		
 	}
- 
+
+	
+	
 
 }
+
+
+class Currency extends Prices{
+	public Currency(int i, int j) {
+		super(priceId, eventPrice);
+		// TODO Auto-generated constructor stub
+		this.euro();
+
+	}
+
+	void euro() {
+		System.out.println("In euro ");
+	}
+	
+	void gbp() {
+		System.out.println("The amount is $" );
+		
+	}
+	
+}
+
+
+

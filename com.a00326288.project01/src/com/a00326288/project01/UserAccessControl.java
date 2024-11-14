@@ -1,5 +1,6 @@
 package com.a00326288.project01;
 import java.io.Console;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 
@@ -83,13 +84,15 @@ public class UserAccessControl {
 					System.out.println("- Welcome Back - " + User.myuserlist.get(0).getUsername()+" -");
 					System.out.println("-----------------------------\n");
 					
+					Event.main(null);
+					
 			}else {
 					System.out.println("Invalid details or User does not Exists");
-			
+					launchpad.menu();
 			}
 			
 		
-			launchpad.menu();
+			
 			
 			
 		}catch(Exception e){
@@ -114,49 +117,65 @@ public class UserAccessControl {
 		// TODO Auto-generated method stub
 		System.out.println("Register");
 				
-		
-		
-		int flg = 0;
-		
-		while(flg==0) {
-			System.out.println("Enter a username:");
-			
-			username = sc.nextLine();	
-			
-		if(User.dbCheckUser(username)==true) 
-			{
-			System.out.println("Username " + username + " is already taken. Please try again.");
-			flg=0;
-			}
-			else{
-				System.out.println("Username "+ username + " is accepted.");
-				flg=1;
-			}
+		while(true) {
+			  try {
+				  System.out.println("Enter a username:");
+				  username = sc.nextLine();	
+				  if(User.dbCheckUser(username)==true) 
+					{
+					sc.next();
+					System.out.println("Username " + username + " is already taken. Please try again.");
+					}
+					else{
+						System.out.println("Username "+ username + " is accepted.");
+						break;
+					}
+			  }catch(Exception e) {
+				  e.printStackTrace();
+				  
+			  }
 		}
 	
 		
-		flg=0;
+		while(true) {
 		
-		
-		
-		while(flg==0) {
-			System.out.println("Enter a password:");
-			password = sc.nextLine();	
-			
-			if(InputValidation.validateInput(password)==1)
-			{
-				User.dbCreateUser(username, password);
-				flg=1;
-			}else
-			{
-				System.out.println("Please enter between 10 - 15 characters, comprising of 1 special char, 1 digit and no spaces.");
-			}
-			
+				System.out.println("Enter a password:");
+				password = sc.nextLine();
+		 
+				int flag = InputValidation.validateInput(password);
+				
+				if(flag==1)
+				{
+					User.dbCreateUser(username, password);
+					System.out.println("User registered. Please login.");
+					break;
+					
+				}else
+				if(flag==-1){
+					break;
+				}else
+				{
+					System.out.println("Please enter between 10 - 15 characters, comprising of 1 special char, 1 digit and no spaces.");
+					}
+				}
 		}
-		launchpad.main(null);		
-		}
-		
-		
+		launchpad.menu();
+	 
 	}
+		
+		
+ 
+
+	public static void whichMenu() {
+		// TODO Auto-generated method stub
+		if(User.myuserlist.get(0).getAdmin_flg()==1) {
+			Admin admin = new Admin(User.myuserlist.get(0).getUsername(),User.myuserlist.get(0).getPassword());
+			admin.Menu();
+		}else {
+			User.myuserlist.get(0).Menu();
+			
+		}
+	}
+	
 	
 }
