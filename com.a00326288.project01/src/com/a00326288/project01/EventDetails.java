@@ -12,135 +12,25 @@ import java.util.stream.Stream;
 
 public class EventDetails 
 {
-	
-	private Integer eventId;
-	private String eventName;
-	private String eventDescription;
-	private String eventStartDate;
-	private String eventEndDate;
-	private Integer venueId;
-	private String venueName;
-	private String venueAddress;
-	private String venueCity;
-	private Integer priceId;
-	private Integer eventPrice;
 
 	
 	private static Scanner sc = new Scanner(System.in);
 
 	
-	public EventDetails(){
-		super();
-		
-		Integer eventId;
-		String eventName;
-		String eventDescription;
-		String eventStartDate;
-		String eventEndDate;
-		Integer venueId;
-		String venueName;
-		String venueAddress;
-		String venueCity;
-		Integer priceId;
-		Integer price;
-		
+	record EventDetail(Integer eventId,String eventName, String eventDescription, String eventStartDate, String eventEndDate, Integer venueId, String venueName, String  venueAddress, String venueCity, Integer priceId, Integer eventPrice ) {
 	}
+	
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
+		
+		
 	}
 	
 	
-	public Integer getEventId() {
-		return eventId;
-	}
 
-	public void setEventId(Integer eventId) {
-		this.eventId = eventId;
-	}
-
-	public String getEventName() {
-		return eventName;
-	}
-
-	public void setEventName(String eventName) {
-		this.eventName = eventName;
-	}
-
-	public String getEventDescription() {
-		return eventDescription;
-	}
-
-	public void setEventDescription(String eventDescription) {
-		this.eventDescription = eventDescription;
-	}
-
-	public String getEventStartDate() {
-		return eventStartDate;
-	}
-
-	public void setEventStartDate(String eventStartDate) {
-		this.eventStartDate = eventStartDate;
-	}
-
-	public String getEventEndDate() {
-		return eventEndDate;
-	}
-
-	public void setEventEndDate(String eventEndDate) {
-		this.eventEndDate = eventEndDate;
-	}
-
-	public Integer getVenueId() {
-		return venueId;
-	}
-
-	public void setVenueId(Integer venueId) {
-		this.venueId = venueId;
-	}
-
-	public String getVenueName() {
-		return venueName;
-	}
-
-	public void setVenueName(String venueName) {
-		this.venueName = venueName;
-	}
-
-	public String getVenueAddress() {
-		return venueAddress;
-	}
-
-	public void setVenueAddress(String venueAddress) {
-		this.venueAddress = venueAddress;
-	}
-
-	public String getVenueCity() {
-		return venueCity;
-	}
-
-	public void setVenueCity(String venueCity) {
-		this.venueCity = venueCity;
-	}
-
-	public Integer getPriceId() {
-		return priceId;
-	}
-
-	public void setPriceId(Integer priceId) {
-		this.priceId = priceId;
-	}
-
-	public Integer getEventPrice() {
-		return eventPrice;
-	}
-
-	public void setEventPrice(Integer eventPrice) {
-		this.eventPrice = eventPrice;
-	}
-
-	private static ArrayList<EventDetails> dbVenueDetails(int eventIdSelection) {
+	private static void dbVenueDetails(int eventIdSelection) {
 		// TODO Auto-generated method stub
 		
 		ArrayList<EventDetails> event_details = new ArrayList<EventDetails>();
@@ -155,23 +45,32 @@ public class EventDetails
   		  	
   		  	while(rs.next())
   		  	{
-  		  	EventDetails venue = new EventDetails();   	
-
-  		  	venue.setEventId(rs.getInt("event_id"));
-  		  	venue.setEventName(rs.getString("event_name"));
-  		  	venue.setEventDescription(rs.getString("event_description"));
-  		    venue.setEventStartDate(rs.getString("event_start_date"));
-  		    venue.setEventEndDate(rs.getString("event_end_date"));
-  		  	venue.setVenueId(rs.getInt("venue_id"));
-  		  	venue.setVenueName(rs.getString("venue_name"));	            
-  		  	venue.setVenueAddress(rs.getString("venue_address"));
-  		  	venue.setVenueCity(rs.getString("city"));	
-  		  	venue.setPriceId(rs.getInt("price_id"));	
-  		  	venue.setEventPrice(rs.getInt("price"));	
+  		  
+  		  	EventDetail event = new EventDetail(rs.getInt("event_id"), rs.getString("event_name"), rs.getString("event_description"), rs.getString("event_start_date"), rs.getString("event_end_date"), rs.getInt("venue_id"), rs.getString("venue_name"), rs.getString("venue_address"), rs.getString("city"), rs.getInt("price_id"), rs.getInt("price"));
   		  	
-  		  	event_details.add(venue);
-  		
-  		  	System.out.println();
+  			System.out.println("-----------------------------");
+  	        System.out.println("- Event Details  -");
+  	        System.out.println("-----------------------------\n");
+
+			System.out.print("Event Name	:	");
+			System.out.println(event.eventName());
+			System.out.print("Event Description :	");
+			System.out.println(event.eventDescription());
+			System.out.print("Event Start Date :	");
+			System.out.println(event.eventStartDate());
+			System.out.print("Event Last Date :	");
+			System.out.println(event.eventEndDate());
+			System.out.print("Event Venue	:	");
+			System.out.println(event.venueName());
+			System.out.print("Venue Address	:	");
+			System.out.println(event.venueAddress());
+			System.out.print("Venue City	:	");
+			System.out.println(event.venueCity());
+			System.out.print("Venue Price	:	");
+			System.out.println(event.eventPrice());
+			System.out.println();
+  		  	
+  
   		  	}
   		  	connection.close();
           }
@@ -179,7 +78,6 @@ public class EventDetails
         {
           e.printStackTrace(System.err);
         }
-		return event_details;
 	}
 
 
@@ -189,39 +87,7 @@ public class EventDetails
 	public static void EventVenueDetails(int eventIdSelection) {
 		// TODO Auto-generated method stub
 		
-		
-		ArrayList<EventDetails> event_details = dbVenueDetails(eventIdSelection);
-
-		int i=0;
-		
-		System.out.println("-----------------------------");
-        System.out.println("- Event Details  -");
-        System.out.println("-----------------------------\n");
-		
-        
-		for(i=0;i<event_details.size();i++) {
-			
-			
-			System.out.print("Event Name	:	");
-			System.out.println(event_details.get(i).getEventName());
-			System.out.print("Event Description :	");
-			System.out.println(event_details.get(i).getEventDescription());
-			System.out.print("Event Start Date :	");
-			System.out.println(event_details.get(i).getEventStartDate());
-			System.out.print("Event Last Date :	");
-			System.out.println(event_details.get(i).getEventEndDate());
-			System.out.print("Event Venue	:	");
-			System.out.println(event_details.get(i).getVenueName());
-			System.out.print("Venue Address	:	");
-			System.out.println(event_details.get(i).getVenueAddress());
-			System.out.print("Venue City	:	");
-			System.out.println(event_details.get(i).getVenueCity());
-			System.out.print("Venue Price	:	");
-			System.out.println(event_details.get(i).getEventPrice());
-			System.out.println();
-			
-			
-		}
+		dbVenueDetails(eventIdSelection);
 		
 		launchpad.user_menu_events();
 		
