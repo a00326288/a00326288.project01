@@ -1,6 +1,11 @@
 package com.a00326288.project01;
 import java.io.Console;
-import java.util.InputMismatchException;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.Scanner;
 
 
@@ -12,14 +17,12 @@ public class UserAccessControl {
 	private static String username;
 	private static String password;
 	
-	
 	static Console cnsl = System.console();
 	static Scanner sc = new Scanner(System.in);
 
-
+	  
 	
 	public static void main(String[] args) {
-	
 		if (cnsl == null) {
 	         System.out.println("No console available");
 	         // exit(): Terminates the currently running Java Virtual Machine.
@@ -27,7 +30,8 @@ public class UserAccessControl {
 	         // a nonzero status code indicates abnormal termination.
 	         System.exit(0);
 	     }
-	
+		
+		
 
 		// Declaring an array of student
 
@@ -36,7 +40,7 @@ public class UserAccessControl {
 	
 	private static Boolean checkLoggedIn() {
 		
-		if(User.readSession()!=null) {
+		if(readSession()!=null) {
 			return false;
 		}else {
 			
@@ -84,7 +88,7 @@ public class UserAccessControl {
 					System.out.println("- Welcome Back - " + User.myuserlist.get(0).getUsername()+" -");
 					System.out.println("-----------------------------\n");
 					
-					Event.main(null);
+					whichMenu();
 					
 			}else {
 					System.out.println("Invalid details or User does not Exists");
@@ -108,6 +112,7 @@ public class UserAccessControl {
 
 	public static void Register() {
 		
+		
 			
 		if(checkLoggedIn()==false) {
 			System.out.println("You are already logged in.");	
@@ -120,11 +125,10 @@ public class UserAccessControl {
 		while(true) {
 			  try {
 				  System.out.println("Enter a username:");
-				  username = sc.nextLine();	
+				  username = sc.next();	
 				  if(User.dbCheckUser(username)==true) 
 					{
-					sc.next();
-					System.out.println("Username " + username + " is already taken. Please try again.");
+						System.out.println("Username " + username + " is already taken. Please try again.");
 					}
 					else{
 						System.out.println("Username "+ username + " is accepted.");
@@ -140,7 +144,7 @@ public class UserAccessControl {
 		while(true) {
 		
 				System.out.println("Enter a password:");
-				password = sc.nextLine();
+				password = sc.next();
 		 
 				int flag = InputValidation.validateInput(password);
 				
@@ -162,6 +166,13 @@ public class UserAccessControl {
 		launchpad.menu();
 	 
 	}
+	
+	
+	public static void Logout() {
+		clearSession();
+		launchpad.menu();
+		
+	}
 		
 		
  
@@ -176,6 +187,48 @@ public class UserAccessControl {
 			
 		}
 	}
+	
+	public static String readSession() {
+    	
+    	try {
+    		FileReader fileReader = new FileReader("session.txt");
+    		fileReader.close();
+    		return fileReader.toString();
+    		
+    	} catch (IOException e) {
+    		// TODO Auto-generated catch block
+    		return null;
+    	}
+    	
+    }
+    
+    public static void writeSession() {
+		// TODO Auto-generated method stub
+    	
+    	PrintWriter writer;
+		try {
+			writer = new PrintWriter("session.txt", "UTF-8");
+			
+			writer.println(User.myuserlist.get(0).getSession());
+	    	writer.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+
+    
+	}
+    	    
+
+    public static void clearSession() {
+    	
+    	File sessionfile = new File("session.txt");
+		sessionfile.delete();
+    }
 	
 	
 }

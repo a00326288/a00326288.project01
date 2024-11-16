@@ -21,7 +21,7 @@ public class Event {
 	
 	public static void main(String[] args) {	
 		sc.useDelimiter("\r?\n");
-		displayEvents();
+	 
 		
 		
 		
@@ -135,7 +135,6 @@ public class Event {
         }
 		System.out.println();
 		
-		UserAccessControl.whichMenu();
 	}
 	
 		
@@ -210,13 +209,14 @@ public class Event {
 		EventDetails.EventVenueDetails(selection);
 		
 	}
+ 
 
-	public static void myBooking() {
+	public static void modifyEvent() {
 		// TODO Auto-generated method stub
 		
 	}
 
-	public static void modifyEvent() {
+	public static void deleteEvent() {
 		// TODO Auto-generated method stub
 		
 	}

@@ -11,20 +11,15 @@ public class launchpad  {
 	private static Scanner sc = new Scanner(System.in);
 	
 	public static void main(String[] args) {
-		
-		User.clearSession();
+		sc.useDelimiter("\r?\n");
+		UserAccessControl.clearSession();
 		menu();
-	
 		
 	}
- 
+	
+	
 	
 	public static void menu() {
-
-        int selection = 0;
-        
-        
-        
         
         while(true) {
         	
@@ -38,15 +33,16 @@ public class launchpad  {
             System.out.println("2 - Register");
             System.out.println("3 - Quit");
         	
-            	selection = sc.nextInt();
+            int setCursor =sc.nextInt();
           
-            	switch(selection) {
+            switch(setCursor) {
       		  case 1:
       			  UserAccessControl.Login();
       		    break;
       		  case 2:
       			  UserAccessControl.Register(); 
-      		  case 3: 
+      		  case 3:
+      			  System.out.println("Goodbye");
       			  break;
       		  default:
             	System.out.println("Please select a valid option");

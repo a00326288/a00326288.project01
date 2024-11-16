@@ -5,11 +5,15 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.InputMismatchException;
 import java.util.Objects;
+import java.util.Scanner;
 
 import com.a00326288.project01.EventDetails.EventDetail;
 
 public class Venue {
+	
+	private static Scanner sc = new Scanner(System.in);
 
 	public Venue() {
 		// TODO Auto-generated constructor stub
@@ -23,7 +27,7 @@ public class Venue {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-
+		sc.useDelimiter("\r?\n");
 	}
 
 	
@@ -137,6 +141,132 @@ public class Venue {
 	          e.printStackTrace(System.err);
 	        }
 		}
+
+
+
+	public static void createVenue() {
+		// TODO Auto-generated method stub
+		
+		System.out.println("Input the name of the Venue:");
+		String venueName = sc.next();
+		
+		System.out.println("Input the address of the Venue:");
+		String venueAddress=sc.next();
+		
+		System.out.println("Input the city of the Venue:");
+		String venueCity = sc.next();
+
+	
+		dbVenue(venueName,venueAddress,venueCity);
+		
+	}
+
+	private static void dbVenue(String venueName,String venueAddress, String venueCity) {
+		
+		String SQL = ("INSERT INTO venues (venue_name, venue_address, city) VALUES ('"+venueName+"','"+venueAddress+"','"+venueCity+"';");
+        try {
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+  		  	Statement statement = connection.createStatement();
+            statement.executeUpdate(SQL);
+            connection.close();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }   
+		
+	}
+	
+	private static Venue dbVenue(int venueId) {
+		
+		Venue venue = new Venue();
+		
+		String SQL = ("SELECT venue_id, venue_name, venue_address, city FROM venues WHERE venue_id = "+venueId+";");
+        try {
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+  		  	Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery(SQL);
+            statement.setQueryTimeout(30); 
+            while (rs.next()) 
+            
+            {
+            	
+            	
+            	
+            	venue.setVenueId(rs.getInt("venue_id"));
+            	venue.setVenueName(rs.getString("venue_name"));
+            	venue.setVenueAddress(rs.getString("venue_name"));
+            	venue.setVenueCity(rs.getString("venue_address"));
+ 
+            }
+            
+            statement.closeOnCompletion();
+            connection.close();
+            
+            
+            
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+		return venue;   
+        
+        
+		
+	}
+	
+	private static void dbVenue() {
+		
+		String SQL = ("SELECT * FROM venues;");
+        try {
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+  		  	Statement statement = connection.createStatement();
+  		  	ResultSet rs = statement.executeQuery(SQL);
+  		  	statement.setQueryTimeout(30); 
+  		  	while (rs.next()) 
+          
+  		  	{
+          	
+          	Venue venue = new Venue();
+          	
+          	venue.setVenueId(rs.getInt("venue_id"));
+          	venue.setVenueName(rs.getString("venue_name"));
+          	venue.setVenueAddress(rs.getString("venue_name"));
+          	venue.setVenueCity(rs.getString("venue_address"));
+
+  		  	}
+          
+  		  	statement.closeOnCompletion();
+  		  	connection.close();          
+            
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }   
+		
+	}
+
+	public static void viewVenue() {
+		// TODO Auto-generated method stub
+		
+		int venueSelection = sc.nextInt();
+		System.out.println(dbVenue(venueSelection).toString());
+  
+		
+	}
+
+
+
+	public static void modifyVenue() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	public static void deleteVenue() {
+		// TODO Auto-generated method stub
+		
+	}
 	
  
 	

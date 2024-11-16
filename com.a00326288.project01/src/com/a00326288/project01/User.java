@@ -23,7 +23,7 @@ public class User {
 	
 		public static void main(String[] args) {
 		// TODO Auto-generated method stub
-	
+			 
 		
 		}
 	
@@ -258,7 +258,7 @@ public class User {
 	        if(myuser.getId()!=null) {
 	       	
 	        	myuser.setSession(encode(myuser.getId(),myuser.getUID(),myuser.getUsername(),myuser.getPassword(),myuser.getUsername(),myuser.getAdmin_flg(),myuser.getLast_login(),myuser.getAcc_lock_ind()));
-	        	writeSession();
+	        	UserAccessControl.writeSession();
 	        	return true;
 	        	
 	        }else 
@@ -298,47 +298,7 @@ public class User {
 	    }
 	    
 	    
-	    public static String readSession() {
-	    	
-	    	try {
-	    		FileReader fileReader = new FileReader("session.txt");
-	    		fileReader.close();
-	    		return fileReader.toString();
-	    		
-	    	} catch (IOException e) {
-	    		// TODO Auto-generated catch block
-	    		return null;
-	    	}
-	    	
-	    }
 	    
-	    private static void writeSession() {
-			// TODO Auto-generated method stub
-	    	
-	    	PrintWriter writer;
-			try {
-				writer = new PrintWriter("session.txt", "UTF-8");
-				
-				writer.println(session);
-		    	writer.close();
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	    	
-
-	    
-		}
-	    	    
-
-	    public static void clearSession() {
-	    	
-	    	File sessionfile = new File("session.txt");
-			sessionfile.delete();
-	    }
 	    	
 	    
 	    public static Boolean checkUserRole() {
@@ -359,7 +319,7 @@ public class User {
  		
 		public void Menu() {
 		 
-	        
+			Event.displayEvents();
 	        
 	        while(true) {
 	        	
@@ -377,18 +337,16 @@ public class User {
 		        
 		       switch(getMenu_cursor()) {
 				  case 1:
-					  Bookings.bookEvent();
+					  Booking.createBooking();
 				    break;
 				  case 2:
 					  Event.viewEvent();
 				    break;
 				  case 3:
-					  
-					  Event.myBooking();
+					  Booking.viewBooking();
 					break;
 				  case 4:
-					  clearSession();
-					  launchpad.menu();
+					  UserAccessControl.Logout();
 					break;
 				  default:
 					  System.out.println("Please select a valid option");
@@ -411,6 +369,33 @@ public class User {
 		public void setMenu_cursor(Integer menu_cursor) {
 			this.menu_cursor = menu_cursor;
 		}
+
+
+		public static void createUserProfile() {
+			// TODO Auto-generated method stub
+			
+		}
+
+
+		public static void viewUserProfile() {
+			// TODO Auto-generated method stub
+			
+		}
+
+
+		public static void modifyUserProfile() {
+			// TODO Auto-generated method stub
+			
+		}
+
+
+		public static void deleteUserProfile() {
+			// TODO Auto-generated method stub
+			
+		}
+
+
+	
 		
 	    
 }
@@ -430,51 +415,184 @@ class Admin extends User {
 	
 	@Override
 	public void Menu() {
+		
+		Event.displayEvents();
+		
+		System.out.println("---------------------------");
+ 	    System.out.println("-Choose from the following options -");
+ 	    System.out.println("---------------------------\n");
+ 	    System.out.println("1 - Manage Events");
+ 	    System.out.println("2 - Manage Bookings");
+ 	    System.out.println("3 - Manage Venues"); 
+ 	    System.out.println("4 - Manage Users"); 
+ 	    System.out.println("5 - Log Out");
+		
+		while(true) {
+			try {     
+	        	
+	     	    setMenu_cursor(sc.nextInt());
+	     	    switch(getMenu_cursor()) {  
+	     	    	case 1:
+	     	    		System.out.println("---------------------------");
+	     	    		System.out.println("-Choose from the following options -");
+	     	    		System.out.println("---------------------------\n");
+	     	    		System.out.println("1 - Add Event");
+	     	    		System.out.println("2 - View Event");
+	     	    		System.out.println("3 - Modify Event");
+	     	    		System.out.println("4 - Delete Event");
+	     	    		System.out.println("5 - Main Menu");
+	     	    		System.out.println("6 - Log Out");
+				  
+	     	    		setMenu_cursor(sc.nextInt());
+	     	    		switch(getMenu_cursor()) {
+	     	    			case 1:
+	     	    				System.out.println("Add Event");
+	     	    				Event.createEvent();
+	     	    			case 2:
+	     	    				System.out.println("View Event");
+	     	    				Event.viewEvent();
+	     	    				break;
+	     	    			case 3:
+	     	    				System.out.println("Modify Event");
+	     	    				Event.modifyEvent();
+	     	    				break;
+	     	    			case 4:
+	     	    				System.out.println("Delete Event");
+	     	    				Event.deleteEvent();
+	     	    				break;
+	     	    			case 5:
+	     	    				Menu();
+	     	    				break;
+	     	    			case 6:
+	     	    				UserAccessControl.Logout();
+	     	    				break;
+	     	    			}
+	     	    		
+	     	    		break;
+	     	    	case 2:
+		
+	     	    		System.out.println("---------------------------");
+	     	    		System.out.println("-Choose from the following options -");
+	     	    		System.out.println("---------------------------\n");
+	     	    		System.out.println("1 - Make a Booking");
+	     	    		System.out.println("2 - View a Booking");
+	     	    		System.out.println("3 - Modify a Booking");
+	     	    		System.out.println("4 - Cancel a Booking");
+	     	    		System.out.println("5 - Main Menu");
+	     	    		System.out.println("6 - Log Out");
+	     	      
+	     	    		setMenu_cursor(sc.nextInt());
+	     	    		switch(getMenu_cursor()) {
+	     	    			case 1:
+	     	    				System.out.println("Make a Booking");
+	     	    				Booking.createBooking();
+	     	    				break;
+	     	    			case 2:
+	     	    				System.out.println("View a Booking");
+	     	    				Booking.createBooking();
+	     	    				break;
+	     	    			case 3:
+	     	    				System.out.println("Modify a Booking");
+	     	    				Booking.modifyBooking();
+	     	    				break;
+	     	    			case 4:
+	     	    				System.out.println("Cancel a Booking");
+	     	    				Booking.cancelBooking();
+	     	    				break;
+	     	    			case 5:
+	     	    				Menu();
+	     	    				break;
+	     	    			case 6:
+	     	    				UserAccessControl.Logout();
+	     	    				break;
+	     	    			}
+				  
+ 
+	     	    		break;
+	     	    	case 3:
 				
-	        
-	        while(true) {
-	        	
-	        	 try {
-	        		 
-	        		 System.out.println("---------------------------");
-	     	        System.out.println("-Choose from the following options -");
-	     	        System.out.println("---------------------------\n");
-	     	        System.out.println("1 - Book Event");
-	     	        System.out.println("2 - View Event"); 
-	     	        System.out.println("3 - Create Event");
-	     	        System.out.println("4 - Modify Event");
-	     	        System.out.println("5 - Modify User");
-	     	        System.out.println("6 - Modify Booking");
-	     	        System.out.println("7 - Log Out");
-	      
-	        	
-	        setMenu_cursor(sc.nextInt());
-	        
-	        switch(getMenu_cursor()) {
-			  case 1:
-				  Bookings.bookEvent();
-			    break;
-			  case 2:
-				  Event.viewEvent();
-			    break;
-			  case 3:
-				  Event.createEvent();
-				break;
-			  case 4:
-				  Event.modifyEvent();
-				  break;
-			  case 5:
-				  ModifyUser();
-				  break;
-			  case 6:
-				  Bookings.modifyBooking();
-				  break;
-			  case 7:
-				  clearSession();
-				  launchpad.menu();
-				  break;
-			  default:
-				  System.out.println("Please select a valid option");
+	     	    		System.out.println("---------------------------");
+	     	    		System.out.println("-Choose from the following options -");
+	     	    		System.out.println("---------------------------\n");
+	     	    		System.out.println("1 - Add a Venue");
+	     	    		System.out.println("2 - View a Venue");
+	     	    		System.out.println("3 - Modify a Venue");
+	     	    		System.out.println("4 - Remove a Venue");
+	     	    		System.out.println("5 - Main Menu");
+	     	    		System.out.println("6 - Log Out");
+	     	      
+	     	    		setMenu_cursor(sc.nextInt());
+	     	    		switch(getMenu_cursor()) {
+	     	    			case 1:
+	     	    				System.out.println("Add a Venue");
+	     	    				Venue.createVenue();
+	     	    				break;
+	     	    			case 2:
+	     	    				System.out.println("View a Venue");
+	     	    				Venue.viewVenue();
+	     	    				break;
+	     	    			case 3:
+	     	    				System.out.println("Modify a Venue");
+	     	    				Venue.modifyVenue();
+	     	    				break;
+	     	    			case 4:
+	     	    				System.out.println("Remove a Venue");
+	     	    				Venue.deleteVenue();
+	     	    				break;
+	     	    			case 5:
+	     	    				Menu();
+	     	    				break;
+	     	    			case 6:
+	     	    				UserAccessControl.Logout();
+	     	    				break;
+	     	    			}
+	     	       
+	     	    		break;
+	     	    	case 4:
+				  
+	     	    		System.out.println("---------------------------");
+	     	    		System.out.println("-Choose from the following options -");
+	     	    		System.out.println("---------------------------\n");
+	     	    		System.out.println("1 - Create a User Profile");
+	     	    		System.out.println("2 - View a User Profile");
+	     	    		System.out.println("3 - Modify a User Profile");
+	     	    		System.out.println("4 - Delete a User Profile");
+	     	    		System.out.println("5 - Main Menu");
+	     	    		System.out.println("6 - Log Out");
+	     	      
+	     	    		setMenu_cursor(sc.nextInt());
+	     	    		switch(getMenu_cursor()) {
+	     	    			case 1:
+	     	    				System.out.println("Create a User Profile");
+	     	    				User.createUserProfile();
+	     	    				break;
+	     	    			case 2:
+	     	    				System.out.println("View a User Profile");
+	     	    				User.viewUserProfile();
+	     	    				break;
+	     	    			case 3:
+	     	    				System.out.println("Modify a User Profile");
+	     	    				User.modifyUserProfile();
+	     	    				break;
+	     	    			case 4:
+	     	    				System.out.println("Delete a User Profile");
+	     	    				User.deleteUserProfile();
+	     	    				break;
+	     	    			case 5:
+	     	    				Menu();
+	     	    				break;
+	     	    			case 6:
+	     	    				UserAccessControl.Logout();
+	     	    				break;
+	     	    			}
+	     	    		break;
+	     	    	case 5:
+	     	    		UserAccessControl.clearSession();
+	     	    		launchpad.menu();
+	     	    		break;
+	     	    	default:
+	     	    		System.out.println("Please select a valid option");
+	     	    		break;
 			}
 	        
 	       }catch(InputMismatchException e) {
@@ -482,9 +600,7 @@ class Admin extends User {
 	    	   System.out.println("Please select a valid option");
 	    	   sc.next();
 	       }
-	       
-	   
-	        }
+		}
 	}
 		
 }
