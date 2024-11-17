@@ -6,7 +6,6 @@ import java.util.Scanner;
  
 
 public class launchpad  {
-
 	
 	private static Scanner sc = new Scanner(System.in);
 	
@@ -16,6 +15,7 @@ public class launchpad  {
 		menu();
 		
 	}
+
 	
 	
 	
@@ -33,9 +33,11 @@ public class launchpad  {
             System.out.println("2 - Register");
             System.out.println("3 - Quit");
         	
-            int setCursor =sc.nextInt();
+            
+            
+            Integer cursor = sc.nextInt();
           
-            switch(setCursor) {
+            switch(cursor) {
       		  case 1:
       			  UserAccessControl.Login();
       		    break;

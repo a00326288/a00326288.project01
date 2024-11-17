@@ -1,22 +1,27 @@
 package com.a00326288.project01;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.InputMismatchException;
+import java.util.HashMap;
+
 import java.util.Objects;
 import java.util.Scanner;
 
-import com.a00326288.project01.EventDetails.EventDetail;
+enum modify {venue_name,venue_desc,venue_city}
+
 
 public class Venue {
 	
 	private static Scanner sc = new Scanner(System.in);
 
+	
+	
+	
 	public Venue() {
 		// TODO Auto-generated constructor stub
+		
 	}
 	
 	private Integer venueId;
@@ -27,7 +32,9 @@ public class Venue {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		sc.useDelimiter("\r?\n");
+		
+	
+		
 	}
 
 	
@@ -73,6 +80,8 @@ public class Venue {
 		this.venueCity = venueCity;
 	}
 	
+	
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(venueAddress, venueCity, venueId, venueName);
@@ -113,23 +122,12 @@ public class Venue {
 	  		  	while(rs.next())
 	  		  	{
 	  		  
-	   
 	  		  	Venue venue = new Venue(rs.getInt("venue_id"), rs.getString("venue_name"), rs.getString("venue_address"), rs.getString("city"));
-	  		  	
-	  			System.out.println("-----------------------------");
-	  	        System.out.println("- Event Details  -");
-	  	        System.out.println("-----------------------------\n");
-
-				System.out.print("Venue Id	:	");
-				System.out.println(venue.getVenueId());
-				System.out.print("Venue Name:	");
-				System.out.println(venue.getVenueName());
-				System.out.print("Venue Address :	");
-				System.out.println(venue.getVenueAddress());
-				System.out.print("Venue City:	");
-				System.out.println(venue.getVenueCity());
-	 
- 
+	  	        System.out.println("Venue ID: " +venue.getVenueId());
+	  	        System.out.println("Venue Name: "+venue.getVenueName());
+	  	        System.out.println("Venue Address: " +venue.getVenueAddress());
+	  	        System.out.println("Venue City: "+venue.getVenueCity());
+				
 				System.out.println();
 	  		  	
 	  
@@ -157,11 +155,11 @@ public class Venue {
 		String venueCity = sc.next();
 
 	
-		dbVenue(venueName,venueAddress,venueCity);
+		dbCreateVenue(venueName,venueAddress,venueCity);
 		
 	}
 
-	private static void dbVenue(String venueName,String venueAddress, String venueCity) {
+	private static void dbCreateVenue(String venueName,String venueAddress, String venueCity) {
 		
 		String SQL = ("INSERT INTO venues (venue_name, venue_address, city) VALUES ('"+venueName+"','"+venueAddress+"','"+venueCity+"';");
         try {
@@ -194,8 +192,8 @@ public class Venue {
             	
             	venue.setVenueId(rs.getInt("venue_id"));
             	venue.setVenueName(rs.getString("venue_name"));
-            	venue.setVenueAddress(rs.getString("venue_name"));
-            	venue.setVenueCity(rs.getString("venue_address"));
+            	venue.setVenueAddress(rs.getString("venue_address"));
+            	venue.setVenueCity(rs.getString("city"));
  
             }
             
@@ -230,8 +228,8 @@ public class Venue {
           	
           	venue.setVenueId(rs.getInt("venue_id"));
           	venue.setVenueName(rs.getString("venue_name"));
-          	venue.setVenueAddress(rs.getString("venue_name"));
-          	venue.setVenueCity(rs.getString("venue_address"));
+          	venue.setVenueAddress(rs.getString("venue_address"));
+          	venue.setVenueCity(rs.getString("city"));
 
   		  	}
           
@@ -254,10 +252,81 @@ public class Venue {
 		
 	}
 
+	
+	
 
 
 	public static void modifyVenue() {
 		// TODO Auto-generated method stub
+		
+		sc.useDelimiter("\r?\n");
+		
+		getVenues();
+		
+		
+		System.out.println("Enter the venue ID to Modify: ");
+		
+		int venueSelection = sc.nextInt();
+		 
+		Venue venue = dbVenue(venueSelection);
+		
+		
+		
+		System.out.println("Venue ID: " + venue.getVenueId());
+		System.out.println("Venue Name: "+ venue.getVenueName());
+		System.out.println("Venue Address: "+venue.getVenueAddress());
+		System.out.println("Venue City: "+ venue.getVenueCity());
+		
+		System.out.println();
+		
+		HashMap<Integer, String> venuesmap = new HashMap<>();
+		venuesmap.put(1, "Venue Name");
+		venuesmap.put(2, "Venue Address");
+		venuesmap.put(3, "Venue City");
+		
+		HashMap<Integer, String> venuesmapUpdate = new HashMap<>();
+		venuesmapUpdate.put(1, venue.getVenueName());
+		venuesmapUpdate.put(2, venue.getVenueAddress());
+		venuesmapUpdate.put(3, venue.getVenueCity());
+		
+		System.out.println("Which property do you want to modify?");
+		
+		
+		for(int i=1;i<=venuesmap.size();i++) {
+			System.out.println(i+". " + venuesmap.get(i));
+			
+		}
+		
+		int cursor = sc.nextInt();
+		
+		System.out.println("Please enter new value for "+venuesmap.get(cursor)+":");
+		
+		String newval = sc.next();
+		
+		venuesmapUpdate.put(cursor, newval);
+		
+		dbUpdateVenue(venuesmapUpdate,venueSelection);
+		
+		
+		
+
+	}
+
+	private static void dbUpdateVenue(HashMap<Integer, String> venuesmap_update,Integer venueSelection) {
+		// TODO Auto-generated method stub
+		
+		String SQL = ("UPDATE venues SET venue_name ='"+venuesmap_update.get(1)
+				+ "', venue_address='"+venuesmap_update.get(2)+"', city='"+venuesmap_update.get(3)+"' WHERE venue_id="+venueSelection+";");
+        try {
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+  		  	Statement statement = connection.createStatement();
+            statement.executeUpdate(SQL);
+            connection.close();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } 
+		
 		
 	}
 
