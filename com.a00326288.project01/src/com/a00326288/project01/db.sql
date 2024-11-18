@@ -9,8 +9,7 @@ username VARCHAR(50),
 password VARCHAR(100),
 usr_role varchar(50),
 admin_flg smallint,
-last_login date,
-acc_lock_ind smallint
+last_login date
 );
 
 insert into uam (uid,username,password,usr_role,admin_flg,last_login,acc_lock_ind) VALUES ('am1jbGF1Z2hpbmZvcm1hdGljYTIwMTkh','jmclaugh','aW5mb3JtYXRpY2EyMDE5IQ==','admin',1,DATE(),0);
@@ -98,11 +97,4 @@ price integer
 )
 
 
-
-INSERT INTO prices values(2,150)
-
-
-SELECT * FROM events;
-SELECT * FROM venues;
-SELECT * FROM prices;
-
+ 

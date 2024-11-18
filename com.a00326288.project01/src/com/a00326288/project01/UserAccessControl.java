@@ -103,7 +103,26 @@ public class UserAccessControl {
 	
 	}
 
-
+	
+	public static Boolean validateUsername(String username) {
+			  
+		try {
+			if(User.dbCheckUser(username)==true) 
+			{
+			System.out.println("Username " + username + " is already taken. Please try again.");
+			return true;
+			}
+			else{
+				System.out.println("Username "+ username + " is accepted.");
+				return false;
+				}
+			  }catch(Exception e){
+				  
+			  }
+		return null;
+		
+	}
+	
 	public static void Register() {
 		
 		
@@ -112,24 +131,22 @@ public class UserAccessControl {
 		// TODO Auto-generated method stub
 		System.out.println("Register");
 				
+		
+		
+		
 		while(true) {
 			  try {
 				  System.out.println("Enter a username:");
-				  username = sc.next();	
-				  if(User.dbCheckUser(username)==true) 
-					{
-						System.out.println("Username " + username + " is already taken. Please try again.");
-					}
-					else{
-						System.out.println("Username "+ username + " is accepted.");
-						break;
-					}
+				  if(validateUsername(sc.next())==false) {;	
+				  break;
+				  }
 			  }catch(Exception e) {
 				  e.printStackTrace();
 				  
 			  }
+			  
+			  
 		}
-	
 		
 		while(true) {
 		
@@ -186,12 +203,12 @@ public class UserAccessControl {
 		// TODO Auto-generated method stub
 		
 			
-			if(User.userlist.get(0).getAdmin_flg()==1) {
+			if(User.userlist.get(0).getAdmin_flg()==true) {
 				
 				Admin admin = new Admin(User.userlist.get(0).getUsername(), User.userlist.get(0).getPassword());
 				admin.Menu();
 				
-			}if(User.userlist.get(0).getAdmin_flg()==0)
+			}if(User.userlist.get(0).getAdmin_flg()==false)
 			{
 				User.userlist.get(0).Menu();
 								
@@ -228,7 +245,7 @@ public class UserAccessControl {
     }
 
 
-	public static void writeSession(String session, Integer admin_flg) {
+	public static void writeSession(String session) {
 		// TODO Auto-generated method stub
 		
 		PrintWriter writer;

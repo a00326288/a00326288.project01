@@ -1,10 +1,4 @@
 package com.a00326288.project01;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -14,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.InputMismatchException;
-import java.util.List;
 import java.util.Scanner;
 
 
@@ -27,7 +20,7 @@ public class User {
 		// TODO Auto-generated method stub
 			
 		}
-	
+		
 		public static ArrayList<User> userlist = new ArrayList<User>();
 		
 		private static Scanner sc = new Scanner(System.in);
@@ -38,24 +31,22 @@ public class User {
 		public String UID;
 		public String username;
 		private String password;
-		public String usr_role;
-		public Integer admin_flg;
+		public Boolean admin_flg;
 		public String last_login;
-		public Integer acc_lock_ind;
+ 
 		
 
 	    // User class constructor
 	    public User(String username, String password )
 	    {
-	    	this.session = null;
+	    	User.session = null;
 	    	this.id = null;
 	        this.UID = encode(username,password);
 	        this.username = username; 
-	        this.password = encode(password);
-	        this.usr_role = null;
+	        this.password = null;
 	        this.admin_flg = null;
 	        this.last_login = null;
-	        this.acc_lock_ind = null;
+ 
 	        
 	    }
 	    
@@ -70,7 +61,7 @@ public class User {
 
 
 		public void setSession(String session) {
-			this.session = session;
+			User.session = session;
 		}
 
 
@@ -112,24 +103,14 @@ public class User {
 		public void setPassword(String password) {
 			this.password = password;
 		}
+ 
 
-
-		public String getUsr_role() {
-			return usr_role;
-		}
-
-
-		public void setUsr_role(String usr_role) {
-			this.usr_role = usr_role;
-		}
-
-
-		public Integer getAdmin_flg() {
+		public Boolean getAdmin_flg() {
 			return admin_flg;
 		}
 
 
-		public void setAdmin_flg(Integer admin_flg) {
+		public void setAdmin_flg(Boolean admin_flg) {
 			this.admin_flg = admin_flg;
 		}
 
@@ -143,16 +124,7 @@ public class User {
 			this.last_login = last_login;
 		}
 
-
-		public Integer getAcc_lock_ind() {
-			return acc_lock_ind;
-		}
-
-
-		public void setAcc_lock_ind(Integer acc_lock_ind) {
-			this.acc_lock_ind = acc_lock_ind;
-		}
-
+ 
 	
 	    
 	    // Encoding the Password and creating a Unique User ID from Username and Password
@@ -171,8 +143,8 @@ public class User {
 			return hashString;
 		}
 		
-		private static String encode(Integer id, String UID, String username, String password, String role,Integer admin_flg, String last_login,Integer acc_lock_ind) {
-			String Input = id.toString()+UID+username+password+role+admin_flg.toString()+last_login+acc_lock_ind.toString();
+		private static String encode(Integer id, String UID, String username, String password, String role,Boolean admin_flg, String last_login) {
+			String Input = id.toString()+UID+username+password+role+admin_flg.toString()+last_login;
 			String hashString = Base64.getEncoder().encodeToString(Input.getBytes());
 			return hashString;
 		}
@@ -212,6 +184,42 @@ public class User {
 			
 		}
 		
+		public static User dbCheckUser(Integer id) {
+			
+			String SQL = ("SELECT * FROM uam where user_id='"+id+"';");
+
+			User user = new User(null, null);
+			
+			try {
+	        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+	  		  	Statement statement = connection.createStatement();
+	            ResultSet rs = statement.executeQuery(SQL);
+	            statement.setQueryTimeout(30); 
+	            while (rs.next()) 
+	            
+	            {
+	            	user.setId(rs.getInt("user_id"));
+	            	user.setUID(rs.getString("uid"));
+	            	user.setUsername(rs.getString("username"));
+	            	user.setPassword(rs.getString("password"));
+	            	user.setAdmin_flg(rs.getBoolean("admin_flg"));
+	            	user.setLast_login(rs.getString("last_login"));
+	            	
+	            	
+	            }
+	            
+	            statement.closeOnCompletion();
+	            connection.close();
+	              
+	        } catch (SQLException e) {
+	            // TODO Auto-generated catch block
+	            e.printStackTrace();
+	        }
+			return user;
+			
+			
+		}
+		
 	    public static String dbCheckUser(String username,String password) {
 	
 	    	User user = new User(username, password);
@@ -232,13 +240,8 @@ public class User {
 	            	user.setUID(rs.getString("uid"));
 		            user.setUsername(rs.getString("username"));
 		            user.setPassword(rs.getString("password"));
-		            user.setUsr_role(rs.getString("usr_role"));	
-		            user.setAdmin_flg(rs.getInt("admin_flg"));
+		            user.setAdmin_flg(rs.getBoolean("admin_flg"));
 		            user.setLast_login(rs.getString("last_login"));
-		            user.setAcc_lock_ind(rs.getInt("acc_lock_ind"));
-		            
-		            
-		            
 		            
 		            userlist.add(user);
 		            
@@ -258,8 +261,8 @@ public class User {
 	        
 	        if(user.getId()!=null) {
 	       	
-	        	user.setSession(encode(user.getId(),user.getUID(),user.getUsername(),user.getPassword(),user.getUsername(),user.getAdmin_flg(),user.getLast_login(),user.getAcc_lock_ind()));
-	        	UserAccessControl.writeSession(user.getSession(),user.getAdmin_flg());
+	        	user.setSession(encode(user.getId(),user.getUID(),user.getUsername(),user.getPassword(),user.getUsername(),user.getAdmin_flg(),user.getLast_login()));
+	        	UserAccessControl.writeSession(user.getSession());
 	        	return username;
 	        	
 	        }else 
@@ -269,6 +272,8 @@ public class User {
 	       
 	    }
 	    
+	    
+	    
 	    public static void dbCreateUser(String username, String password) {
 	    	
 	    	
@@ -276,13 +281,12 @@ public class User {
 	    	
 	    	user.setUID(encode(username,password));
 	    	user.setPassword(encode(password));
-	    	user.setUsr_role("user");
-	    	user.setAdmin_flg(0);
+	    	user.setAdmin_flg(false);
 	    	user.setLast_login("01/01/2020");
-	    	user.setAcc_lock_ind(0);
-	    	 
-	    	
-	        String SQL = ("INSERT INTO uam (uid,username,password,usr_role,admin_flg,last_login,acc_lock_ind) VALUES ('"+user.getUID()+"','"+username+"','"+user.getPassword()+"','"+user.getUsr_role()+"',"+user.getAdmin_flg()+",'"+user.getLast_login()+"',"+user.getAcc_lock_ind()+");");
+	 
+
+	        String SQL = ("INSERT INTO uam (uid,username,password,last_login,admin_flg) VALUES ('"+user.getUID()+"','"+user.getUsername()+"','"+user.getPassword()+"','"+user.getLast_login()+"',"+user.getAdmin_flg()+");");
+	        
 	        try {
 	        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
 	  		  	Statement statement = connection.createStatement();
@@ -300,24 +304,6 @@ public class User {
 	    }
 	    
 	    
-	    
-	    	
-	    
-	    public static Boolean checkUserRole(User user) {
-	    	
-	    	try {
-	    	if(user.getAdmin_flg()==1) {
-	    		return true;
-	    	}else {
-	    		return false;
-	    	}}catch(Exception e){
-	    		return false;
-	    	}
-			
-	    	
-	    	
-	    }
-
  		
 		public void Menu() {
 		 
@@ -371,29 +357,9 @@ public class User {
 			this.menu_cursor = menu_cursor;
 		}
 
-
-		public static void createUserProfile() {
-			// TODO Auto-generated method stub
-			
-		}
+ 
 
 
-		public static void viewUserProfile() {
-			// TODO Auto-generated method stub
-			
-		}
-
-
-		public static void modifyUserProfile() {
-			// TODO Auto-generated method stub
-			
-		}
-
-
-		public static void deleteUserProfile() {
-			// TODO Auto-generated method stub
-			
-		}
 
 
 	
@@ -406,17 +372,227 @@ class Admin extends User {
 		super(username, password);
 		// TODO Auto-generated constructor stub
 	}
+	
+	
 			
+	private static ArrayList<User> allusers = new ArrayList<User>();
+	private static Scanner sc = new Scanner(System.in);
 	
-	private Scanner sc = new Scanner(System.in);
+
+	private static String isAdmin(Boolean AdminFlg) {
+		if(AdminFlg==true) {
+			return "Admin";
+		}else{
+			return "User";
+		}	
+	}
 	
-	private void ModifyUser() {
+	private static void viewUserProfile() {
 		// TODO Auto-generated method stub
 		
+		displayUsers();
+		
+		UserAccessControl.returnMain();
+	}
+	
+	public static void displayUsers() {
+		// TODO Auto-generated method stub
+		
+		StringBuilder str = new StringBuilder();
+		
+		for(int i = 0;i < getUsers().size();i++) {
+			
+			str.setLength(0);
+			
+			str.append(isAdmin(getUsers().get(i).getAdmin_flg()));
+			
+			System.out.println("User ID: "+getUsers().get(i).getId());
+			System.out.println("User Name: "+getUsers().get(i).getUsername());
+			System.out.println("User Role: " + str);
+			System.out.println("User Last Login: "+getUsers().get(i).getLast_login());
+			
+		}
+		
+		
+ 
 	}
 	
 	
+	private static ArrayList<User> getUsers() {
+		// TODO Auto-generated method stub
+    	 String SQL = ("SELECT * FROM uam;");
+	        try {
+	        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+	  		  	Statement statement = connection.createStatement();
+	            ResultSet rs = statement.executeQuery(SQL);
+	            statement.setQueryTimeout(30); 
+	            
+	            allusers.clear();
+	            
+	            while (rs.next()) 
+	            {
+	            	User user = new User(rs.getString("username"), rs.getString("password"));
+	            	
+	            	
+	            	
+	            	user.setId(rs.getInt("user_id"));
+	            	user.setUID(rs.getString("uid"));
+	            	user.setUsername(rs.getString("username"));
+	            	user.setPassword(rs.getString("password"));
+	            	user.setAdmin_flg(rs.getBoolean("admin_flg"));
+	            	user.setLast_login(rs.getString("last_login"));
+ 
+		            
+	            	allusers.add(user);
+		            
+		          
+		         
+	            }
+	            
+	            statement.closeOnCompletion();
+	            connection.close();
+	        	
+	        } catch (SQLException e) {
+	            // TODO Auto-generated catch block
+	            e.printStackTrace();
+	        }
+			return allusers;
+	        
+	}
 	
+	private static void modifyUserProfile() {
+		// TODO Auto-generated method stub
+		
+		displayUsers();
+		
+		sc.useDelimiter("\r?\n");
+		
+		
+		System.out.println("Enter the User ID to modify: ");
+		
+		int userSelection = sc.nextInt();
+		 
+		User user= dbCheckUser(userSelection);
+		
+		
+		System.out.println("Username: "+ user.getUsername());
+		System.out.println("User Role: "+ isAdmin(user.getAdmin_flg()).toString());
+		
+		System.out.println();
+		
+		HashMap<Integer, String> usermap = new HashMap<>();
+		usermap.put(1, "Username");
+		usermap.put(2, "User Role");
+ 
+		HashMap<Integer, String> usermapUpdate = new HashMap<>();
+		usermapUpdate.put(1, user.getUsername());
+		usermapUpdate.put(2, isAdmin(user.getAdmin_flg()).toString());
+ 
+		System.out.println("Which property do you want to modify?");
+		
+		
+		for(int i=1;i<=usermap.size();i++) {
+			System.out.println(i+". " + usermap.get(i));
+			
+		}
+		
+		int cursor = sc.nextInt();
+		
+		System.out.println("Please enter new value for "+usermap.get(cursor)+":");
+		
+		
+		String newval = null;
+		Boolean mybool;
+		switch(cursor) {
+			case 1:
+				while(true) {
+					  try {
+						  if(UserAccessControl.validateUsername(newval)==false) {
+							  usermapUpdate.put(cursor, newval);
+						  break;
+						  }
+					  }catch(Exception e) {
+						  e.printStackTrace();
+						  
+					  }
+					  
+				  
+					}
+				break;
+			case 2:
+				mybool=sc.nextBoolean();
+				usermapUpdate.put(cursor, mybool.toString());
+				break;
+			default:
+				break;
+		}
+
+
+		dbUpdateUser(usermapUpdate,userSelection);
+		
+		System.out.println("Update Complete! Press enter to return to Main Menu.");
+		
+		UserAccessControl.returnMain();
+		
+	}
+
+
+	private static void dbUpdateUser(HashMap<Integer, String> usermapUpdate, int userSelection) {
+		// TODO Auto-generated method stub
+		
+		String SQL = ("UPDATE uam SET username ='"+usermapUpdate.get(1)
+		+ "', admin_flg='"+ Boolean.parseBoolean(usermapUpdate.get(2))+"' WHERE user_id="+userSelection+";");
+		try {
+			Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+			Statement statement = connection.createStatement();
+			statement.executeUpdate(SQL);
+			connection.close();
+		} 
+		catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 		
+	}
+
+	private static void deleteUserProfile() {
+		// TODO Auto-generated method stub
+		
+		displayUsers();
+
+		System.out.println("Enter the User ID to delete: ");
+		
+		int userSelection = sc.nextInt();
+		
+		dbDeleteUser(userSelection);
+		
+		
+		System.out.println("Delete Complete! Press enter to return to Main Menu.");
+		UserAccessControl.returnMain();
+		
+		
+		
+	}
+	
+	private static void dbDeleteUser(int userSelection) {
+		// TODO Auto-generated method stub
+		
+
+		String SQL = ("DELETE FROM uam WHERE user_id="+userSelection+";");
+        try {
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+  		  	Statement statement = connection.createStatement();
+            statement.executeUpdate(SQL);
+            connection.close();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } 
+		
+		
+	}
+
+
+
 	@Override
 	public void Menu() {
 		
@@ -548,10 +724,10 @@ class Admin extends User {
 	     	    		System.out.println("---------------------------");
 	     	    		System.out.println("-Choose from the following options -");
 	     	    		System.out.println("---------------------------\n");
-	     	    		System.out.println("1 - Create a User Profile");
-	     	    		System.out.println("2 - View a User Profile");
-	     	    		System.out.println("3 - Modify a User Profile");
-	     	    		System.out.println("4 - Delete a User Profile");
+	     	    		System.out.println("1 - Create a User");
+	     	    		System.out.println("2 - View Users");
+	     	    		System.out.println("3 - Modify a User");
+	     	    		System.out.println("4 - Delete a User");
 	     	    		System.out.println("5 - Main Menu");
 	     	    		System.out.println("6 - Log Out");
 	     	      
@@ -561,13 +737,13 @@ class Admin extends User {
 	     	    				UserAccessControl.Register();
 	     	    				break;
 	     	    			case 2:
-	     	    				User.viewUserProfile();
+	     	    				Admin.viewUserProfile();
 	     	    				break;
 	     	    			case 3:
-	     	    				User.modifyUserProfile();
+	     	    				Admin.modifyUserProfile();
 	     	    				break;
 	     	    			case 4:
-	     	    				User.deleteUserProfile();
+	     	    				Admin.deleteUserProfile();
 	     	    				break;
 	     	    			case 5:
 	     	    				Menu();
@@ -578,8 +754,7 @@ class Admin extends User {
 	     	    			}
 	     	    		break;
 	     	    	case 5:
-	     	    		UserAccessControl.clearSession();
-	     	    		launchpad.menu();
+	     	    		UserAccessControl.Logout();
 	     	    		break;
 	     	    	default:
 	     	    		System.out.println("Please select a valid option");
@@ -593,6 +768,10 @@ class Admin extends User {
 	       }
 		}
 	}
+
+
+
+	
 		
 }
 
