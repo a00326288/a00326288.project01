@@ -664,7 +664,7 @@ class Admin extends User {
 	     	    				break;
 	     	    			case 2:
 	     	    				System.out.println("View a Booking");
-	     	    				Booking.createBooking();
+	     	    				Booking.viewBooking();
 	     	    				break;
 	     	    			case 3:
 	     	    				System.out.println("Modify a Booking");

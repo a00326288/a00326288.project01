@@ -109,7 +109,7 @@ public class Venue {
 	}
 	
 	
-	public static void getVenues() {
+	public static void dbGetVenues() {
 		
 	        String SQL = ("SELECT * from venues;");
 	        try {
@@ -250,7 +250,7 @@ public class Venue {
 		// TODO Auto-generated method stub
 		
 		 
-		getVenues();
+		dbGetVenues();
 		System.out.println("Venues Returned! Press enter to return to Main Menu.");
 		UserAccessControl.returnMain();
   
@@ -266,7 +266,7 @@ public class Venue {
 		
 		sc.useDelimiter("\r?\n");
 		
-		getVenues();
+		dbGetVenues();
 		
 		
 		System.out.println("Enter the venue ID to Modify: ");
@@ -345,7 +345,7 @@ public class Venue {
 	public static void deleteVenue() {
 		// TODO Auto-generated method stub
 		
-		getVenues();
+		dbGetVenues();
 
 		System.out.println("Enter the venue ID to delete: ");
 		

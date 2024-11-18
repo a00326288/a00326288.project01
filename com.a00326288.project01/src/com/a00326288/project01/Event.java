@@ -1,12 +1,17 @@
 package com.a00326288.project01;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 
 public class Event {
@@ -21,10 +26,9 @@ public class Event {
 	private static Scanner sc = new Scanner(System.in);
 	
 	public static void main(String[] args) {		
-		
-		
-	}
 	
+	}
+ 
 	public Event(int eventId, String eventName, String eventDescription, String eventStartDate, String eventEndDate) {
 		this.eventId = eventId;
 		this.eventName = eventName;
@@ -32,12 +36,9 @@ public class Event {
 		this.eventStartDate =  eventStartDate;
 		this.eventEndDate = eventEndDate;
 		
-		
-	}
-	
+	}	
+ 
 
-	
-	
 	public Integer getEventId() {
 		return eventId;
 	}
@@ -103,7 +104,7 @@ public class Event {
 		
 		
 		System.out.println("-----------------------------");
-        System.out.println("- Current Event Listings -");
+        System.out.println("- Event Listings -");
         System.out.println("-----------------------------\n");
         
         String SQL = ("SELECT * FROM events;");
@@ -174,8 +175,8 @@ public class Event {
 		return event;
 		
 	}
+ 
 	
-		
 	
 	public static void createEvent() {
 		
@@ -193,7 +194,7 @@ public class Event {
 		System.out.println("Enter a date for whenever the event finishes:");
 		String eventEndDate=sc.next();
 
-		Venue.getVenues();
+		Venue.dbGetVenues();
 		
 		System.out.println("Specify a venue:");
 		
@@ -217,6 +218,7 @@ public class Event {
 		//Prices price = new Prices(price, venueId);
 		
 		dbCreateEvent(event);
+		dbAddEventDates(event.eventStartDate,event.eventEndDate);
 		
 		System.out.println("Event Created! Press enter to return to Main Menu.");
 		
@@ -224,10 +226,22 @@ public class Event {
 		
 	}
 	
+	private static void dbAddEventDates(String eventStartDate, String eventEndDate) {
+		// TODO Auto-generated method stub
+			
+		
+		
+		List<LocalDate> datelist = new List();
+		
+	    eventStartDate.datesUntil(eventEndDate).collect(Collectors.toList());
+	
+	
+	}
+
 	private static void dbCreateEvent(Event event) {
 		
-		String SQL = ("INSERT INTO events (event_name, event_description, event_start_date, event_end_date) VALUES ('"+event.getEventName()+"','"+event.getEventDescription()+"','"+event.getEventStartDate()+"','"+event.getEventEndDate()+"');");
-        try {
+		String SQL = ("INSERT INTO events (event_name, event_description, event_start_date, event_end_date) VALUES ('"+event.getEventName()+"','"+event.getEventDescription()+"',"+event.getEventStartDate()+","+event.getEventEndDate()+");");
+		try {
         	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
   		  	Statement statement = connection.createStatement();
             statement.executeUpdate(SQL);
