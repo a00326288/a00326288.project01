@@ -38,7 +38,7 @@ public class UserAccessControl {
 	}
 
 	
-	private static Boolean checkLoggedIn() {
+	public static Boolean checkLoggedIn() {
 		
 		if(readSession()!=null) {
 			return false;
@@ -76,16 +76,13 @@ public class UserAccessControl {
 			
 			password = String.valueOf(consolePass);
 			
+			String user= User.dbCheckUser(username,password); 
 			
-		
 			
-			
-			if(User.dbCheckUser(username,password)==true) {
-			
-				
+			if(user!=null) {
 			
 					System.out.println("-----------------------------");
-					System.out.println("- Welcome Back - " + User.myuserlist.get(0).getUsername()+" -");
+					System.out.println("- Welcome Back - " + user + " -");
 					System.out.println("-----------------------------\n");
 					
 					whichMenu();
@@ -94,9 +91,6 @@ public class UserAccessControl {
 					System.out.println("Invalid details or User does not Exists");
 					launchpad.menu();
 			}
-			
-		
-			
 			
 			
 		}catch(Exception e){
@@ -114,11 +108,7 @@ public class UserAccessControl {
 		
 		
 			
-		if(checkLoggedIn()==false) {
-			System.out.println("You are already logged in.");	
-			launchpad.menu();
-		}else
-		{    
+
 		// TODO Auto-generated method stub
 		System.out.println("Register");
 				
@@ -162,15 +152,30 @@ public class UserAccessControl {
 					System.out.println("Please enter between 10 - 15 characters, comprising of 1 special char, 1 digit and no spaces.");
 					}
 				}
+		
+		try {
+		
+		if(checkLoggedIn()!=false&&User.userlist.get(0).getId()!=null) {
+			launchpad.menu();
+		}else {
+			whichMenu();
 		}
-		launchpad.menu();
-	 
+		}catch(Exception e) {
+			launchpad.menu();
+		}
+		
 	}
 	
 	
 	public static void Logout() {
-		clearSession();
-		launchpad.menu();
+		
+		try{
+			User.userlist.clear();
+			clearSession();
+		}catch(Exception e) {
+		}
+		
+		whichMenu();
 		
 	}
 		
@@ -179,14 +184,26 @@ public class UserAccessControl {
 
 	public static void whichMenu() {
 		// TODO Auto-generated method stub
-		if(User.myuserlist.get(0).getAdmin_flg()==1) {
-			Admin admin = new Admin(User.myuserlist.get(0).getUsername(),User.myuserlist.get(0).getPassword());
-			admin.Menu();
-		}else {
-			User.myuserlist.get(0).Menu();
+		
 			
-		}
+			if(User.userlist.get(0).getAdmin_flg()==1) {
+				
+				Admin admin = new Admin(User.userlist.get(0).getUsername(), User.userlist.get(0).getPassword());
+				admin.Menu();
+				
+			}if(User.userlist.get(0).getAdmin_flg()==0)
+			{
+				User.userlist.get(0).Menu();
+								
+			}else {
+				launchpad.menu();
+			
+			}
+	
 	}
+	
+
+	
 	
 	public static String readSession() {
     	
@@ -201,27 +218,7 @@ public class UserAccessControl {
     	}
     	
     }
-    
-    public static void writeSession() {
-		// TODO Auto-generated method stub
-    	
-    	PrintWriter writer;
-		try {
-			writer = new PrintWriter("session.txt", "UTF-8");
-			
-			writer.println(User.myuserlist.get(0).getSession());
-	    	writer.close();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    	
-
-    
-	}
+	
     	    
 
     public static void clearSession() {
@@ -229,6 +226,36 @@ public class UserAccessControl {
     	File sessionfile = new File("session.txt");
 		sessionfile.delete();
     }
-	
+
+
+	public static void writeSession(String session, Integer admin_flg) {
+		// TODO Auto-generated method stub
+		
+		PrintWriter writer;
+		try {
+			writer = new PrintWriter("session.txt", "UTF-8");
+			writer.println(session);
+	    	writer.close();
+
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+
+	public static void returnMain() {
+		// TODO Auto-generated method stub
+		
+		System.out.println("Please hit enter to return.");
+		sc.nextLine();
+		whichMenu();
+		
+		
+	}
 	
 }

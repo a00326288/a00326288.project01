@@ -157,6 +157,9 @@ public class Venue {
 	
 		dbCreateVenue(venueName,venueAddress,venueCity);
 		
+		System.out.println("Venue Created! Press enter to return to Main Menu.");
+		UserAccessControl.returnMain();
+		
 	}
 
 	private static void dbCreateVenue(String venueName,String venueAddress, String venueCity) {
@@ -243,11 +246,13 @@ public class Venue {
 		
 	}
 
-	public static void viewVenue() {
+	public static void viewVenues() {
 		// TODO Auto-generated method stub
 		
-		int venueSelection = sc.nextInt();
-		System.out.println(dbVenue(venueSelection).toString());
+		 
+		getVenues();
+		System.out.println("Venues Returned! Press enter to return to Main Menu.");
+		UserAccessControl.returnMain();
   
 		
 	}
@@ -307,16 +312,21 @@ public class Venue {
 		
 		dbUpdateVenue(venuesmapUpdate,venueSelection);
 		
+		System.out.println("Update Complete! Press enter to return to Main Menu.");
+		
+		UserAccessControl.returnMain();
+		
+		
 		
 		
 
 	}
 
-	private static void dbUpdateVenue(HashMap<Integer, String> venuesmap_update,Integer venueSelection) {
+	private static void dbUpdateVenue(HashMap<Integer, String> venuesmapUpdate,Integer venueSelection) {
 		// TODO Auto-generated method stub
 		
-		String SQL = ("UPDATE venues SET venue_name ='"+venuesmap_update.get(1)
-				+ "', venue_address='"+venuesmap_update.get(2)+"', city='"+venuesmap_update.get(3)+"' WHERE venue_id="+venueSelection+";");
+		String SQL = ("UPDATE venues SET venue_name ='"+venuesmapUpdate.get(1)
+				+ "', venue_address='"+venuesmapUpdate.get(2)+"', city='"+venuesmapUpdate.get(3)+"' WHERE venue_id="+venueSelection+";");
         try {
         	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
   		  	Statement statement = connection.createStatement();
@@ -334,6 +344,35 @@ public class Venue {
 
 	public static void deleteVenue() {
 		// TODO Auto-generated method stub
+		
+		getVenues();
+
+		System.out.println("Enter the venue ID to delete: ");
+		
+		int venueSelection = sc.nextInt();
+		
+		dbDeleteVenue(venueSelection);
+		
+		
+		System.out.println("Delete Complete! Press enter to return to Main Menu.");
+		UserAccessControl.returnMain();
+		
+	}
+	
+	private static void dbDeleteVenue(Integer venueSelection) {
+		// TODO Auto-generated method stub
+		
+		String SQL = ("DELETE FROM venues WHERE venue_id="+venueSelection+";");
+        try {
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+  		  	Statement statement = connection.createStatement();
+            statement.executeUpdate(SQL);
+            connection.close();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } 
+		
 		
 	}
 	

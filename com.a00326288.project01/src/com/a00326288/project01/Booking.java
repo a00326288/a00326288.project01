@@ -118,6 +118,9 @@ public class Booking {
 
 	public static void createBooking() {
 		// TODO Auto-generated method stub
+		Booking mybooking = new Booking();
+		
+		
 		
 	}
 

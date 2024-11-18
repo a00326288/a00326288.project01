@@ -42,20 +42,29 @@ public class launchpad  {
       			  UserAccessControl.Login();
       		    break;
       		  case 2:
+      			if(UserAccessControl.checkLoggedIn()==false) {
+      				System.out.println("You are already logged in.");	
+      				launchpad.menu();
+      			}else
+      			{    
       			  UserAccessControl.Register(); 
+      			}
       		  case 3:
       			  System.out.println("Goodbye");
       			  break;
       		  default:
             	System.out.println("Please select a valid option");
+            	break;
             }
-        break;
+            
         }catch(InputMismatchException e){
         	e.printStackTrace();
         	System.out.println("Please select a valid option");
         	sc.next();
         }
-        	
+        
+        
+        break;	
         }
         
         
