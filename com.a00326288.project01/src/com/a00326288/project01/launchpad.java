@@ -11,8 +11,7 @@ public class launchpad  {
 	
 	public static void main(String[] args) {
 		sc.useDelimiter("\r?\n");
-		UserAccessControl.clearSession();
-		menu();
+		UserAccessControl.Logout();
 		
 	}
 

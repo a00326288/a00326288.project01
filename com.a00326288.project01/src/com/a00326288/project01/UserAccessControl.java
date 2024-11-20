@@ -131,13 +131,14 @@ public class UserAccessControl {
 		// TODO Auto-generated method stub
 		System.out.println("Register");
 				
-		
+		String regUsername ="";
 		
 		
 		while(true) {
 			  try {
 				  System.out.println("Enter a username:");
-				  if(validateUsername(sc.next())==false) {;	
+				  regUsername = sc.next();
+				  if(validateUsername(regUsername)==false) {;	
 				  break;
 				  }
 			  }catch(Exception e) {
@@ -157,7 +158,7 @@ public class UserAccessControl {
 				
 				if(flag==1)
 				{
-					User.dbCreateUser(username, password);
+					User.dbCreateUser(regUsername, password);
 					System.out.println("User registered. Please login.");
 					break;
 					
@@ -202,7 +203,7 @@ public class UserAccessControl {
 	public static void whichMenu() {
 		// TODO Auto-generated method stub
 		
-			
+			try {
 			if(User.userlist.get(0).getAdmin_flg()==true) {
 				
 				Admin admin = new Admin(User.userlist.get(0).getUsername(), User.userlist.get(0).getPassword());
@@ -215,6 +216,10 @@ public class UserAccessControl {
 			}else {
 				launchpad.menu();
 			
+			}
+			}catch(Exception e) {
+				launchpad.menu();
+				
 			}
 	
 	}

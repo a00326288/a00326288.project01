@@ -304,7 +304,17 @@ public class User {
 	    }
 	    
 	    
+		private Integer getMenu_cursor() {
+			return menu_cursor;
+		}
+
+
+		private void setMenu_cursor(Integer menu_cursor) {
+			this.menu_cursor = menu_cursor;
+		}
  		
+	    
+	    
 		public void Menu() {
 		 
 	        
@@ -348,26 +358,14 @@ public class User {
 		}
 
 
-		public Integer getMenu_cursor() {
-			return menu_cursor;
-		}
-
-
-		public void setMenu_cursor(Integer menu_cursor) {
-			this.menu_cursor = menu_cursor;
-		}
-
- 
-
-
-
-
-	
-		
+	 
 	    
 }
 
 class Admin extends User {
+	private Integer menu_cursor;
+
+
 	Admin(String username, String password) {
 		super(username, password);
 		// TODO Auto-generated constructor stub
@@ -590,8 +588,16 @@ class Admin extends User {
 		
 		
 	}
+	
+	
+	private Integer getMenu_cursor() {
+		return menu_cursor;
+	}
 
 
+	private void setMenu_cursor(Integer menu_cursor) {
+		this.menu_cursor = menu_cursor;
+	}
 
 	@Override
 	public void Menu() {

@@ -19,22 +19,23 @@ public class Event {
 	private Integer eventId;
 	private String eventName;
 	private String eventDescription;
-	private String eventStartDate;
-	private String eventEndDate;
+	private String eventStartDateAndTime;
+	private String eventEndDateAndTime;
 	
 	
 	private static Scanner sc = new Scanner(System.in);
+
 	
 	public static void main(String[] args) {		
 	
 	}
  
-	public Event(int eventId, String eventName, String eventDescription, String eventStartDate, String eventEndDate) {
+	public Event(int eventId, String eventName, String eventDescription, String eventStartDateAndTime, String eventEndDateAndTime) {
 		this.eventId = eventId;
 		this.eventName = eventName;
 		this.eventDescription = eventDescription;
-		this.eventStartDate =  eventStartDate;
-		this.eventEndDate = eventEndDate;
+		this.eventStartDateAndTime =  eventStartDateAndTime;
+		this.eventEndDateAndTime = eventEndDateAndTime;
 		
 	}	
  
@@ -75,26 +76,26 @@ public class Event {
 
 
 
-	public String getEventStartDate() {
-		return eventStartDate;
+	public String getEventStartDateAndTime() {
+		return eventStartDateAndTime;
 	}
 
 
 
-	public void setEventStartDate(String eventStartDate) {
-		this.eventStartDate = eventStartDate;
+	public void setEventStartDate(String eventStartDateAndTime) {
+		this.eventStartDateAndTime = eventStartDateAndTime;
 	}
 
 
 
-	public String getEventEndDate() {
-		return eventEndDate;
+	public String getEventEndDateAndTime() {
+		return eventEndDateAndTime;
 	}
 
 
 
-	public void setEventEndDate(String eventEndDate) {
-		this.eventEndDate = eventEndDate;
+	public void setEventEndDateAndTime(String eventEndDateAndTime) {
+		this.eventEndDateAndTime = eventEndDateAndTime;
 	}
 
 
@@ -122,7 +123,7 @@ public class Event {
   		  		
   		  		Event event = new Event(rs.getInt("event_id"),rs.getString("event_name"),rs.getString("event_description"),rs.getString("event_start_date"),rs.getString("event_end_date"));
   		  		
-  		  		System.out.format("%-10s %-40s %8s %21s\n",event.getEventId(),event.getEventName(),event.getEventStartDate(),event.getEventEndDate());
+  		  		System.out.format("%-10s %-40s %8s %21s\n",event.getEventId(),event.getEventName(),event.getEventStartDateAndTime(),event.getEventEndDateAndTime());
   		  	}
   		  	
             connection.close();
@@ -157,10 +158,10 @@ public class Event {
   		  		event.setEventId(rs.getInt("event_id"));
   		  		event.setEventName(rs.getString("event_name"));
   		  		event.setEventStartDate(rs.getString("event_start_date"));
-  		  		event.setEventEndDate(rs.getString("event_end_date"));
+  		  		event.setEventEndDateAndTime(rs.getString("event_end_date"));
  
 	  		
-  		  		System.out.format("%-10s %-40s %8s %21s\n",event.getEventId(),event.getEventName(),event.getEventStartDate(),event.getEventEndDate());
+  		  		System.out.format("%-10s %-40s %8s %21s\n",event.getEventId(),event.getEventName(),event.getEventStartDateAndTime(),event.getEventEndDateAndTime());
   		  	}
   		  	
             connection.close();
@@ -188,12 +189,16 @@ public class Event {
 		System.out.println("Input a description of the Event:");
 		String eventDescription=sc.next();
 		
-		System.out.println("Enter a date whenever the event starts:");
+		System.out.println("Enter a date for the event:");
 		String eventStartDate = sc.next();
 
-		System.out.println("Enter a date for whenever the event finishes:");
+		System.out.println("Enter a time for the event:");
 		String eventEndDate=sc.next();
 
+
+
+		
+		
 		Venue.dbGetVenues();
 		
 		System.out.println("Specify a venue:");
@@ -218,29 +223,19 @@ public class Event {
 		//Prices price = new Prices(price, venueId);
 		
 		dbCreateEvent(event);
-		dbAddEventDates(event.eventStartDate,event.eventEndDate);
-		
+		 
 		System.out.println("Event Created! Press enter to return to Main Menu.");
 		
 		UserAccessControl.whichMenu();
 		
 	}
 	
-	private static void dbAddEventDates(String eventStartDate, String eventEndDate) {
-		// TODO Auto-generated method stub
-			
-		
-		
-		List<LocalDate> datelist = new List();
-		
-	    eventStartDate.datesUntil(eventEndDate).collect(Collectors.toList());
-	
-	
-	}
+
+
 
 	private static void dbCreateEvent(Event event) {
 		
-		String SQL = ("INSERT INTO events (event_name, event_description, event_start_date, event_end_date) VALUES ('"+event.getEventName()+"','"+event.getEventDescription()+"',"+event.getEventStartDate()+","+event.getEventEndDate()+");");
+		String SQL = ("INSERT INTO events (event_name, event_description, event_start_date, event_end_date) VALUES ('"+event.getEventName()+"','"+event.getEventDescription()+"',"+event.getEventStartDateAndTime()+","+event.getEventEndDateAndTime()+");");
 		try {
         	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
   		  	Statement statement = connection.createStatement();
@@ -280,8 +275,8 @@ public class Event {
 		
 		System.out.println("Venue ID: " + event.getEventId());
 		System.out.println("Venue Name: "+ event.getEventName());
-		System.out.println("Venue Address: "+event.getEventStartDate());
-		System.out.println("Venue City: "+ event.getEventEndDate());
+		System.out.println("Venue Address: "+event.getEventStartDateAndTime());
+		System.out.println("Venue City: "+ event.getEventEndDateAndTime());
 		
 		System.out.println();
 		
@@ -294,8 +289,8 @@ public class Event {
 		HashMap<Integer, String> eventmapUpdate = new HashMap<>();
 		eventmapUpdate.put(1, event.getEventName());
 		eventmapUpdate.put(2, event.getEventDescription());
-		eventmapUpdate.put(3, event.getEventStartDate());
-		eventmapUpdate.put(4, event.getEventEndDate());
+		eventmapUpdate.put(3, event.getEventStartDateAndTime());
+		eventmapUpdate.put(4, event.getEventEndDateAndTime());
 		
 		System.out.println("Which property do you want to modify?");
 		
