@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 
@@ -16,24 +17,27 @@ public class Event {
 	private Integer eventId;
 	public String eventName;
 	public String eventDescription;
- 
-	
+	private String event_date;
+	private String venue_name;
+	private Integer price;
 	
 	private static Scanner sc = new Scanner(System.in);
-
+	private static ArrayList<Event> eventList = new ArrayList<Event>();
+	
 	
 	public static void main(String[] args) {		
 	
 	}
  
-	public Event(int eventId, String eventName, String eventDescription) {
+	public Event(int eventId, String eventName, String eventDescription, String event_date, String venue_name, Integer price) {
 		this.eventId = eventId;
 		this.eventName = eventName;
 		this.eventDescription = eventDescription;
-	 
-	}	
- 
-
+		this.event_date=null;
+		this.venue_name = null;
+		this.price = 0;
+	}
+	
 	protected Integer getEventId() {
 		return eventId;
 	}
@@ -72,11 +76,6 @@ public class Event {
 	public static void dbGetEvents() {
 		// TODO Auto-generated method stub
 		
-		
-		System.out.println("-----------------------------");
-        System.out.println("- Event Listings -");
-        System.out.println("-----------------------------\n");
-        
         String SQL = ("SELECT * FROM events;");
         try {
         	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
@@ -90,7 +89,7 @@ public class Event {
   		  	while(rs.next())
   		  	{
   		  		
-  		  		Event event = new Event(rs.getInt("event_id"),rs.getString("event_name"),rs.getString("event_description"));
+  		  		Event event = new Event(rs.getInt("event_id"),rs.getString("event_name"),rs.getString("event_description"), null, null,null);
   		  		
   		  		System.out.format("%-10s %-40s %21s\n",event.getEventId(),event.getEventName(),event.getEventDescription());
   		  	}
@@ -106,10 +105,43 @@ public class Event {
 	}
 	
 	
+	public static void dbGetEventDates(Integer selection) {
+		// TODO Auto-generated method stub
+		 
+		
+		
+        String SQL = ("SELECT a.event_id, a.event_name, b.event_date,c.venue_name, d.price  FROM events a left join dates b on a.event_id = b.event_id left join venues c on b.venue_id = c.venue_id left join prices d on b.price_id = d.price_id where a.event_id="+selection+";");
+        try {
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+  		  	Statement statement = connection.createStatement();
+  		    statement.setQueryTimeout(30); 
+  		  	ResultSet rs = statement.executeQuery(SQL);
+  		  	
+  		  	
+  		  	while(rs.next())
+  		  	{
+  		  		
+  		  		Event event = new Event(rs.getInt("event_id"),rs.getString("event_name"),null, rs.getString("event_date"),rs.getString("venue_name"),rs.getInt("price"));
+  		  		eventList.add(event);
+  		  		
+  		  	}
+  		  	
+  		  
+  		  	
+            connection.close();
+          }
+        catch(SQLException e)
+        {
+          e.printStackTrace(System.err);
+        }
+		System.out.println();
+		
+	}
+	
 	public static Event dbGetEvent(Integer eventId) {
 		// TODO Auto-generated method stub
  
-		Event event = new Event(0,null,null);
+		Event event = new Event(0,null,null,null,null,null);
 		
         String SQL = ("SELECT * FROM events where event_id="+eventId+";");
         try {
@@ -127,8 +159,6 @@ public class Event {
   		  		event.setEventId(rs.getInt("event_id"));
   		  		event.setEventName(rs.getString("event_name"));
   		  		
- 
-	  		
   		  		System.out.format("%-10s %-40s\n",event.getEventId(),event.getEventName());
   		  	
             connection.close();
@@ -157,7 +187,7 @@ public class Event {
 		String eventDescription=sc.next();
 		
 		
-		Event event = new Event(0,eventname,eventDescription);
+		Event event = new Event(0,eventname,eventDescription,null,null,null);
 		
 		dbCreateEvent(event);
 		 
@@ -278,8 +308,33 @@ public class Event {
 	public static void viewEvents() {
 		
 		dbGetEvents();
-		System.out.println("Above is the List of Events! Press enter to return to Main Menu.");
-		UserAccessControl.returnMain();
+		
+		System.out.println("Above is the list of avaialble Events! ");
+		
+		System.out.println("To find out more details on available dates, venues and prices please input an event or enter '0' to exit.");
+		
+		int selection = sc.nextInt();
+		
+		if(selection==0) {
+			UserAccessControl.returnMain();
+		}else {
+			dbGetEventDates(selection);
+			
+			//System.out.println(String.format("%-10s %-10s %-25s %-10s %20s"  , "Event ID", "Event Name","Event Date", "Venue", "Price", "Remaining Tickets"));
+			
+			System.out.println(eventList.get(selection).event_date.toString());
+			System.out.println(eventList.get(selection).eventName.toString());
+			System.out.println(eventList.get(selection).venue_name.toString());
+			System.out.println(eventList.get(selection).price.toString());
+			
+			//System.out.format("%-10s %-10s %-25s %-10s %20s\n",event.getEventId(),event.getEventName(),event.getEventDescription());
+			
+		}
+		
+		
+		
+		
+		
 		
 	}
 
@@ -393,6 +448,11 @@ public class Event {
             e.printStackTrace();
         } 
 		
+		
+	}
+
+	public static void deleteEventDate() {
+		// TODO Auto-generated method stub
 		
 	}
 	  

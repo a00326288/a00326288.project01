@@ -621,33 +621,42 @@ class Admin extends User {
 	     	    		System.out.println("---------------------------");
 	     	    		System.out.println("-Choose from the following options -");
 	     	    		System.out.println("---------------------------\n");
-	     	    		System.out.println("1 - Add Event");
-	     	    		System.out.println("2 - View Events");
-	     	    		System.out.println("3 - Modify Event");
-	     	    		System.out.println("4 - Delete Event");
-	     	    		System.out.println("5 - Main Menu");
-	     	    		System.out.println("6 - Log Out");
+	     	    		System.out.println("1 - Add an Event");
+	     	    		System.out.println("2 - Add Event Dates");
+	     	    		System.out.println("3 - View Event and Dates");
+	     	    		System.out.println("4 - Modify an Event");
+	     	    		System.out.println("5 - Delete an Event");
+	     	    		System.out.println("6 - Delete Event Dates");
+	     	    		System.out.println("7 - Main Menu");
+	     	    		System.out.println("8 - Log Out");
 				  
 	     	    		setMenu_cursor(sc.nextInt());
 	     	    		switch(getMenu_cursor()) {
 	     	    			case 1:
 	     	    				Event.createEvent();
 	     	    			case 2:
-	     	    				Event.viewEvents();
+	     	    				Event.createEventDate();
 	     	    				break;
 	     	    			case 3:
-	     	    				Event.modifyEvent();
+	     	    				Event.viewEvents();
 	     	    				break;
 	     	    			case 4:
-
+	     	    				Event.modifyEvent();
 	     	    				break;
 	     	    			case 5:
-	     	    				Menu();
+	     	    				Event.deleteEvent();
 	     	    				break;
 	     	    			case 6:
+	     	    				Event.deleteEventDate();
+	     	    				break;
+	     	    			case 7:
+	     	    				Menu();
+	     	    				break;
+	     	    			case 8:
 	     	    				UserAccessControl.Logout();
 	     	    				break;
 	     	    			}
+	     	    		
 	     	    		
 	     	    		break;
 	     	    	case 2:
