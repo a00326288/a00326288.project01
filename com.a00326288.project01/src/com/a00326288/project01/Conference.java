@@ -10,9 +10,8 @@ public class Conference extends Event {
 	private String companyAddress;
 	
 	
-	public Conference(int eventId, String eventName, String eventDescription, String eventStartDate,
-			String eventEndDate, List<String> conferenceSpeakers) {
-		super(eventId, eventName, eventDescription, eventStartDate, eventEndDate);
+	public Conference(int eventId, String eventName, String eventDescription,List<String> conferenceSpeakers) {
+		super(eventId, eventName, eventDescription);
 		
 		this.conferenceSpeakers = conferenceSpeakers;
 		this.companyName = companyName;

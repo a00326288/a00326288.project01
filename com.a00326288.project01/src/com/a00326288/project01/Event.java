@@ -1,26 +1,22 @@
 package com.a00326288.project01;
 import java.sql.Connection;
-import java.sql.Date;
+
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.InputMismatchException;
-import java.util.List;
+
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 
 public class Event {
 	
 	private Integer eventId;
-	private String eventName;
-	private String eventDescription;
-	private String eventStartDateAndTime;
-	private String eventEndDateAndTime;
+	public String eventName;
+	public String eventDescription;
+ 
 	
 	
 	private static Scanner sc = new Scanner(System.in);
@@ -30,23 +26,21 @@ public class Event {
 	
 	}
  
-	public Event(int eventId, String eventName, String eventDescription, String eventStartDateAndTime, String eventEndDateAndTime) {
+	public Event(int eventId, String eventName, String eventDescription) {
 		this.eventId = eventId;
 		this.eventName = eventName;
 		this.eventDescription = eventDescription;
-		this.eventStartDateAndTime =  eventStartDateAndTime;
-		this.eventEndDateAndTime = eventEndDateAndTime;
-		
+	 
 	}	
  
 
-	public Integer getEventId() {
+	protected Integer getEventId() {
 		return eventId;
 	}
 
 
 
-	public void setEventId(Integer eventId) {
+	private void setEventId(Integer eventId) {
 		this.eventId = eventId;
 	}
 
@@ -58,7 +52,7 @@ public class Event {
 
 
 
-	public void setEventName(String eventName) {
+	private void setEventName(String eventName) {
 		this.eventName = eventName;
 	}
 
@@ -70,34 +64,9 @@ public class Event {
 
 
 
-	public void setEventDescription(String eventDescription) {
+	private void setEventDescription(String eventDescription) {
 		this.eventDescription = eventDescription;
 	}
-
-
-
-	public String getEventStartDateAndTime() {
-		return eventStartDateAndTime;
-	}
-
-
-
-	public void setEventStartDate(String eventStartDateAndTime) {
-		this.eventStartDateAndTime = eventStartDateAndTime;
-	}
-
-
-
-	public String getEventEndDateAndTime() {
-		return eventEndDateAndTime;
-	}
-
-
-
-	public void setEventEndDateAndTime(String eventEndDateAndTime) {
-		this.eventEndDateAndTime = eventEndDateAndTime;
-	}
-
 
 	
 	public static void dbGetEvents() {
@@ -117,13 +86,13 @@ public class Event {
   		  	
   		  	
   		  	
-  		  	System.out.println(String.format("%-10s %-40s %8s %20s" , "Event ID", "Event Name", "Event Start", "Event Ends" ));
+  		  	System.out.println(String.format("%-10s %-40s %20s" , "Event ID", "Event Name", "Event Description" ));
   		  	while(rs.next())
   		  	{
   		  		
-  		  		Event event = new Event(rs.getInt("event_id"),rs.getString("event_name"),rs.getString("event_description"),rs.getString("event_start_date"),rs.getString("event_end_date"));
+  		  		Event event = new Event(rs.getInt("event_id"),rs.getString("event_name"),rs.getString("event_description"));
   		  		
-  		  		System.out.format("%-10s %-40s %8s %21s\n",event.getEventId(),event.getEventName(),event.getEventStartDateAndTime(),event.getEventEndDateAndTime());
+  		  		System.out.format("%-10s %-40s %21s\n",event.getEventId(),event.getEventName(),event.getEventDescription());
   		  	}
   		  	
             connection.close();
@@ -140,7 +109,7 @@ public class Event {
 	public static Event dbGetEvent(Integer eventId) {
 		// TODO Auto-generated method stub
  
-		Event event = new Event(0,null,null,null, null);
+		Event event = new Event(0,null,null);
 		
         String SQL = ("SELECT * FROM events where event_id="+eventId+";");
         try {
@@ -151,22 +120,20 @@ public class Event {
   		  	
   		  	
   		  	
-  		  	System.out.println(String.format("%-10s %-40s %8s %20s" , "Event ID", "Event Name", "Event Start", "Event Ends" ));
+  		  	System.out.println(String.format("%-10s %-40s" , "Event ID", "Event Name"));
   		  	while(rs.next())
   		  	{
   		  		
   		  		event.setEventId(rs.getInt("event_id"));
   		  		event.setEventName(rs.getString("event_name"));
-  		  		event.setEventStartDate(rs.getString("event_start_date"));
-  		  		event.setEventEndDateAndTime(rs.getString("event_end_date"));
+  		  		
  
 	  		
-  		  		System.out.format("%-10s %-40s %8s %21s\n",event.getEventId(),event.getEventName(),event.getEventStartDateAndTime(),event.getEventEndDateAndTime());
-  		  	}
+  		  		System.out.format("%-10s %-40s\n",event.getEventId(),event.getEventName());
   		  	
             connection.close();
             
- 
+  		  	}
           }
         catch(SQLException e)
         {
@@ -189,38 +156,8 @@ public class Event {
 		System.out.println("Input a description of the Event:");
 		String eventDescription=sc.next();
 		
-		System.out.println("Enter a date for the event:");
-		String eventStartDate = sc.next();
-
-		System.out.println("Enter a time for the event:");
-		String eventEndDate=sc.next();
-
-
-
 		
-		
-		Venue.dbGetVenues();
-		
-		System.out.println("Specify a venue:");
-		
-		while (true) {
-			  try {
-				int venueId=sc.nextInt();
-			    break;
-			  } catch (InputMismatchException e ) {
-				  sc.next();
-				  System.out.println("Please enter valid number");
-		
-			  }
-			}
-	
-		System.out.println("Specify a Price:");
-		int price=sc.nextInt();
-		
-		Event event = new Event(0,eventname,eventDescription,eventStartDate,eventEndDate);
-		
- 
-		//Prices price = new Prices(price, venueId);
+		Event event = new Event(0,eventname,eventDescription);
 		
 		dbCreateEvent(event);
 		 
@@ -231,11 +168,100 @@ public class Event {
 	}
 	
 
+	public static void createEventDate() {
+		
+		int eventId=0;
+		int venueId=0;
+		String eventDate=null;
+		int  eventPrice=0;
+		
+		sc.useDelimiter("\r?\n");
+		
+		System.out.println("Specify Event Id:");
+		
+		while (true) {
+			  try {
+				eventId=sc.nextInt();
+			    break;
+			  } catch (InputMismatchException e ) {
+				  sc.next();
+				  System.out.println("Please enter valid number");
+		
+			  }
+			}
+		
+		
+		Venue.dbGetVenues();
+		
+		System.out.println("Specify a Venue ID:");
+		
+		while (true) {
+			  try {
+				venueId=sc.nextInt();
+			    break;
+			  } catch (InputMismatchException e ) {
+				  sc.next();
+				  System.out.println("Please enter valid number");
+		
+			  }
+			}
+		
+		System.out.println("Specify a Date :");
+		
+		while (true) {
+			  try {
+				eventDate=sc.next();
+			    break;
+			  } catch (InputMismatchException e ) {
+				  sc.next();
+				  System.out.println("Please enter valid number");
+		
+			  }
+			}
+	
+		System.out.println("Specify a Price:");
+		
+		while (true) {
+			  try {
+				eventPrice=sc.nextInt();
+			    break;
+			  } catch (InputMismatchException e ) {
+				  sc.next();
+				  System.out.println("Please enter valid number");
+		
+			  }
+			}
+		
+		
+		
+		dbCreateEventDate(eventId, eventDate,venueId, eventPrice);
+		 
+		System.out.println("Event Created! Press enter to return to Main Menu.");
+		
+		UserAccessControl.whichMenu();
+		
+	}
 
+	private static void dbCreateEventDate(int eventId, String eventDate, int venueId, int priceId) {
+		// TODO Auto-generated method stub
+		String SQL = ("INSERT INTO dates (event_date, event_id, venue_id, price_id) VALUES ("+eventId+",'"+eventDate+"',"+venueId+","+priceId+");");
+		try {
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+  		  	Statement statement = connection.createStatement();
+            statement.executeUpdate(SQL);
+            connection.close();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }   
+        //User.Menu();	
+		
+		
+	}
 
 	private static void dbCreateEvent(Event event) {
 		
-		String SQL = ("INSERT INTO events (event_name, event_description, event_start_date, event_end_date) VALUES ('"+event.getEventName()+"','"+event.getEventDescription()+"',"+event.getEventStartDateAndTime()+","+event.getEventEndDateAndTime()+");");
+		String SQL = ("INSERT INTO events (event_name, event_description) VALUES ('"+event.getEventName()+"','"+event.getEventDescription()+"');");
 		try {
         	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
   		  	Statement statement = connection.createStatement();
@@ -273,24 +299,20 @@ public class Event {
 		
 		
 		
-		System.out.println("Venue ID: " + event.getEventId());
-		System.out.println("Venue Name: "+ event.getEventName());
-		System.out.println("Venue Address: "+event.getEventStartDateAndTime());
-		System.out.println("Venue City: "+ event.getEventEndDateAndTime());
+		System.out.println("Event ID: " + event.getEventId());
+		System.out.println("Event Name: "+ event.getEventName());
+
 		
 		System.out.println();
 		
 		HashMap<Integer, String> eventmap = new HashMap<>();
 		eventmap.put(1, "Event Name");
 		eventmap.put(2, "Event Description");
-		eventmap.put(3, "Event Start Date");
-		eventmap.put(4, "Event End Date");
-		
+ 
 		HashMap<Integer, String> eventmapUpdate = new HashMap<>();
 		eventmapUpdate.put(1, event.getEventName());
 		eventmapUpdate.put(2, event.getEventDescription());
-		eventmapUpdate.put(3, event.getEventStartDateAndTime());
-		eventmapUpdate.put(4, event.getEventEndDateAndTime());
+ 
 		
 		System.out.println("Which property do you want to modify?");
 		
@@ -323,7 +345,7 @@ public class Event {
 		
 		
 		String SQL = ("UPDATE events SET event_name ='"+eventmapUpdate.get(1)
-				+ "', event_description='"+eventmapUpdate.get(2)+"', event_start_date='"+eventmapUpdate.get(3)+"', event_end_date='"+eventmapUpdate.get(4)+"' WHERE event_id="+eventSelection+";");
+				+ "', event_description='"+eventmapUpdate.get(2)+"' WHERE event_id="+eventSelection+";");
         try {
         	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
   		  	Statement statement = connection.createStatement();
@@ -373,8 +395,5 @@ public class Event {
 		
 		
 	}
-	
-	
-     
+	  
 }
-

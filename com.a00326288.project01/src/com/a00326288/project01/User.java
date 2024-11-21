@@ -639,7 +639,7 @@ class Admin extends User {
 	     	    				Event.modifyEvent();
 	     	    				break;
 	     	    			case 4:
-	     	    				Event.deleteEvent();
+
 	     	    				break;
 	     	    			case 5:
 	     	    				Menu();
