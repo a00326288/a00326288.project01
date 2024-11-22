@@ -10,35 +10,25 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.Scanner;
 
-enum modify {venue_name,venue_desc,venue_city}
-
-
 public class Venue {
-	
-	private static Scanner sc = new Scanner(System.in);
-
-	
-	
-	
-	public Venue() {
-		// TODO Auto-generated constructor stub
-		
-	}
 	
 	private Integer venueId;
 	private String venueName;
 	private String venueAddress;
 	private String venueCity;
 	private Integer capacity;
-	
-	
+	private static Scanner sc = new Scanner(System.in);
+
+	public Venue() {
+		// TODO Auto-generated constructor stub
+		
+	}
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	
 
 	public Venue(Integer venueId, String venueName, String venueAddress, String venueCity, Integer capacity) {
 		this.venueId = venueId;
@@ -119,54 +109,15 @@ public class Venue {
 	}
 	
 	
-	
-	
-	public static ArrayList<Venue> dbGetVenues() {
-		
-			ArrayList<Venue> venueList = new ArrayList<Venue>();
-		
-	        String SQL = ("SELECT * from venues;");
-	        try {
-	        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
-	  		  	Statement statement = connection.createStatement();
-	  		    statement.setQueryTimeout(30); 
-	  		  	ResultSet rs = statement.executeQuery(SQL);
-	  		  	
-	  		  	venueList.clear();
-	  		  	
-	  		  	while(rs.next())
-	  		  	{
-	  		  
-	  		  	Venue venue = new Venue(rs.getInt("venue_id"), rs.getString("venue_name"), rs.getString("venue_address"), rs.getString("city"), rs.getInt("capacity"));
-	  	      
-	  		  	venueList.add(venue);
-	  	
-	  
-	  		  	}
-	  		  	connection.close();
-	          }
-	        catch(SQLException e)
-	        {
-	          e.printStackTrace(System.err);
-	        }
-			return venueList;
-			
-		}
-
-
-
 	public static void createVenue() {
 		// TODO Auto-generated method stub
 		
 		System.out.println("Input the name of the Venue:");
 		String venueName = sc.next();
-		
 		System.out.println("Input the address of the Venue:");
 		String venueAddress=sc.next();
-		
 		System.out.println("Input the city of the Venue:");
 		String venueCity = sc.next();
-
 		System.out.println("Input the capcity of the Venue:");
 		Integer capacity = sc.nextInt();
 	
@@ -176,7 +127,100 @@ public class Venue {
 		UserAccessControl.returnMain();
 		
 	}
+	
+	public static void viewVenues() {
+		// TODO Auto-generated method stub
+		for(int i=0;i < Venue.dbGetVenues().size();i++) {	
+			System.out.println(Venue.dbGetVenues().get(i).toString());
+		}
+		UserAccessControl.returnMain();		
+	}
+	
+	public static void deleteVenue() {
+		// TODO Auto-generated method stub
+		dbGetVenues();
+		System.out.println("Enter the venue ID to delete: ");
+		int venueSelection = sc.nextInt();
+		dbDeleteVenue(venueSelection);
+		System.out.println("Delete Complete! Press enter to return to Main Menu.");
+		UserAccessControl.returnMain();
+	}
 
+	public static void modifyVenue() {
+		// TODO Auto-generated method stub
+		
+		sc.useDelimiter("\r?\n");
+		viewVenues();
+		System.out.println("Enter the venue ID to Modify: ");
+		int venueSelection = sc.nextInt();
+		Venue venue = dbVenue(venueSelection);
+		
+		System.out.println("Venue ID: " + venue.getVenueId());
+		System.out.println("Venue Name: "+ venue.getVenueName());
+		System.out.println("Venue Address: "+venue.getVenueAddress());
+		System.out.println("Venue City: "+ venue.getVenueCity());
+		System.out.println("Capacity: "+ venue.getCapacity());
+		System.out.println();
+		
+		HashMap<Integer, String> venuesmap = new HashMap<>();
+		venuesmap.put(1, "Venue Name");
+		venuesmap.put(2, "Venue Address");
+		venuesmap.put(3, "Venue City");
+		venuesmap.put(4, "Capacity");
+		
+		HashMap<Integer, String> venuesmapUpdate = new HashMap<>();
+		venuesmapUpdate.put(1, venue.getVenueName());
+		venuesmapUpdate.put(2, venue.getVenueAddress());
+		venuesmapUpdate.put(3, venue.getVenueCity());
+		venuesmapUpdate.put(4, venue.getCapacity().toString());
+		
+		System.out.println("Which property do you want to modify?");
+		
+		for(int i=1;i<=venuesmap.size();i++) {
+			System.out.println(i+". " + venuesmap.get(i));	
+		}
+		
+		int cursor = sc.nextInt();
+		
+		System.out.println("Please enter new value for "+venuesmap.get(cursor)+":");
+		String newval = sc.next();		
+		venuesmapUpdate.put(cursor, newval);
+		dbUpdateVenue(venuesmapUpdate,venueSelection);
+		System.out.println("Update Complete! Press enter to return to Main Menu.");
+		UserAccessControl.returnMain();
+	}
+
+	private static void dbUpdateVenue(HashMap<Integer, String> venuesmapUpdate,Integer venueSelection) {
+		// TODO Auto-generated method stub
+		
+		String SQL = ("UPDATE venues SET venue_name ='"+venuesmapUpdate.get(1)
+				+ "', venue_address='"+venuesmapUpdate.get(2)+"', city='"+venuesmapUpdate.get(3)+"',capacity="+Integer.parseInt(venuesmapUpdate.get(4))+"  WHERE venue_id="+venueSelection+";");
+        try {
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+  		  	Statement statement = connection.createStatement();
+            statement.executeUpdate(SQL);
+            connection.close();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } 
+	}
+
+	private static void dbDeleteVenue(Integer venueSelection) {
+		// TODO Auto-generated method stub
+		
+		String SQL = ("DELETE FROM venues WHERE venue_id="+venueSelection+";");
+        try {
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+  		  	Statement statement = connection.createStatement();
+            statement.executeUpdate(SQL);
+            connection.close();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } 	
+	}
+	
 	private static void dbCreateVenue(String venueName,String venueAddress, String venueCity, Integer capacity) {
 		
 		String SQL = ("INSERT INTO venues (venue_name, venue_address, city) VALUES ('"+venueName+"','"+venueAddress+"','"+venueCity+"',"+capacity+");");
@@ -204,164 +248,47 @@ public class Venue {
             statement.setQueryTimeout(30); 
             while (rs.next()) 
             
-            {
-            	
-            	
-            	
+            {	
             	venue.setVenueId(rs.getInt("venue_id"));
             	venue.setVenueName(rs.getString("venue_name"));
             	venue.setVenueAddress(rs.getString("venue_address"));
             	venue.setVenueCity(rs.getString("city"));
             	venue.setCapacity(rs.getInt("capacity"));	
             }
-            
             statement.closeOnCompletion();
             connection.close();
-            
-            
-            
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-		return venue;   
-        
-        
-		
+		return venue;   	
 	}
-	
-	public static void viewVenues() {
-		// TODO Auto-generated method stub
-		
-		 
-		dbGetVenues();
-		System.out.println("Venues Returned! Press enter to return to Main Menu.");
-		UserAccessControl.returnMain();
-  
-		
-	}
-
-	
-	
-
-
-	public static void modifyVenue() {
-		// TODO Auto-generated method stub
-		
-		sc.useDelimiter("\r?\n");
-		
-		dbGetVenues();
-		
-		
-		System.out.println("Enter the venue ID to Modify: ");
-		
-		int venueSelection = sc.nextInt();
-		 
-		Venue venue = dbVenue(venueSelection);
-		
-		
-		
-		System.out.println("Venue ID: " + venue.getVenueId());
-		System.out.println("Venue Name: "+ venue.getVenueName());
-		System.out.println("Venue Address: "+venue.getVenueAddress());
-		System.out.println("Venue City: "+ venue.getVenueCity());
-		System.out.println("Capacity: "+ venue.getCapacity());
-		
-		
-		System.out.println();
-		
-		HashMap<Integer, String> venuesmap = new HashMap<>();
-		venuesmap.put(1, "Venue Name");
-		venuesmap.put(2, "Venue Address");
-		venuesmap.put(3, "Venue City");
-		venuesmap.put(4, "Capacity");
-		
-		HashMap<Integer, String> venuesmapUpdate = new HashMap<>();
-		venuesmapUpdate.put(1, venue.getVenueName());
-		venuesmapUpdate.put(2, venue.getVenueAddress());
-		venuesmapUpdate.put(3, venue.getVenueCity());
-		venuesmapUpdate.put(4, venue.getCapacity().toString());
-		
-		
-		System.out.println("Which property do you want to modify?");
-		
-		
-		for(int i=1;i<=venuesmap.size();i++) {
-			System.out.println(i+". " + venuesmap.get(i));
-			
-		}
-		
-		int cursor = sc.nextInt();
-		
-		System.out.println("Please enter new value for "+venuesmap.get(cursor)+":");
-		
-		
-		String newval = sc.next();
-		
-		venuesmapUpdate.put(cursor, newval);
-		
-		dbUpdateVenue(venuesmapUpdate,venueSelection);
-		
-		System.out.println("Update Complete! Press enter to return to Main Menu.");
-		
-		UserAccessControl.returnMain();
-
-	}
-
-	private static void dbUpdateVenue(HashMap<Integer, String> venuesmapUpdate,Integer venueSelection) {
-		// TODO Auto-generated method stub
-		
-		String SQL = ("UPDATE venues SET venue_name ='"+venuesmapUpdate.get(1)
-				+ "', venue_address='"+venuesmapUpdate.get(2)+"', city='"+venuesmapUpdate.get(3)+"',capacity="+Integer.parseInt(venuesmapUpdate.get(4))+"  WHERE venue_id="+venueSelection+";");
-        try {
-        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
-  		  	Statement statement = connection.createStatement();
-            statement.executeUpdate(SQL);
-            connection.close();
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } 
-		
-		
-	}
-
-
-
-	public static void deleteVenue() {
-		// TODO Auto-generated method stub
-		
-		dbGetVenues();
-
-		System.out.println("Enter the venue ID to delete: ");
-		
-		int venueSelection = sc.nextInt();
-		
-		dbDeleteVenue(venueSelection);
-		
-		
-		System.out.println("Delete Complete! Press enter to return to Main Menu.");
-		UserAccessControl.returnMain();
-		
-	}
-	
-	private static void dbDeleteVenue(Integer venueSelection) {
-		// TODO Auto-generated method stub
-		
-		String SQL = ("DELETE FROM venues WHERE venue_id="+venueSelection+";");
-        try {
-        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
-  		  	Statement statement = connection.createStatement();
-            statement.executeUpdate(SQL);
-            connection.close();
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } 
-		
-		
-	}
-	
  
+	
+	public static ArrayList<Venue> dbGetVenues() {
+		ArrayList<Venue> venueList = new ArrayList<Venue>();
+        String SQL = ("SELECT * from venues;");
+        try {
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+  		  	Statement statement = connection.createStatement();
+  		    statement.setQueryTimeout(30); 
+  		  	ResultSet rs = statement.executeQuery(SQL);
+  		  	
+  		  	venueList.clear();
+  		  	
+  		  	while(rs.next())
+  		  	{
+  		  	Venue venue = new Venue(rs.getInt("venue_id"), rs.getString("venue_name"), rs.getString("venue_address"), rs.getString("city"), rs.getInt("capacity"));
+  		  	venueList.add(venue);
+  		  	}
+  		  	connection.close();
+          }
+        catch(SQLException e)
+        {
+          e.printStackTrace(System.err);
+        }
+		return venueList;		
+	}
+
 	
 }
