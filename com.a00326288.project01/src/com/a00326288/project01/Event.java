@@ -33,9 +33,9 @@ public class Event {
 		this.eventId = eventId;
 		this.eventName = eventName;
 		this.eventDescription = eventDescription;
-		this.event_date=null;
-		this.venue_name = null;
-		this.price = 0;
+		this.event_date=event_date;
+		this.venue_name = venue_name;
+		this.price = price;
 	}
 	
 	protected Integer getEventId() {
@@ -66,13 +66,37 @@ public class Event {
 		return eventDescription;
 	}
 
-
-
 	private void setEventDescription(String eventDescription) {
 		this.eventDescription = eventDescription;
 	}
 
 	
+	
+	
+	private String getEvent_date() {
+		return event_date;
+	}
+
+	private void setEvent_date(String event_date) {
+		this.event_date = event_date;
+	}
+
+	private String getVenue_name() {
+		return venue_name;
+	}
+
+	private void setVenue_name(String venue_name) {
+		this.venue_name = venue_name;
+	}
+
+	private Integer getPrice() {
+		return price;
+	}
+
+	private void setPrice(Integer price) {
+		this.price = price;
+	}
+
 	public static void dbGetEvents() {
 		// TODO Auto-generated method stub
 		
@@ -107,8 +131,6 @@ public class Event {
 	
 	public static void dbGetEventDates(Integer selection) {
 		// TODO Auto-generated method stub
-		 
-		
 		
         String SQL = ("SELECT a.event_id, a.event_name, b.event_date,c.venue_name, d.price  FROM events a left join dates b on a.event_id = b.event_id left join venues c on b.venue_id = c.venue_id left join prices d on b.price_id = d.price_id where a.event_id="+selection+";");
         try {
@@ -117,16 +139,17 @@ public class Event {
   		    statement.setQueryTimeout(30); 
   		  	ResultSet rs = statement.executeQuery(SQL);
   		  	
+  		  	eventList.clear();
   		  	
   		  	while(rs.next())
   		  	{
   		  		
   		  		Event event = new Event(rs.getInt("event_id"),rs.getString("event_name"),null, rs.getString("event_date"),rs.getString("venue_name"),rs.getInt("price"));
+  		  		
   		  		eventList.add(event);
   		  		
+  		  		
   		  	}
-  		  	
-  		  
   		  	
             connection.close();
           }
@@ -138,6 +161,14 @@ public class Event {
 		
 	}
 	
+	
+	
+	@Override
+	public String toString() {
+		return "Event [eventId=" + eventId + ", eventName=" + eventName + ", eventDescription=" + eventDescription
+				+ ", event_date=" + event_date + ", venue_name=" + venue_name + ", price=" + price + "]";
+	}
+
 	public static Event dbGetEvent(Integer eventId) {
 		// TODO Auto-generated method stub
  
@@ -191,9 +222,9 @@ public class Event {
 		
 		dbCreateEvent(event);
 		 
-		System.out.println("Event Created! Press enter to return to Main Menu.");
+		System.out.println("Event has been created! Press enter to return to Main Menu.");
 		
-		UserAccessControl.whichMenu();
+		//UserAccessControl.whichMenu();
 		
 	}
 	
@@ -206,6 +237,8 @@ public class Event {
 		int  eventPrice=0;
 		
 		sc.useDelimiter("\r?\n");
+		
+		dbGetEvents();
 		
 		System.out.println("Specify Event Id:");
 		
@@ -220,8 +253,10 @@ public class Event {
 			  }
 			}
 		
+		for(int i=0;i < Venue.dbGetVenues().size();i++) {
 		
-		Venue.dbGetVenues();
+			System.out.println(Venue.dbGetVenues().get(i).toString());
+		}
 		
 		System.out.println("Specify a Venue ID:");
 		
@@ -248,6 +283,12 @@ public class Event {
 		
 			  }
 			}
+		
+		
+		for(int i=0;i < Price.getPrices().size();i++) {
+			
+			System.out.println(Price.getPrices().get(i).toString());
+		}
 	
 		System.out.println("Specify a Price:");
 		
@@ -268,7 +309,7 @@ public class Event {
 		 
 		System.out.println("Event Created! Press enter to return to Main Menu.");
 		
-		UserAccessControl.whichMenu();
+		//UserAccessControl.whichMenu();
 		
 	}
 
@@ -309,33 +350,37 @@ public class Event {
 		
 		dbGetEvents();
 		
-		System.out.println("Above is the list of avaialble Events! ");
+		System.out.println();
 		
 		System.out.println("To find out more details on available dates, venues and prices please input an event or enter '0' to exit.");
-		
+
 		int selection = sc.nextInt();
 		
 		if(selection==0) {
-			UserAccessControl.returnMain();
-		}else {
+		
+		}else
+		{
+			
 			dbGetEventDates(selection);
 			
-			//System.out.println(String.format("%-10s %-10s %-25s %-10s %20s"  , "Event ID", "Event Name","Event Date", "Venue", "Price", "Remaining Tickets"));
+			if(eventList.get(0).getEvent_date()==null) 
+			{
+				System.out.println("No listing dates are available yet for this event - please check back soon.");
+				UserAccessControl.returnMain();
+			}else{
+				System.out.println(String.format("%-10s %-10s %-25s %-10s %20s "  , "Event ID", "Event Name","Event Date", "Venue", "Price", "Remaining Tickets"));
+				
+				for(int i = 0;i < eventList.size();i++) 
+				{	
+				System.out.format("%-10s %-10s %-25s %-10s %20s\n",eventList.get(i).getEventId(),eventList.get(i).getEventName(),eventList.get(i).getEvent_date(),eventList.get(i).getVenue_name(),eventList.get(i).getPrice());
+				}
+				
+				UserAccessControl.returnMain();	
+			}
 			
-			System.out.println(eventList.get(selection).event_date.toString());
-			System.out.println(eventList.get(selection).eventName.toString());
-			System.out.println(eventList.get(selection).venue_name.toString());
-			System.out.println(eventList.get(selection).price.toString());
-			
-			//System.out.format("%-10s %-10s %-25s %-10s %20s\n",event.getEventId(),event.getEventName(),event.getEventDescription());
 			
 		}
-		
-		
-		
-		
-		
-		
+				
 	}
 
 	public static void modifyEvent() {

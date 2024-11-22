@@ -4,6 +4,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import java.util.Objects;
@@ -28,22 +29,23 @@ public class Venue {
 	private String venueName;
 	private String venueAddress;
 	private String venueCity;
-	 
+	private Integer capacity;
+	
+	
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		
-	
 		
 	}
 
 	
 
-	public Venue(Integer venueId, String venueName, String venueAddress, String venueCity) {
+	public Venue(Integer venueId, String venueName, String venueAddress, String venueCity, Integer capacity) {
 		this.venueId = venueId;
 		this.venueName = venueName;
 		this.venueAddress = venueAddress;
 		this.venueCity = venueCity;
+		this.capacity = capacity;
 	}
 
 
@@ -80,11 +82,19 @@ public class Venue {
 		this.venueCity = venueCity;
 	}
 	
-	
-	
+	private Integer getCapacity() {
+		return capacity;
+	}
+
+	private void setCapacity(Integer capacity) {
+		this.capacity = capacity;
+	}
+
+
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(venueAddress, venueCity, venueId, venueName);
+		return Objects.hash(venueAddress, venueCity, venueId, venueName,capacity);
 	}
 
 	@Override
@@ -97,19 +107,23 @@ public class Venue {
 			return false;
 		Venue other = (Venue) obj;
 		return Objects.equals(venueAddress, other.venueAddress) && Objects.equals(venueCity, other.venueCity)
-				&& Objects.equals(venueId, other.venueId) && Objects.equals(venueName, other.venueName);
+				&& Objects.equals(venueId, other.venueId) && Objects.equals(venueName, other.venueName) && Objects.equals(capacity, other.capacity);
 	}
-
 
 
 	@Override
 	public String toString() {
+		
 		return "Venue [venueId=" + venueId + ", venueName=" + venueName + ", venueAddress=" + venueAddress
-				+ ", venueCity=" + venueCity + "]";
+				+ ", venueCity=" + venueCity + ", capacity=" + capacity + "]";
 	}
 	
 	
-	public static void dbGetVenues() {
+	
+	
+	public static ArrayList<Venue> dbGetVenues() {
+		
+			ArrayList<Venue> venueList = new ArrayList<Venue>();
 		
 	        String SQL = ("SELECT * from venues;");
 	        try {
@@ -118,18 +132,15 @@ public class Venue {
 	  		    statement.setQueryTimeout(30); 
 	  		  	ResultSet rs = statement.executeQuery(SQL);
 	  		  	
+	  		  	venueList.clear();
 	  		  	
 	  		  	while(rs.next())
 	  		  	{
 	  		  
-	  		  	Venue venue = new Venue(rs.getInt("venue_id"), rs.getString("venue_name"), rs.getString("venue_address"), rs.getString("city"));
-	  	        System.out.println("Venue ID: " +venue.getVenueId());
-	  	        System.out.println("Venue Name: "+venue.getVenueName());
-	  	        System.out.println("Venue Address: " +venue.getVenueAddress());
-	  	        System.out.println("Venue City: "+venue.getVenueCity());
-				
-				System.out.println();
-	  		  	
+	  		  	Venue venue = new Venue(rs.getInt("venue_id"), rs.getString("venue_name"), rs.getString("venue_address"), rs.getString("city"), rs.getInt("capacity"));
+	  	      
+	  		  	venueList.add(venue);
+	  	
 	  
 	  		  	}
 	  		  	connection.close();
@@ -138,6 +149,8 @@ public class Venue {
 	        {
 	          e.printStackTrace(System.err);
 	        }
+			return venueList;
+			
 		}
 
 
@@ -154,17 +167,19 @@ public class Venue {
 		System.out.println("Input the city of the Venue:");
 		String venueCity = sc.next();
 
+		System.out.println("Input the capcity of the Venue:");
+		Integer capacity = sc.nextInt();
 	
-		dbCreateVenue(venueName,venueAddress,venueCity);
+		dbCreateVenue(venueName,venueAddress,venueCity,capacity);
 		
 		System.out.println("Venue Created! Press enter to return to Main Menu.");
 		UserAccessControl.returnMain();
 		
 	}
 
-	private static void dbCreateVenue(String venueName,String venueAddress, String venueCity) {
+	private static void dbCreateVenue(String venueName,String venueAddress, String venueCity, Integer capacity) {
 		
-		String SQL = ("INSERT INTO venues (venue_name, venue_address, city) VALUES ('"+venueName+"','"+venueAddress+"','"+venueCity+"';");
+		String SQL = ("INSERT INTO venues (venue_name, venue_address, city) VALUES ('"+venueName+"','"+venueAddress+"','"+venueCity+"',"+capacity+");");
         try {
         	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
   		  	Statement statement = connection.createStatement();
@@ -181,7 +196,7 @@ public class Venue {
 		
 		Venue venue = new Venue();
 		
-		String SQL = ("SELECT venue_id, venue_name, venue_address, city FROM venues WHERE venue_id = "+venueId+";");
+		String SQL = ("SELECT venue_id, venue_name, venue_address, city,capacity FROM venues WHERE venue_id = "+venueId+";");
         try {
         	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
   		  	Statement statement = connection.createStatement();
@@ -197,7 +212,7 @@ public class Venue {
             	venue.setVenueName(rs.getString("venue_name"));
             	venue.setVenueAddress(rs.getString("venue_address"));
             	venue.setVenueCity(rs.getString("city"));
- 
+            	venue.setCapacity(rs.getInt("capacity"));	
             }
             
             statement.closeOnCompletion();
@@ -215,37 +230,6 @@ public class Venue {
 		
 	}
 	
-	private static void dbVenue() {
-		
-		String SQL = ("SELECT * FROM venues;");
-        try {
-        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
-  		  	Statement statement = connection.createStatement();
-  		  	ResultSet rs = statement.executeQuery(SQL);
-  		  	statement.setQueryTimeout(30); 
-  		  	while (rs.next()) 
-          
-  		  	{
-          	
-          	Venue venue = new Venue();
-          	
-          	venue.setVenueId(rs.getInt("venue_id"));
-          	venue.setVenueName(rs.getString("venue_name"));
-          	venue.setVenueAddress(rs.getString("venue_address"));
-          	venue.setVenueCity(rs.getString("city"));
-
-  		  	}
-          
-  		  	statement.closeOnCompletion();
-  		  	connection.close();          
-            
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }   
-		
-	}
-
 	public static void viewVenues() {
 		// TODO Auto-generated method stub
 		
@@ -281,6 +265,8 @@ public class Venue {
 		System.out.println("Venue Name: "+ venue.getVenueName());
 		System.out.println("Venue Address: "+venue.getVenueAddress());
 		System.out.println("Venue City: "+ venue.getVenueCity());
+		System.out.println("Capacity: "+ venue.getCapacity());
+		
 		
 		System.out.println();
 		
@@ -288,11 +274,14 @@ public class Venue {
 		venuesmap.put(1, "Venue Name");
 		venuesmap.put(2, "Venue Address");
 		venuesmap.put(3, "Venue City");
+		venuesmap.put(4, "Capacity");
 		
 		HashMap<Integer, String> venuesmapUpdate = new HashMap<>();
 		venuesmapUpdate.put(1, venue.getVenueName());
 		venuesmapUpdate.put(2, venue.getVenueAddress());
 		venuesmapUpdate.put(3, venue.getVenueCity());
+		venuesmapUpdate.put(4, venue.getCapacity().toString());
+		
 		
 		System.out.println("Which property do you want to modify?");
 		
@@ -306,6 +295,7 @@ public class Venue {
 		
 		System.out.println("Please enter new value for "+venuesmap.get(cursor)+":");
 		
+		
 		String newval = sc.next();
 		
 		venuesmapUpdate.put(cursor, newval);
@@ -315,10 +305,6 @@ public class Venue {
 		System.out.println("Update Complete! Press enter to return to Main Menu.");
 		
 		UserAccessControl.returnMain();
-		
-		
-		
-		
 
 	}
 
@@ -326,7 +312,7 @@ public class Venue {
 		// TODO Auto-generated method stub
 		
 		String SQL = ("UPDATE venues SET venue_name ='"+venuesmapUpdate.get(1)
-				+ "', venue_address='"+venuesmapUpdate.get(2)+"', city='"+venuesmapUpdate.get(3)+"' WHERE venue_id="+venueSelection+";");
+				+ "', venue_address='"+venuesmapUpdate.get(2)+"', city='"+venuesmapUpdate.get(3)+"',capacity="+Integer.parseInt(venuesmapUpdate.get(4))+"  WHERE venue_id="+venueSelection+";");
         try {
         	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
   		  	Statement statement = connection.createStatement();

@@ -317,8 +317,9 @@ public class User {
 	    
 		public void Menu() {
 		 
-	        
-	        while(true) {
+			setMenu_cursor(0);
+			
+	        while(getMenu_cursor()==0) {
 	        	
 	            try {
 	        
@@ -335,16 +336,16 @@ public class User {
 		       switch(getMenu_cursor()) {
 				  case 1:
 					  Booking.createBooking();
-				    break;
+					  break;
 				  case 2:
 					  Event.viewEvents();
-				    break;
+					  break;
 				  case 3:
 					  Booking.viewBooking();
-					break;
+					  break;
 				  case 4:
-					  UserAccessControl.Logout();
-					break;
+					  setMenu_cursor(-1);
+					  break;
 				  default:
 					  System.out.println("Please select a valid option");
 				}
@@ -602,20 +603,26 @@ class Admin extends User {
 	@Override
 	public void Menu() {
 		
+		setMenu_cursor(0);
 
-		System.out.println("---------------------------");
- 	    System.out.println("-Choose from the following options -");
- 	    System.out.println("---------------------------\n");
- 	    System.out.println("1 - Manage Events");
- 	    System.out.println("2 - Manage Bookings");
- 	    System.out.println("3 - Manage Venues"); 
- 	    System.out.println("4 - Manage Users"); 
- 	    System.out.println("5 - Log Out");
 		
-		while(true) {
+		while(getMenu_cursor()!=-1) {
+			
+			System.out.println("---------------------------");
+	 	    System.out.println("-Choose from the following options -");
+	 	    System.out.println("---------------------------\n");
+	 	    System.out.println("1 - Manage Events");
+	 	    System.out.println("2 - Manage Bookings");
+	 	    System.out.println("3 - Manage Venues"); 
+	 	    System.out.println("4 - Manage Users"); 
+	 	    System.out.println("5 - Log Out");
+			
+			
 			try {     
-	        	
 	     	    setMenu_cursor(sc.nextInt());
+	     	    
+	     	    
+	     	    
 	     	    switch(getMenu_cursor()) {  
 	     	    	case 1:
 	     	    		System.out.println("---------------------------");
@@ -628,12 +635,12 @@ class Admin extends User {
 	     	    		System.out.println("5 - Delete an Event");
 	     	    		System.out.println("6 - Delete Event Dates");
 	     	    		System.out.println("7 - Main Menu");
-	     	    		System.out.println("8 - Log Out");
 				  
 	     	    		setMenu_cursor(sc.nextInt());
 	     	    		switch(getMenu_cursor()) {
 	     	    			case 1:
 	     	    				Event.createEvent();
+	     	    				break;
 	     	    			case 2:
 	     	    				Event.createEventDate();
 	     	    				break;
@@ -650,14 +657,10 @@ class Admin extends User {
 	     	    				Event.deleteEventDate();
 	     	    				break;
 	     	    			case 7:
-	     	    				Menu();
 	     	    				break;
-	     	    			case 8:
-	     	    				UserAccessControl.Logout();
-	     	    				break;
+	     	    			default:
+	     	    				System.out.println("Input a valid option.");
 	     	    			}
-	     	    		
-	     	    		
 	     	    		break;
 	     	    	case 2:
 		
@@ -669,7 +672,6 @@ class Admin extends User {
 	     	    		System.out.println("3 - Modify a Booking");
 	     	    		System.out.println("4 - Cancel a Booking");
 	     	    		System.out.println("5 - Main Menu");
-	     	    		System.out.println("6 - Log Out");
 	     	      
 	     	    		setMenu_cursor(sc.nextInt());
 	     	    		switch(getMenu_cursor()) {
@@ -690,14 +692,10 @@ class Admin extends User {
 	     	    				Booking.cancelBooking();
 	     	    				break;
 	     	    			case 5:
-	     	    				Menu();
 	     	    				break;
-	     	    			case 6:
-	     	    				UserAccessControl.Logout();
-	     	    				break;
-	     	    			}
-				  
- 
+	     	    			default:
+	     	    				System.out.println("Input a valid option.");
+	     	    		}
 	     	    		break;
 	     	    	case 3:
 				
@@ -709,7 +707,6 @@ class Admin extends User {
 	     	    		System.out.println("3 - Modify a Venue");
 	     	    		System.out.println("4 - Remove a Venue");
 	     	    		System.out.println("5 - Main Menu");
-	     	    		System.out.println("6 - Log Out");
 	     	      
 	     	    		setMenu_cursor(sc.nextInt());
 	     	    		switch(getMenu_cursor()) {
@@ -726,13 +723,10 @@ class Admin extends User {
 	     	    				Venue.deleteVenue();
 	     	    				break;
 	     	    			case 5:
-	     	    				Menu();
 	     	    				break;
-	     	    			case 6:
-	     	    				UserAccessControl.Logout();
-	     	    				break;
-	     	    			}
-	     	       
+	     	    			default:
+	     	    				System.out.println("Input a valid option.");
+	     	    		}
 	     	    		break;
 	     	    	case 4:
 				  
@@ -744,7 +738,6 @@ class Admin extends User {
 	     	    		System.out.println("3 - Modify a User");
 	     	    		System.out.println("4 - Delete a User");
 	     	    		System.out.println("5 - Main Menu");
-	     	    		System.out.println("6 - Log Out");
 	     	      
 	     	    		setMenu_cursor(sc.nextInt());
 	     	    		switch(getMenu_cursor()) {
@@ -761,15 +754,14 @@ class Admin extends User {
 	     	    				Admin.deleteUserProfile();
 	     	    				break;
 	     	    			case 5:
-	     	    				Menu();
 	     	    				break;
-	     	    			case 6:
-	     	    				UserAccessControl.Logout();
-	     	    				break;
+	     	    			default:
+	     	    				System.out.println("Input a valid option.");
 	     	    			}
 	     	    		break;
 	     	    	case 5:
-	     	    		UserAccessControl.Logout();
+	     	    		setMenu_cursor(-1);
+	     	    		System.out.println("You have logged out.");
 	     	    		break;
 	     	    	default:
 	     	    		System.out.println("Please select a valid option");

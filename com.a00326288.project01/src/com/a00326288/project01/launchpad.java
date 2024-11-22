@@ -12,6 +12,8 @@ public class launchpad  {
 	public static void main(String[] args) {
 		sc.useDelimiter("\r?\n");
 		UserAccessControl.Logout();
+		menu();
+		
 		
 	}
 
@@ -20,7 +22,9 @@ public class launchpad  {
 	
 	public static void menu() {
         
-        while(true) {
+		int exit =0;
+		
+        while(exit==0) {
         	
         try {
         	/***************************************************/
@@ -38,18 +42,26 @@ public class launchpad  {
           
             switch(cursor) {
       		  case 1:
-      			  UserAccessControl.Login();
-      		    break;
+      			  
+      			UserAccessControl.Login();
+      			UserAccessControl.whichMenu();
+      			UserAccessControl.Logout();
+      			break;
+      			
+      			  
       		  case 2:
+      			
       			if(UserAccessControl.checkLoggedIn()==false) {
       				System.out.println("You are already logged in.");	
-      				launchpad.menu();
       			}else
       			{    
       			  UserAccessControl.Register(); 
       			}
+      			break;
+      			
       		  case 3:
       			  System.out.println("Goodbye");
+      			  exit=1;
       			  break;
       		  default:
             	System.out.println("Please select a valid option");
@@ -62,11 +74,7 @@ public class launchpad  {
         	sc.next();
         }
         
-        
-        break;	
         }
-        
-        
   
         
     }

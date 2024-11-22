@@ -57,7 +57,7 @@ public class UserAccessControl {
 		
 		if(checkLoggedIn()==false) {
 			System.out.println("You are already logged in.");	
-			launchpad.menu();
+			//launchpad.menu();
 		}else
 		{
 		
@@ -84,12 +84,12 @@ public class UserAccessControl {
 					System.out.println("-----------------------------");
 					System.out.println("- Welcome Back - " + user + " -");
 					System.out.println("-----------------------------\n");
+					//whichMenu();
 					
-					whichMenu();
 					
 			}else {
 					System.out.println("Invalid details or User does not Exists");
-					launchpad.menu();
+					//launchpad.menu();
 			}
 			
 			
@@ -170,7 +170,7 @@ public class UserAccessControl {
 					System.out.println("Please enter between 10 - 15 characters, comprising of 1 special char, 1 digit and no spaces.");
 					}
 				}
-		
+		/*
 		try {
 		
 		if(checkLoggedIn()!=false&&User.userlist.get(0).getId()!=null) {
@@ -181,6 +181,7 @@ public class UserAccessControl {
 		}catch(Exception e) {
 			launchpad.menu();
 		}
+		*/
 		
 	}
 	
@@ -192,8 +193,6 @@ public class UserAccessControl {
 			clearSession();
 		}catch(Exception e) {
 		}
-		
-		whichMenu();
 		
 	}
 		
@@ -214,14 +213,11 @@ public class UserAccessControl {
 				User.userlist.get(0).Menu();
 								
 			}else {
-				launchpad.menu();
-			
+				//launchpad.menu();
 			}
 			}catch(Exception e) {
-				launchpad.menu();
-				
+				//launchpad.menu();
 			}
-	
 	}
 	
 
@@ -275,7 +271,6 @@ public class UserAccessControl {
 		
 		System.out.println("Please hit enter to return.");
 		sc.nextLine();
-		whichMenu();
 		
 		
 	}
