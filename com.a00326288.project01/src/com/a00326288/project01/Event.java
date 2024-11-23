@@ -20,8 +20,11 @@ public class Event {
 	public String eventName;
 	public String eventDescription;
 	private String event_date;
+	private Integer venue_id;
 	private String venue_name;
+	private Integer price_id;
 	private Integer price;
+	
 	
 	private static Scanner sc = new Scanner(System.in);
 	private static ArrayList<Event> eventList = new ArrayList<Event>();
@@ -30,12 +33,14 @@ public class Event {
 	
 	}
  
-	public Event(int eventId, String eventName, String eventDescription, String event_date, String venue_name, Integer price) {
+	public Event(int eventId, String eventName, String eventDescription, String event_date,Integer venue_id, String venue_name, Integer price_id, Integer price) {
 		this.eventId = eventId;
 		this.eventName = eventName;
 		this.eventDescription = eventDescription;
 		this.event_date=event_date;
+		this.venue_id = venue_id;
 		this.venue_name = venue_name;
+		this.price_id = price_id;
 		this.price = price;
 	}
 	
@@ -87,7 +92,22 @@ public class Event {
 		this.price = price;
 	}
 
-	
+	public Integer getVenue_id() {
+		return venue_id;
+	}
+
+	private void setVenue_id(Integer venue_id) {
+		this.venue_id = venue_id;
+	}
+
+	public Integer getPrice_id() {
+		return price_id;
+	}
+
+	private void setPrice_id(Integer price_id) {
+		this.price_id = price_id;
+	}
+
 	@Override
 	public String toString() {
 		return "Event [eventId=" + eventId + ", eventName=" + eventName + ", eventDescription=" + eventDescription
@@ -108,7 +128,7 @@ public class Event {
 		System.out.println("Input a description of the Event:");
 		String eventDescription=sc.next();
 		
-		Event event = new Event(0,eventname,eventDescription,null,null,null);
+		Event event = new Event(0,eventname,eventDescription,null,null,null,null,null);
 		dbCreateEvent(event);
 		System.out.println("Event has been created! Press enter to return to Main Menu.");
 	}
@@ -316,7 +336,7 @@ public class Event {
   		  	while(rs.next())
   		  	{
   		  		
-  		  		Event event = new Event(rs.getInt("event_id"),rs.getString("event_name"),rs.getString("event_description"), null, null,null);
+  		  		Event event = new Event(rs.getInt("event_id"),rs.getString("event_name"),rs.getString("event_description"), null, null,null,null,null);
   		  		
   		  		System.out.format("%-10s %-40s %21s\n",event.getEventId(),event.getEventName(),event.getEventDescription());
   		  	}
@@ -334,7 +354,7 @@ public class Event {
 	public static Event dbGetEvent(Integer eventId) {
 		// TODO Auto-generated method stub
  
-		Event event = new Event(0,null,null,null,null,null);
+		Event event = new Event(0,null,null,null,null,null,null,null);
 		
         String SQL = ("SELECT * FROM events where event_id="+eventId+";");
         try {
@@ -363,7 +383,7 @@ public class Event {
 	public static ArrayList<Event> dbGetEventDates(Integer selection) {
 		// TODO Auto-generated method stub
 		
-        String SQL = ("SELECT DISTINCT a.event_id, a.event_name, b.event_date,c.venue_name, d.price  FROM events a left join dates b on a.event_id = b.event_id left join venues c on b.venue_id = c.venue_id left join prices d on b.price_id = d.price_id where a.event_id="+selection+";");
+        String SQL = ("SELECT DISTINCT a.event_id, a.event_name, b.event_date,c.venue_id, c.venue_name, d.price_id, d.price  FROM events a left join dates b on a.event_id = b.event_id left join venues c on b.venue_id = c.venue_id left join prices d on b.price_id = d.price_id where a.event_id="+selection+";");
         try {
         	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
   		  	Statement statement = connection.createStatement();
@@ -375,7 +395,7 @@ public class Event {
   		  	while(rs.next())
   		  	{	
   		  		
-  		  		Event event = new Event(rs.getInt("event_id"),rs.getString("event_name"),null, rs.getString("event_date"),rs.getString("venue_name"),rs.getInt("price"));			
+  		  		Event event = new Event(rs.getInt("event_id"),rs.getString("event_name"),null, rs.getString("event_date"),rs.getInt("venue_id"),rs.getString("venue_name"),rs.getInt("price_id"), rs.getInt("price"));			
   		  		
   		  		eventList.add(event);
   		  	}
