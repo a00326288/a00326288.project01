@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -17,6 +18,7 @@ import java.util.Set;
 public class Booking {
 
 	private static Scanner sc = new Scanner(System.in);
+	private static ArrayList<StringBuilder> bookingList = new ArrayList<>();
 	private int booking_id;
 	private Date booking_dte;
 	private int num_of_tickets;
@@ -116,11 +118,6 @@ public class Booking {
 	}
 
 
-	public static void modifyBooking() {
-		// TODO Auto-generated method stub
-		
-	}
-
 	public void createBooking() {
 		// TODO Auto-generated method stub
 				
@@ -136,91 +133,85 @@ public class Booking {
 		
 		setEvent_id(sc.nextInt());
 		
-		System.out.println();
-				
-		
-		for(int i = 0; i < Event.dbGetEventDates(getEvent_id()).size(); i++) {
-			System.out.println("Option "+i+ " : " + Event.dbGetEventDates(getEvent_id()).get(i).getEventName() + "\t" + Event.dbGetEventDates(getEvent_id()).get(i).getEvent_date() + "\t" + Event.dbGetEventDates(getEvent_id()).get(i).getVenue_name() + "\t" + Event.dbGetEventDates(getEvent_id()).get(i).getPrice());	
-		}
-
-		System.out.println();
-				
-		System.out.println("Please input the option number from the list above for the date and venue to book:");
-		
-		int indexSelection = sc.nextInt();
-		
-		System.out.println("You have selected:");
-		
-		System.out.println();
-		
-		Integer eventId = Event.dbGetEventDates(getEvent_id()).get(indexSelection).getEventId();
-		String eventName = Event.dbGetEventDates(getEvent_id()).get(indexSelection).getEventName();
-		String eventDate = Event.dbGetEventDates(getEvent_id()).get(indexSelection).getEvent_date();
-		Integer venue_id = Event.dbGetEventDates(getEvent_id()).get(indexSelection).getVenue_id();
-		String venueName = Event.dbGetEventDates(getEvent_id()).get(indexSelection).getVenue_name();
-		Integer price_id = Event.dbGetEventDates(getEvent_id()).get(indexSelection).getPrice_id();
-		Integer price = Event.dbGetEventDates(getEvent_id()).get(indexSelection).getPrice();
-		Integer userId = User.userlist.get(0).getId();
-		
-		System.out.println(eventName + "\t" + eventDate + "\t" + venueName + "\t" + price);
-
-		System.out.println();
-		
-		System.out.println("Confirm your selection (Y/N):");
-		
-		sc.next();
-		
-		//calculate total number of tickets per booking for date at venue and then minus that from total count for the venue.
-		
-		int remainingTickets = numOfTickets(eventId,venue_id,eventDate);
-		
-		System.out.println("Total remaining number of tickets: " + remainingTickets);
-		
-		System.out.println("Please input the number of tickets you want : ");
-		
-		boolean checkRemainder=false;
-		
-		while(checkRemainder==false) {
-		
-		setNum_of_tickets(sc.nextInt());		
-
-		if(getNum_of_tickets()>remainingTickets){
-			System.out.println("Sorry not enough tickets. Please choose less or another date");
-			checkRemainder=false;
-		}else{
-			System.out.println("The total cost of your booking is : " + (getNum_of_tickets() *  price));	
-			checkRemainder=true;
-		}
-		};
-
-		
-		System.out.println("Please input the card number for the booking guarntee : ");
-		
-		String cardnumber = sc.next();
-		
-		StringBuilder bookref = new StringBuilder();
-		
-		bookref.append(LocalDate.now()+"-"+User.userlist.get(0).getUID()+"-"+event_id);
-		
-		
-		System.out.println("Thanks your booking ref is : " + bookref);
-		
+		if(Event.dbGetEventDates(getEvent_id()).get(0).getEvent_date()==null) {
 			
-		/*
-		System.out.println("Booking Date: " +LocalDate.now());
-		System.out.println("Event ID: " + eventId);
-		System.out.println("Event Date: " + eventDate);
-		System.out.println("Venue ID: " + venue_id);
-		System.out.println("Venue Name: " + venueName);
-		System.out.println("Price ID: " + price_id);
-		System.out.println("Price: " + price);
-		System.out.println("User ID: " + userId);
-		System.out.println("Number of Tickets: " + getNum_of_tickets());
-		System.out.println("Card Number: " + cardnumber);
-		
-		*/
+			System.out.println("Sorry no available dates currently for this event. Please check back later.");
+		}else {
 			
-		dbCreateEventBooking(LocalDate.now(),eventId,venue_id,userId,getNum_of_tickets(),cardnumber,bookref,eventDate,price_id);
+
+			System.out.println();
+			
+			for(int i = 0; i < Event.dbGetEventDates(getEvent_id()).size(); i++) {
+				System.out.println("Option "+i+ " : " + Event.dbGetEventDates(getEvent_id()).get(i).getEventName() + "\t" + Event.dbGetEventDates(getEvent_id()).get(i).getEvent_date() + "\t" + Event.dbGetEventDates(getEvent_id()).get(i).getVenue_name() + "\t" + Event.dbGetEventDates(getEvent_id()).get(i).getPrice());	
+			}
+			
+			System.out.println();
+			
+			System.out.println("Please input the option number from the list above for the date and venue to book:");
+			
+			int indexSelection = sc.nextInt();
+			
+			Integer eventId = Event.dbGetEventDates(getEvent_id()).get(indexSelection).getEventId();
+			String eventName = Event.dbGetEventDates(getEvent_id()).get(indexSelection).getEventName();
+			String eventDate = Event.dbGetEventDates(getEvent_id()).get(indexSelection).getEvent_date();
+			Integer venue_id = Event.dbGetEventDates(getEvent_id()).get(indexSelection).getVenue_id();
+			String venueName = Event.dbGetEventDates(getEvent_id()).get(indexSelection).getVenue_name();
+			Integer price_id = Event.dbGetEventDates(getEvent_id()).get(indexSelection).getPrice_id();
+			Integer price = Event.dbGetEventDates(getEvent_id()).get(indexSelection).getPrice();
+			Integer userId = User.userlist.get(0).getId();
+
+
+			System.out.println();
+			
+			System.out.println("You have selected:");
+			
+			System.out.println();
+					
+			System.out.println(eventName + "\t" + eventDate + "\t" + venueName + "\t" + price);
+
+			System.out.println();
+			
+			//calculate total number of tickets per booking for date at venue and then minus that from total count for the venue.
+			
+			int remainingTickets = numOfTickets(eventId,venue_id,eventDate);
+			
+			System.out.println("Total remaining number of tickets: " + remainingTickets);
+			
+			System.out.println("Please input the number of tickets you want : ");
+			
+			boolean checkRemainder=false;
+			
+			while(checkRemainder==false) {
+			
+			setNum_of_tickets(sc.nextInt());		
+
+			if(getNum_of_tickets()>remainingTickets){
+				System.out.println("Sorry not enough tickets. Please choose less or another date.");
+				checkRemainder=false;
+			}else{
+				System.out.println("The total cost of your booking is : " + (getNum_of_tickets() *  price));	
+				checkRemainder=true;
+			}
+			};
+
+			
+			System.out.println("Please input the card number for the booking Guarntee : ");
+			
+			String cardnumber = sc.next();
+			
+			StringBuilder bookref = new StringBuilder();
+			
+			bookref.append(LocalDateTime.now()+"-"+User.userlist.get(0).getUID()+"-"+eventId+venue_id);
+			
+			
+			System.out.println("Thanks. Your booking reference is : " + bookref);
+			
+			dbCreateEventBooking(LocalDate.now(),eventId,venue_id,userId,getNum_of_tickets(),cardnumber,bookref,eventDate,price_id);
+			
+			
+		}
+		
+		
 		
 	}
 	
@@ -249,13 +240,95 @@ public class Booking {
 		
 	}
 
-	public static void cancelBooking() {
+	public void cancelBooking() {
 		// TODO Auto-generated method stub
+
+		Event.dbGetEvents();
+
+		System.out.println("Input the Event ID to view a list of venues and dates for the event.");
 		
+		setEvent_id(sc.nextInt());
+
+		for(int i = 0; i < Event.dbGetEventDates(getEvent_id()).size(); i++) {
+			System.out.println("Option "+i+ " : " + Event.dbGetEventDates(getEvent_id()).get(i).getEventName() + "\t" + Event.dbGetEventDates(getEvent_id()).get(i).getEvent_date() + "\t" + Event.dbGetEventDates(getEvent_id()).get(i).getVenue_name() );	
+		}
+
+		System.out.println();
+		System.out.println("Please select from the options above to see existing bookings for cancellation.");
+		
+		
+		int indexSelection = sc.nextInt();
+
+		
+		Integer eventId = Event.dbGetEventDates(getEvent_id()).get(indexSelection).getEventId();
+		String eventDate = Event.dbGetEventDates(getEvent_id()).get(indexSelection).getEvent_date();
+		Integer venue_id = Event.dbGetEventDates(getEvent_id()).get(indexSelection).getVenue_id();
+
+		
+
+		dbGetBookingList(eventId,venue_id,eventDate);
+		
+		System.out.println(String.format("%-10s %-10s %-10s %-10s %-20s %-70s %20s" , "ID", "Username", "Event Name", "Event Date", "Venue", "Booking Date", "Booking Reference", "Number Of Tickets"  ));
+		
+	  	
+		
+		for(int i = 0; i < bookingList.size(); i++) {
+			System.out.println(bookingList.get(i).toString());
+			
+		}
+
 	}
 
 	public static void viewBooking() {
 		// TODO Auto-generated method stub
+		
+	}
+	
+	private ArrayList<StringBuilder> dbGetBookingList(Integer eventId, Integer venue_id, String eventDate ){
+		
+		String SQL = ("SELECT a.booking_id, a.booking_date,  a.booking_ref, a.num_of_tickets, a.venue_id, b.venue_name, a.event_date, a.event_id, d.event_name,  a.user_id, c.username  from bookings a left join venues b on a.venue_id = b.venue_id left join uam c on a.user_id  = c.user_id left join events d on a.event_id = d.event_id where a.event_id="+eventId+" AND a.venue_id="+venue_id+" AND a.event_date='"+eventDate+"';");
+        try {
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+  		  	Statement statement = connection.createStatement();
+  		    statement.setQueryTimeout(30); 
+  		  	ResultSet rs = statement.executeQuery(SQL);
+  		  	
+  		  	bookingList.clear();
+  		  			
+   		  	while(rs.next())
+  		  	{
+   		  		StringBuilder newRecord = new StringBuilder();
+   		  	
+   		  		newRecord.append(rs.getInt("booking_id"));
+   		  		newRecord.append("\t");
+   		  		newRecord.append(rs.getString("username"));
+   		  		newRecord.append("\t");
+   		  		newRecord.append(rs.getString("event_name"));
+		  		newRecord.append("\t");
+		  		newRecord.append(rs.getString("event_date"));
+   		  		newRecord.append("\t");
+   		  		newRecord.append(rs.getString("venue_name"));
+		  		newRecord.append("\t");
+   		  		newRecord.append(rs.getString("booking_date"));
+   		  		newRecord.append("\t");
+   		  		newRecord.append(rs.getString("booking_ref"));
+   		  		newRecord.append("\t");
+   		  		newRecord.append(rs.getInt("num_of_tickets"));
+   		  		newRecord.append("\t");
+   		  	
+   		  		
+   		  		bookingList.add(newRecord);
+   		  		
+  		  	}
+  		  	
+            connection.close();
+          }
+        catch(SQLException e)
+        {
+          e.printStackTrace(System.err);
+        }	
+		return bookingList;
+		
 		
 	}
 	
@@ -289,7 +362,5 @@ public class Booking {
 		return remainingTickets;
 		
 	}
-
-	
 	
 }

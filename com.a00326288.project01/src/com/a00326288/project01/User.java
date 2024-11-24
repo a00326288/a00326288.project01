@@ -419,29 +419,25 @@ class Admin extends User {
 	     	    		System.out.println("---------------------------\n");
 	     	    		System.out.println("1 - Make a Booking");
 	     	    		System.out.println("2 - View a Booking");
-	     	    		System.out.println("3 - Modify a Booking");
-	     	    		System.out.println("4 - Cancel a Booking");
-	     	    		System.out.println("5 - Main Menu");
+	     	    		System.out.println("3 - Cancel a Booking");
+	     	    		System.out.println("4 - Main Menu");
 	     	      
 	     	    		setMenu_cursor(sc.nextInt());
 	     	    		switch(getMenu_cursor()) {
 	     	    			case 1:
-	     	    				Booking newBooking = new Booking();
-	     	    				newBooking.createBooking();
+	     	    				Booking createBooking = new Booking();
+	     	    				createBooking.createBooking();
 	     	    				break;
 	     	    			case 2:
 	     	    				System.out.println("View a Booking");
 	     	    				Booking.viewBooking();
 	     	    				break;
 	     	    			case 3:
-	     	    				System.out.println("Modify a Booking");
-	     	    				Booking.modifyBooking();
+	     	    				System.out.println("Cancel a Booking");
+	     	    				Booking CancelBooking = new Booking();
+	     	    				CancelBooking.cancelBooking();
 	     	    				break;
 	     	    			case 4:
-	     	    				System.out.println("Cancel a Booking");
-	     	    				Booking.cancelBooking();
-	     	    				break;
-	     	    			case 5:
 	     	    				break;
 	     	    			default:
 	     	    				System.out.println("Input a valid option.");
