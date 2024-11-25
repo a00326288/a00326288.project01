@@ -113,6 +113,8 @@ public class Venue {
 		// TODO Auto-generated method stub
 		
 		System.out.println("Input the name of the Venue:");
+		
+		
 		String venueName = sc.next();
 		System.out.println("Input the address of the Venue:");
 		String venueAddress=sc.next();

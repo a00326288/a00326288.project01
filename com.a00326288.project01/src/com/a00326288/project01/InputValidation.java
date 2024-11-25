@@ -1,11 +1,32 @@
 package com.a00326288.project01;
 
+import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+
 enum validation {
 TOOMANYCHAR,TOOFEWCHAR,NOSPECIALCHAR,NOUPPERCHAR,NOLOWERCHAR,CONTAINSWHITEPACE,NODIGIT,SUCCESS,QUIT,USERALREADYTAKEN;
 }
 
 public class InputValidation {
 
+	
+	public static Date StringToDate(String dob) throws ParseException {
+	      SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+	      Date date = formatter.parse(dob);
+	      return date;
+	   }
+	
+	
+	public static boolean checkfieldNull(String input) {
+		if(input.isBlank()||input.isEmpty()||input==null) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+	
 
 	public static int validateInput(String input) {
 		

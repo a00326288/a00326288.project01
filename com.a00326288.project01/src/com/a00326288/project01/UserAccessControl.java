@@ -82,7 +82,7 @@ public class UserAccessControl {
 			if(user!=null) {
 			
 					System.out.println("-----------------------------");
-					System.out.println("- Welcome Back - " + user + " -");
+					System.out.println("- Hello - " + user + " -");
 					System.out.println("-----------------------------\n");
 					//whichMenu();
 					
@@ -269,7 +269,8 @@ public class UserAccessControl {
 	public static void returnMain() {
 		// TODO Auto-generated method stub
 		
-		System.out.println("Please hit enter to return.");
+		System.out.println();
+		System.out.println("Please hit enter to return to the menu.");
 		sc.nextLine();
 		
 		

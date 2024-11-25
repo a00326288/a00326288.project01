@@ -17,7 +17,7 @@ public class Price {
 	private String eventDate;
 
 	
-	private static ArrayList<Price> priceList = new ArrayList<Price>();
+	
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -34,7 +34,7 @@ public class Price {
 
 	}
 
-	private Integer getPriceId() {
+	public Integer getPriceId() {
 		return priceId;
 	}
 
@@ -42,7 +42,7 @@ public class Price {
 		this.priceId = priceId;
 	}
 
-	private Integer getEventPrice() {
+	public Integer getEventPrice() {
 		return eventPrice;
 	}
 
@@ -75,6 +75,8 @@ public class Price {
 	}
 
 	public static ArrayList<Price> getPrices() {
+	
+		ArrayList<Price> priceList = new ArrayList<Price>();
 		
 		String SQL = ("SELECT * from prices;");
         try {
@@ -88,9 +90,9 @@ public class Price {
   		  	while(rs.next())
   		  	{
   		  
-  		  	Price venue = new Price(rs.getInt("price_id"), rs.getInt("price"), rs.getInt("venue_id"), rs.getInt("event_id"), rs.getString("event_date"));
+  		  	Price price = new Price(rs.getInt("price_id"), rs.getInt("price"), rs.getInt("venue_id"), rs.getInt("event_id"), rs.getString("event_date"));
   	      
-  		  	priceList.add(venue);
+  		  	priceList.add(price);
   	
   
   		  	}

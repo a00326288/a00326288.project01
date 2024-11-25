@@ -129,17 +129,17 @@ public class User {
 			return menu_cursor;
 		}
 
-
 		private void setMenu_cursor(Integer menu_cursor) {
 			this.menu_cursor = menu_cursor;
 		}
  		
 	    
 		public void Menu() {
-		 
+			
+			
 			setMenu_cursor(0);
 			
-	        while(getMenu_cursor()==0) {
+	        while(getMenu_cursor()!=-1) {
 	        	
 	            try {
 	        
@@ -162,7 +162,7 @@ public class User {
 					  Event.viewEvents();
 					  break;
 				  case 3:
-					  Booking.viewBooking();
+					  Booking.viewMyBookings();
 					  break;
 				  case 4:
 					  setMenu_cursor(-1);
@@ -341,6 +341,7 @@ class Admin extends User {
 		return menu_cursor;
 	}
 
+	
 	private void setMenu_cursor(Integer menu_cursor) {
 		this.menu_cursor = menu_cursor;
 	}
@@ -398,7 +399,8 @@ class Admin extends User {
 	     	    				Event.viewEvents();
 	     	    				break;
 	     	    			case 4:
-	     	    				Event.modifyEvent();
+	     	    				Event event = new Event();
+	     	    				event.modifyEvent();
 	     	    				break;
 	     	    			case 5:
 	     	    				Event.deleteEvent();
@@ -418,7 +420,7 @@ class Admin extends User {
 	     	    		System.out.println("-Choose from the following options -");
 	     	    		System.out.println("---------------------------\n");
 	     	    		System.out.println("1 - Make a Booking");
-	     	    		System.out.println("2 - View a Booking");
+	     	    		System.out.println("2 - View Bookings");
 	     	    		System.out.println("3 - Cancel a Booking");
 	     	    		System.out.println("4 - Main Menu");
 	     	      
@@ -429,8 +431,8 @@ class Admin extends User {
 	     	    				createBooking.createBooking();
 	     	    				break;
 	     	    			case 2:
-	     	    				System.out.println("View a Booking");
-	     	    				Booking.viewBooking();
+	     	    				Booking viewBooking = new Booking();
+	     	    				viewBooking.viewBookings();
 	     	    				break;
 	     	    			case 3:
 	     	    				System.out.println("Cancel a Booking");

@@ -209,6 +209,7 @@ public class Booking {
 			dbCreateEventBooking(LocalDate.now(),eventId,venue_id,userId,getNum_of_tickets(),cardnumber,bookref,eventDate,price_id);
 			
 			
+			
 		}
 		
 		
@@ -219,7 +220,7 @@ public class Booking {
 		// TODO Auto-generated method stub
 		//booking_date,venue_id, event_id, user_id, num_of_tickets, cardNumber
 		
-		String SQL = ("INSERT INTO bookings (booking_date,venue_id, event_id, user_id, num_of_tickets, cardNumber, booking_ref,event_date) VALUES ('"+booking_dte+"',"+venue_id+","+event_id+","+event_id+","+num_of_tickets+",'"+cardnumber+"','"+booking_ref+"','"+event_date+"');");
+		String SQL = ("INSERT INTO bookings (booking_date,venue_id, event_id, user_id, num_of_tickets, cardNumber, booking_ref,event_date) VALUES ('"+booking_dte+"',"+venue_id+","+event_id+","+user_id+","+num_of_tickets+",'"+cardnumber+"','"+booking_ref+"','"+event_date+"');");
 		
 		try {
         	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
@@ -243,6 +244,33 @@ public class Booking {
 	public void cancelBooking() {
 		// TODO Auto-generated method stub
 
+		viewBookings();
+		
+		System.out.println("Please enter the ID of the booking to delete");
+		
+		int deleteOption = sc.nextInt();
+		
+		dbCancelBooking(deleteOption);
+
+		System.out.println("Booking has been cancelled.");
+	}
+
+	private void dbCancelBooking(int deleteOption) {
+		// TODO Auto-generated method stub
+		String SQL = ("DELETE FROM bookings WHERE booking_id="+deleteOption+";");
+        try {
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+  		  	Statement statement = connection.createStatement();
+            statement.executeUpdate(SQL);
+            connection.close();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } 	
+	}
+
+	public void viewBookings() {
+		// TODO Auto-generated method stub
 		Event.dbGetEvents();
 
 		System.out.println("Input the Event ID to view a list of venues and dates for the event.");
@@ -254,7 +282,7 @@ public class Booking {
 		}
 
 		System.out.println();
-		System.out.println("Please select from the options above to see existing bookings for cancellation.");
+		System.out.println("Please select from the options above to see existing bookings.");
 		
 		
 		int indexSelection = sc.nextInt();
@@ -267,20 +295,14 @@ public class Booking {
 		
 
 		dbGetBookingList(eventId,venue_id,eventDate);
-		
-		System.out.println(String.format("%-10s %-10s %-10s %-10s %-20s %-70s %20s" , "ID", "Username", "Event Name", "Event Date", "Venue", "Booking Date", "Booking Reference", "Number Of Tickets"  ));
-		
+
 	  	
 		
 		for(int i = 0; i < bookingList.size(); i++) {
 			System.out.println(bookingList.get(i).toString());
 			
 		}
-
-	}
-
-	public static void viewBooking() {
-		// TODO Auto-generated method stub
+		
 		
 	}
 	
@@ -299,24 +321,15 @@ public class Booking {
   		  	{
    		  		StringBuilder newRecord = new StringBuilder();
    		  	
-   		  		newRecord.append(rs.getInt("booking_id"));
-   		  		newRecord.append("\t");
-   		  		newRecord.append(rs.getString("username"));
-   		  		newRecord.append("\t");
-   		  		newRecord.append(rs.getString("event_name"));
-		  		newRecord.append("\t");
-		  		newRecord.append(rs.getString("event_date"));
-   		  		newRecord.append("\t");
-   		  		newRecord.append(rs.getString("venue_name"));
-		  		newRecord.append("\t");
-   		  		newRecord.append(rs.getString("booking_date"));
-   		  		newRecord.append("\t");
-   		  		newRecord.append(rs.getString("booking_ref"));
-   		  		newRecord.append("\t");
-   		  		newRecord.append(rs.getInt("num_of_tickets"));
-   		  		newRecord.append("\t");
-   		  	
-   		  		
+   		  		newRecord.append("Booking ID: " + rs.getInt("booking_id") + "\t" );
+   		  		newRecord.append("Booking Reference: " +rs.getString("booking_ref") + "\t" );
+   		  		newRecord.append("Booking Date: " +rs.getString("booking_date") + "\t" );
+   		  		newRecord.append("Username: " +rs.getString("username") + "\t" );
+   		  		newRecord.append("Event Name: " +rs.getString("event_name") + "\t" );
+   		  		newRecord.append("Event Date: " +rs.getString("event_date") + "\t" );
+   		  		newRecord.append("Venue Name: " +rs.getString("venue_name") + "\t" );
+   		  		newRecord.append("Number of tickets: " +rs.getInt("num_of_tickets") + "\t" );
+   	  		
    		  		bookingList.add(newRecord);
    		  		
   		  	}
@@ -360,6 +373,11 @@ public class Booking {
           e.printStackTrace(System.err);
         }
 		return remainingTickets;
+		
+	}
+
+	public static void viewMyBookings() {
+		// TODO Auto-generated method stub
 		
 	}
 	
