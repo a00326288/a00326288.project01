@@ -11,6 +11,14 @@ TOOMANYCHAR,TOOFEWCHAR,NOSPECIALCHAR,NOUPPERCHAR,NOLOWERCHAR,CONTAINSWHITEPACE,N
 
 public class InputValidation {
 
+	public static boolean cardNumberVerification(String cardNumber) {
+		
+		if(cardNumber.length()>=12 && cardNumber.matches("[0-9]+")) {
+			return true;
+		}else {
+		return false;
+		}
+	}
 	
 	public static Date StringToDate(String dob) throws ParseException {
 	      SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");

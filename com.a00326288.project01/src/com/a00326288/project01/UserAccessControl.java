@@ -270,7 +270,7 @@ public class UserAccessControl {
 		// TODO Auto-generated method stub
 		
 		System.out.println();
-		System.out.println("Please hit enter to return to the menu.");
+		System.out.println("Please hit enter to continue.");
 		sc.nextLine();
 		
 		

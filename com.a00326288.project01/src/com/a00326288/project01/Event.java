@@ -60,7 +60,7 @@ public class Event {
 		// TODO Auto-generated constructor stub
 	}
 
-	protected Integer getEventId() {
+	public Integer getEventId() {
 		return eventId;
 	}
 
