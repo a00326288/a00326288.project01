@@ -387,7 +387,7 @@ public class Booking {
 		}catch(InputMismatchException e) {
 			e.printStackTrace();
 			System.out.println("Invalid input. Please enter a correct ID");
-			
+			sc.next();
 		}
 		}
 
