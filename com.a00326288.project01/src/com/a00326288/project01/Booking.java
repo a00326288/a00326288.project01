@@ -538,10 +538,12 @@ public class Booking {
 				
 			}else {
 			
-			System.out.println(String.format("%-15s %-15s %-70s %-20s %-20s %-15s %-25s %10s", "Booking ID", "Booking Date", "Booking Reference", "Username", "Event Name", "Event Date", "Venue", "No. of Tickets"));
+			System.out.println(String.format("%-15s %-15s %-70s %-20s %-45s %-20s %-20s %10s", "Booking ID", "Booking Date", "Booking Reference", "Username", "Event Name", "Event Date", "Venue", "No. of Tickets"));
 			
+ 
 			for(int i = 0; i < bookingList.size(); i++) {
-				System.out.format("%-15s %-15s %-70s %-20s %-20s %-15s %-25s %10s", bookingList.get(i).booking_id, bookingList.get(i).booking_dte, bookingList.get(i).booking_ref, bookingList.get(i).username, bookingList.get(i).event_name, bookingList.get(i).event_date, bookingList.get(i).venue_name, bookingList.get(i).num_of_tickets);
+				System.out.format("%-15s %-15s %-70s %-20s %-45s %-20s %-20s %10s\n", bookingList.get(i).getBooking_id(), bookingList.get(i).getBooking_dte(), bookingList.get(i).getBooking_ref(), bookingList.get(i).getUsername(), bookingList.get(i).getEvent_name(), bookingList.get(i).getEvent_date(), bookingList.get(i).getVenue_name(), bookingList.get(i).getNum_of_tickets());
+  				
 			}
 			
 			}
@@ -565,10 +567,12 @@ public class Booking {
   		  	
   		  	bookingList.clear();
   		  	
-  		  	Booking booking = new Booking();
+  		  	
   		  	
    		  	while(rs.next())
   		  	{
+   		  		
+   		  		Booking booking = new Booking();
    		  		
    		  		booking.setBooking_id(rs.getInt("booking_id"));
    		  		booking.setBooking_ref(rs.getString("booking_ref"));
