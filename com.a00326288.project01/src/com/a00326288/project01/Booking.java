@@ -1,8 +1,7 @@
 package com.a00326288.project01;
 
-import java.sql.Array;
+
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,9 +11,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
-import java.util.Objects;
 import java.util.Scanner;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Booking {
@@ -105,13 +102,6 @@ public class Booking {
 		this.event_name = event_name;
 	}
 
-	private int getVenue_id() {
-		return venue_id;
-	}
-
-	private void setVenue_id(int venue_id) {
-		this.venue_id = venue_id;
-	}
 	
 	private String getVenue_name() {
 		return venue_name;
@@ -119,14 +109,6 @@ public class Booking {
 
 	private void setVenue_name(String venue_name) {
 		this.venue_name = venue_name;
-	}
-
-	private int getUser_id() {
-		return user_id;
-	}
-
-	private void setUser_id(int user_id) {
-		this.user_id = user_id;
 	}
 
 	private String getUsername() {
@@ -177,47 +159,41 @@ public class Booking {
 		System.out.println("-----------------------------");
         System.out.println("- Book Event -");
         System.out.println("-----------------------------\n");
+		
+        Integer eventSelection = null;
         
-		System.out.println("Please input the ID of the event you wish to book:");
-		
 		while(true) {
-		
+			
 			try {
-				
-				setEvent_id(sc.nextInt());
-				
-				try {
-				
-				List<Event> list = Event.dbGetEventDates(getEvent_id());
-				
+				System.out.println("Please input the ID of the event you wish to book:");
+				eventSelection = sc.nextInt();
 				
 				List<Integer> lookupEventList = Event.dbGetEvents().stream()
 	  		  			.map(Event::getEventId)
 	  		  			.collect(Collectors.toList());
-		
-				if(list.get(0).getEvent_date()==null) {
-					System.out.println("Sorry no available dates currently for this event. Please try again.");
-				}else {
-				if(lookupEventList.contains(getEvent_id())){			
-					System.out.println();
-					for(int i = 0; i < list.size(); i++) {
-						System.out.println("Option "+i+ " : " + list.get(i).getEventName() + "\t" + list.get(i).getEvent_date() + "\t" + list.get(i).getVenue_name() + "\t" + list.get(i).getPrice());	
+				
+				if(lookupEventList.contains(eventSelection)) {
+				
+					List<Event> list = Event.dbGetEventDates(eventSelection);
+				
+					if(list.get(0).getEvent_date()==null) {
+						System.out.println("Sorry no available dates currently for this event. Please try again.");
+					}else {
+						System.out.println();
+						for(int i = 0; i < list.size(); i++) {
+							System.out.println("Option "+i+ " : " + list.get(i).getEventName() + "\t" + list.get(i).getEvent_date() + "\t" + list.get(i).getVenue_name() + "\t" + list.get(i).getPrice());	
+						}
+						break;
 					}
-					break;
-				}else{
-					System.out.println("Invalid Event ID specified");
-					}
+					}else {
+					System.out.println("Cannot find that event ID. Please enter another.");
 				}
 				}catch(InputMismatchException e) {
 				e.printStackTrace();
-				System.out.println("Invalid input valid Event ID.");
-				sc.next();
-			}
-			}catch(Exception e){
-				System.out.println("Please input a valid Event ID.");
+				System.out.println("Invalid input. Please enter a valid Event ID.");
 				sc.nextLine();
+				}
 			}
-		}
 			
 	
 			System.out.println();
@@ -234,48 +210,57 @@ public class Booking {
 			Integer price = null;
 			Integer userId = null;
 			
-
+			Integer indexSelection = null;
+			
 			while(true) {
 				
 				try {
-					int indexSelection = sc.nextInt();
+					
+					indexSelection = sc.nextInt();
+					
+					List<Event> list = Event.dbGetEventDates(eventSelection);
+					
+					
 					
 					try {
-			
-					if(Event.dbGetEventDates(getEvent_id()).get(indexSelection).getEventId() != null) {
+					if(list.get(indexSelection)!=null) {
 						
-						eventId = Event.dbGetEventDates(getEvent_id()).get(indexSelection).getEventId();
-						eventName = Event.dbGetEventDates(getEvent_id()).get(indexSelection).getEventName();
-						eventDate = Event.dbGetEventDates(getEvent_id()).get(indexSelection).getEvent_date();
-						venue_id = Event.dbGetEventDates(getEvent_id()).get(indexSelection).getVenue_id();
-						venueName = Event.dbGetEventDates(getEvent_id()).get(indexSelection).getVenue_name();
-						price_id = Event.dbGetEventDates(getEvent_id()).get(indexSelection).getPrice_id();
-						price = Event.dbGetEventDates(getEvent_id()).get(indexSelection).getPrice();
+						eventId = list.get(indexSelection).getEventId();
+						eventName = list.get(indexSelection).getEventName();
+						eventDate = list.get(indexSelection).getEvent_date();
+						venue_id = list.get(indexSelection).getVenue_id();
+						venueName = list.get(indexSelection).getVenue_name();
+						price_id = list.get(indexSelection).getPrice_id();
+						price = list.get(indexSelection).getPrice();
 						userId = User.userlist.get(0).getId();
+ 
+						
 						break;	
 						
 					}else {
-						System.out.println("ID is not found");	
-					}
-					}catch(Exception e) {
-						System.out.println("ID is not found");
-						
+						System.out.println("Option entered is not valid. Please input a valid option from the list.");	
 					}
 					
+				}catch(Exception e) {
+					e.printStackTrace();
+					System.out.println("Invalid input. Please enter the ID of the option you wish to book.");
+				}
 				}catch(InputMismatchException e) {
 					e.printStackTrace();
-					System.out.println("Invalid selection");
+					System.out.println("Invalid input. Please enter the ID of the option you wish to book.");
 					sc.next();
 				}
-
 			}
+			
 			System.out.println();
 			
 			System.out.println("You have selected:");
 			
 			System.out.println();
 					
-			System.out.println(eventName + "\t" + eventDate + "\t" + venueName + "\t" + price);
+			System.out.println(String.format("%-25s %-15s %-30s %10s" , "Event Name", "Event Date", "Venue", "Price" ));
+			
+			System.out.printf("%-25s %-15s %-30s %10s",eventName, eventDate, venueName, price);
 
 			System.out.println();
 			
@@ -283,29 +268,41 @@ public class Booking {
 			
 			int remainingTickets = numOfTickets(eventId,venue_id,eventDate);
 			
+			System.out.println();
+			
 			System.out.println("Total remaining number of tickets: " + remainingTickets);
+			
+			System.out.println();
 			
 			System.out.println("Please input the number of tickets you want : ");
 			
 			boolean checkRemainder=false;
+			Integer numoftickets = null;
 			
 			while(checkRemainder==false) {
 			
 				while(true) 
 				{
 					try {
-						setNum_of_tickets(sc.nextInt());
-						break;
+						numoftickets = sc.nextInt();
+						
+						if(numoftickets<=0) {
+							System.out.println("Must purchase more than one ticket.");
+						}else {
+							break;
+						}
 					}catch(InputMismatchException e) {
-						e.printStackTrace();					
+						e.printStackTrace();
+						System.out.println("Please input a valid number of tickets.");
+						sc.next();
 					}
 				}
 				
-				if(getNum_of_tickets()>remainingTickets){
+				if(numoftickets>remainingTickets){
 					System.out.println("Sorry not enough tickets. Please choose less or another date.");
 					checkRemainder=false;
 				}else{
-					System.out.println("The total cost of your booking is : " + (getNum_of_tickets() *  price));	
+					System.out.println("The total cost of your booking is : " + (numoftickets *  price));	
 					checkRemainder=true;
 			}
 			};
@@ -597,7 +594,48 @@ public class Booking {
 
 	}
 	
-	
+	private static ArrayList<Booking> dbGetBookingList(Integer user_id){
+
+		ArrayList<Booking> bookingList = new ArrayList<>();
+		
+		String SQL = ("SELECT a.booking_id, a.booking_date,  a.booking_ref, a.num_of_tickets, a.venue_id, b.venue_name, a.event_date, a.event_id, d.event_name,  a.user_id, c.username  from bookings a left join venues b on a.venue_id = b.venue_id left join uam c on a.user_id  = c.user_id left join events d on a.event_id = d.event_id where a.user_id='"+user_id+"';");
+        try {
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+  		  	Statement statement = connection.createStatement();
+  		    statement.setQueryTimeout(30); 
+  		  	ResultSet rs = statement.executeQuery(SQL);
+  		  	
+  		  	bookingList.clear();
+  		  	
+  		  	
+  		  	
+   		  	while(rs.next())
+  		  	{
+   		  		
+   		  		Booking booking = new Booking();
+   		  		
+   		  		booking.setBooking_id(rs.getInt("booking_id"));
+   		  		booking.setBooking_ref(rs.getString("booking_ref"));
+   		  		booking.setBooking_dte(rs.getString("booking_date"));
+   		  		booking.setUsername(rs.getString("username"));
+   		  		booking.setEvent_name(rs.getString("event_name"));
+   		  		booking.setEvent_date(rs.getString("event_date"));
+   		  		booking.setVenue_name(rs.getString("venue_name"));
+   		  		booking.setNum_of_tickets(rs.getInt("num_of_tickets"));
+   		  		
+   		  		bookingList.add(booking);
+   		  		
+  		  	}
+  		  	
+            connection.close();
+          }
+        catch(SQLException e)
+        {
+          e.printStackTrace(System.err);
+        }	
+		return bookingList;
+
+	}
 
 	private Integer numOfTickets(Integer eventId, Integer venue_id, String eventDate) {
 		
@@ -632,6 +670,18 @@ public class Booking {
 
 	public static void viewMyBookings() {
 		// TODO Auto-generated method stub
+		
+		ArrayList<Booking> mybookings = dbGetBookingList(User.userlist.get(0).getId());
+
+		System.out.println(String.format("%-15s %-15s %-70s %-20s %-35s %-20s %-35s %10s", "Booking ID", "Booking Date", "Booking Reference", "Username", "Event Name", "Event Date", "Venue", "No. of Tickets"));
+		 
+		for(int i = 0; i < mybookings.size(); i++) {
+			System.out.format("%-15s %-15s %-70s %-20s %-35s %-20s %-35s %10s\n", mybookings.get(i).getBooking_id(), mybookings.get(i).getBooking_dte(), mybookings.get(i).getBooking_ref(), mybookings.get(i).getUsername(), mybookings.get(i).getEvent_name(), mybookings.get(i).getEvent_date(), mybookings.get(i).getVenue_name(), mybookings.get(i).getNum_of_tickets());
+				
+		}
+		
+		
+
 		
 	}
 	

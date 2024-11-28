@@ -12,13 +12,10 @@ public class launchpad  {
 	public static void main(String[] args) {
 		sc.useDelimiter("\r?\n");
 		UserAccessControl.Logout();
-		menu();
-		
+		menu();	
 		
 	}
 
-	
-	
 	
 	public static void menu() {
         

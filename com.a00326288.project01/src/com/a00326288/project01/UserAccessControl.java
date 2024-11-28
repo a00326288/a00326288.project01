@@ -72,8 +72,6 @@ public class UserAccessControl {
 			char[] consolePass = cnsl.readPassword( 
 					"Enter password : ");
 			
-			String pass = new String();
-			
 			password = String.valueOf(consolePass);
 			
 			String user= User.dbCheckUser(username,password); 

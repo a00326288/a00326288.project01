@@ -1,22 +1,17 @@
 package com.a00326288.project01;
 import java.sql.Connection;
-
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+
 
 
 public class Event {
@@ -64,16 +59,9 @@ public class Event {
 		return eventId;
 	}
 
-	private void setEventId(Integer eventId) {
-		this.eventId = eventId;
-	}
 
 	public String getEventName() {
 		return eventName;
-	}
-
-	private void setEventName(String eventName) {
-		this.eventName = eventName;
 	}
 
 	public String getEventDescription() {
@@ -88,40 +76,21 @@ public class Event {
 		return event_date;
 	}
 
-	private void setEvent_date(String event_date) {
-		this.event_date = event_date;
-	}
-
 	public String getVenue_name() {
 		return venue_name;
 	}
 
-	private void setVenue_name(String venue_name) {
-		this.venue_name = venue_name;
-	}
-
+ 
 	public Integer getPrice() {
 		return price;
-	}
-
-	private void setPrice(Integer price) {
-		this.price = price;
 	}
 
 	public Integer getVenue_id() {
 		return venue_id;
 	}
 
-	private void setVenue_id(Integer venue_id) {
-		this.venue_id = venue_id;
-	}
-
 	public Integer getPrice_id() {
 		return price_id;
-	}
-
-	private void setPrice_id(Integer price_id) {
-		this.price_id = price_id;
 	}
 
 	@Override
@@ -129,8 +98,6 @@ public class Event {
 		return "Event [eventId=" + eventId + ", eventName=" + eventName + ", eventDescription=" + eventDescription
 				+ ", event_date=" + event_date + ", venue_name=" + venue_name + ", price=" + price + "]";
 	}
-
-	 
 
 	
 	public static void createEvent() {
@@ -395,12 +362,14 @@ public class Event {
 		{
 			System.out.println("No listing dates are available yet for this event - please check back soon.");
 		}else{
-			System.out.println(String.format("%-10s %-30s %-20s %-15s %-30s %10s", "Option", "Event Name","Event Date", "Price", "Venue", "Venue ID"));	
+			System.out.println(String.format("%-10s %-30s %-20s %-15s %-30s", "Option", "Event Name","Event Date", "Price", "Venue"));	
 			for(int i = 0;i < eventDateList.size();i++) 
 			{	
-			System.out.format("%-10s %-30s %-20s %-15s %-30s %10s\n",i,eventDateList.get(i).getEventName(),eventDateList.get(i).getEvent_date(),eventDateList.get(i).getPrice(),eventDateList.get(i).getVenue_name(),eventDateList.get(i).getVenue_id());
+			System.out.format("%-10s %-30s %-20s %-15s %-30s\n",i,eventDateList.get(i).getEventName(),eventDateList.get(i).getEvent_date(),eventDateList.get(i).getPrice(),eventDateList.get(i).getVenue_name());
 			}	
 		}
+		
+		UserAccessControl.returnMain();
 		
 	}
 	

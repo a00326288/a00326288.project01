@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 
 
@@ -530,48 +532,68 @@ class Admin extends User {
 		UserAccessControl.returnMain();
 	}
 	
-	public static void displayUsers() {
+	public static ArrayList<User> displayUsers() {
 		// TODO Auto-generated method stub
 		
-		StringBuilder str = new StringBuilder();
 		
-		for(int i = 0;i < getUsers().size();i++) {
-			
-			str.setLength(0);
-			str.append(isAdmin(getUsers().get(i).getAdmin_flg()));
-			
-			System.out.println("User ID: "+getUsers().get(i).getId());
-			System.out.println("User Name: "+getUsers().get(i).getUsername());
-			System.out.println("User Role: " + str);
-			System.out.println("User Last Login: "+getUsers().get(i).getLast_login());
-			
-		} 
+		ArrayList<User> Users = getUsers();
+ 
+		System.out.println(String.format("%-10s %-40s %-15s %-25s" , "User ID", "Username ", "User Role", "User Last Login"));
+		
+		for(int i = 0;i < Users.size();i++) {
+	
+			System.out.format("%-10s %-40s %-15s %-25s\n",+Users.get(i).getId(),Users.get(i).getUsername(),isAdmin(Users.get(i).getAdmin_flg()),Users.get(i).getLast_login());
+		 
+		}
+		return Users; 
 	}
 	
 	private static void modifyUserProfile() {
 		// TODO Auto-generated method stub
 		
-		displayUsers();
-		
 		sc.useDelimiter("\r?\n");
+		
+		ArrayList<User> Users = displayUsers();
+		
+		
+		List<Integer> lookupUserList = Users.stream()
+					.map(User::getId)
+		  			.collect(Collectors.toList());
+ 
+		Integer userSelection = null;
+		
+		while(true) {
+			
+			try {
+		
 		System.out.println("Enter the User ID to modify: ");
-		
-		int userSelection = sc.nextInt();
+		userSelection = sc.nextInt();
 		 
-		User user= dbCheckUser(userSelection);
+		if(lookupUserList.contains(userSelection)) {
+			break;
+		}else {
+			System.out.println("Please input a valid user ID.");
+		}
 		
+		}catch(InputMismatchException e) {
+			e.printStackTrace();
+			System.out.println("Please input a valid user ID.");
+			sc.next();
+		}
+		}
+		
+		User user= dbCheckUser(userSelection);
 		System.out.println("Username: "+ user.getUsername());
 		System.out.println("User Role: "+ isAdmin(user.getAdmin_flg()).toString());
+		
 		
 		System.out.println();
 		
 		HashMap<Integer, String> usermap = new HashMap<>();
-		usermap.put(1, "Username");
-		usermap.put(2, "User Role");
+		usermap.put(1, "User Role");
  
 		HashMap<Integer, String> usermapUpdate = new HashMap<>();
-		usermapUpdate.put(1, user.getUsername());
-		usermapUpdate.put(2, isAdmin(user.getAdmin_flg()).toString());
+		usermapUpdate.put(1, isAdmin(user.getAdmin_flg()).toString());
  
 		System.out.println("Which property do you want to modify?");
 		
@@ -579,34 +601,61 @@ class Admin extends User {
 			System.out.println(i+". " + usermap.get(i));			
 		}
 		
-		int cursor = sc.nextInt();
+		Integer cursor = null;
+		
+		while(true) {
+			try {
+				cursor = sc.nextInt();
+				if(usermap.containsKey(cursor)) {
+					break;
+				}else {
+					
+					System.out.println("Please input a valid option.");
+				}
+				
+				
+			}catch(InputMismatchException e) {
+			e.printStackTrace();
+			System.out.println("Please input a valid option.");
+			sc.next();
+			
+			}
+		}
 		
 		System.out.println("Please enter new value for "+usermap.get(cursor)+":");
 		
-		String newval = null;
-		Boolean mybool;
-		switch(cursor) {
-			case 1:
-				while(true) {
-					  try {
-						  if(UserAccessControl.validateUsername(newval)==false) {
-							  usermapUpdate.put(cursor, newval);
-						  break;
-						  }
-					  }catch(Exception e) {
-						  e.printStackTrace();
-						  
-					  }		  
-					}
-				break;
-			case 2:
-				mybool=sc.nextBoolean();
-				usermapUpdate.put(cursor, mybool.toString());
-				break;
-			default:
-				break;
+		
+		String usr_role =null;
+		
+		if(cursor==1) {
+			System.out.println("Please enter 'Admin' to assign Administrator Role or 'User' to assign User role.");
+			
 		}
+		
+		while(true) {
+		
+		try {
+			usr_role = sc.next();
+			if(usr_role.contentEquals("Admin")) {
+				usermapUpdate.put(cursor, "1");
+				break;
+			}else if(usr_role.contentEquals("User")) {
+				usermapUpdate.put(cursor, "0");
+				break;
+			}
+			{
+				System.out.println("Please enter 'Admin' to assign Administrator Role or 'User' to assign User role.");
+			}
 
+		}catch(InputMismatchException e){
+			e.printStackTrace();
+			System.out.println("Please enter 'Admin' to assign Administrator Role or 'User' to assign User role.");
+			sc.next();
+		}
+		
+		}
+		
+		
 		dbUpdateUser(usermapUpdate,userSelection);
 		
 		System.out.println("Update Complete! Press enter to return to Main Menu.");
@@ -618,15 +667,33 @@ class Admin extends User {
 	private static void deleteUserProfile() {
 		// TODO Auto-generated method stub
 		
-		displayUsers();
+		ArrayList<User> Users = displayUsers();
+		
+		
+		List<Integer> lookupUserList = Users.stream()
+					.map(User::getId)
+		  			.collect(Collectors.toList());
+ 
+		Integer userSelection = null;
 
+		while(true) {
+		
+		try {
 		System.out.println("Enter the User ID to delete: ");
+		userSelection = sc.nextInt();
 		
-		int userSelection = sc.nextInt();
+		if(lookupUserList.contains(userSelection)) {
+			dbDeleteUser(userSelection);
+			System.out.println("Delete Complete! Press enter to return to Main Menu.");
+			break;
+		}
+		}catch(InputMismatchException e) {
+			e.printStackTrace();
+			System.out.println("Please input a valid User ID to delete.");
+			sc.next();
+		}
 		
-		dbDeleteUser(userSelection);
-		
-		System.out.println("Delete Complete! Press enter to return to Main Menu.");
+		}
 		
 		UserAccessControl.returnMain();
 	}
@@ -634,8 +701,7 @@ class Admin extends User {
 	private static void dbUpdateUser(HashMap<Integer, String> usermapUpdate, int userSelection) {
 		// TODO Auto-generated method stub
 		
-		String SQL = ("UPDATE uam SET username ='"+usermapUpdate.get(1)
-		+ "', admin_flg='"+ Boolean.parseBoolean(usermapUpdate.get(2))+"' WHERE user_id="+userSelection+";");
+		String SQL = ("UPDATE uam SET admin_flg='"+ Integer.parseInt(usermapUpdate.get(1))+"' WHERE user_id="+userSelection+";");
 		try {
 			Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
 			Statement statement = connection.createStatement();
@@ -687,7 +753,6 @@ class Admin extends User {
             
 	            	allusers.add(user);		         
 	            }
-	            statement.closeOnCompletion();
 	            connection.close();
 	        } catch (SQLException e) {
 	            // TODO Auto-generated catch block
