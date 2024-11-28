@@ -213,7 +213,7 @@ public class User {
 			String SQL = ("SELECT * FROM uam where username='"+username+"';");
 			int id = 0;
 			try {
-	        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+	        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
 	  		  	Statement statement = connection.createStatement();
 	            ResultSet rs = statement.executeQuery(SQL);
 	            statement.setQueryTimeout(30); 
@@ -240,7 +240,7 @@ public class User {
 			User user = new User(null, null);
 			
 			try {
-	        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+	        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
 	  		  	Statement statement = connection.createStatement();
 	            ResultSet rs = statement.executeQuery(SQL);
 	            statement.setQueryTimeout(30); 
@@ -268,8 +268,11 @@ public class User {
 	    		    	
 	        String SQL = ("SELECT * FROM uam where username='"+username+"' and password='"+encode(password)+"';");
 	        try {
-	        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
-	  		  	Statement statement = connection.createStatement();
+	        	//Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
+	  		  	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
+	        	//Connection connection = DriverManager.getConnection("jdbc:sqlite::resource:com/a00326288/project01/db/a00326288.db");
+	  		 
+	        	Statement statement = connection.createStatement();
 	            ResultSet rs = statement.executeQuery(SQL);
 	            statement.setQueryTimeout(30); 
 	            while (rs.next()) 
@@ -314,7 +317,7 @@ public class User {
 	        String SQL = ("INSERT INTO uam (uid,username,password,last_login,admin_flg) VALUES ('"+user.getUID()+"','"+user.getUsername()+"','"+user.getPassword()+"','"+user.getLast_login()+"',"+user.getAdmin_flg()+");");
 	        
 	        try {
-	        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+	        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
 	  		  	Statement statement = connection.createStatement();
 	            statement.executeUpdate(SQL);
 	            connection.close();
@@ -371,7 +374,8 @@ class Admin extends User {
 	 	    System.out.println("2 - Manage Bookings");
 	 	    System.out.println("3 - Manage Venues"); 
 	 	    System.out.println("4 - Manage Users"); 
-	 	    System.out.println("5 - Log Out");
+	 	    System.out.println("5 - Manage Prices");
+	 	    System.out.println("6 - Log Out");
 			
 			try {     
 	     	    setMenu_cursor(sc.nextInt());
@@ -510,6 +514,36 @@ class Admin extends User {
 	     	    			}
 	     	    		break;
 	     	    	case 5:
+	     	    		System.out.println("---------------------------");
+	     	    		System.out.println("-Choose from the following options -");
+	     	    		System.out.println("---------------------------\n");
+	     	    		System.out.println("1 - Add a Price");
+	     	    		System.out.println("2 - View Prices");
+	     	    		System.out.println("3 - Update a Price");
+	     	    		System.out.println("4 - Delete a Price");
+	     	    		System.out.println("5 - Main Menu");
+	     	      
+	     	    		setMenu_cursor(sc.nextInt());
+	     	    		switch(getMenu_cursor()) {
+	     	    			case 1:
+	     	    				Price.addPrice();
+	     	    				break;
+	     	    			case 2:
+	     	    				Price.viewPrices();
+	     	    				break;
+	     	    			case 3:
+	     	    				Price.modifyPrice();
+	     	    				break;
+	     	    			case 4:
+	     	    				Price.deletePrice();
+	     	    				break;
+	     	    			case 5:
+	     	    				break;
+	     	    			default:
+	     	    				System.out.println("Input a valid option.");
+	     	    			}
+	     	    		break;
+	     	    	case 6:
 	     	    		setMenu_cursor(-1);
 	     	    		System.out.println("You have logged out.");
 	     	    		break;
@@ -703,7 +737,7 @@ class Admin extends User {
 		
 		String SQL = ("UPDATE uam SET admin_flg='"+ Integer.parseInt(usermapUpdate.get(1))+"' WHERE user_id="+userSelection+";");
 		try {
-			Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+			Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
 			Statement statement = connection.createStatement();
 			statement.executeUpdate(SQL);
 			connection.close();
@@ -719,7 +753,7 @@ class Admin extends User {
 
 		String SQL = ("DELETE FROM uam WHERE user_id="+userSelection+";");
         try {
-        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
   		  	Statement statement = connection.createStatement();
             statement.executeUpdate(SQL);
             connection.close();
@@ -733,7 +767,7 @@ class Admin extends User {
 		// TODO Auto-generated method stub
     	 String SQL = ("SELECT * FROM uam;");
 	        try {
-	        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+	        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
 	  		  	Statement statement = connection.createStatement();
 	            ResultSet rs = statement.executeQuery(SQL);
 	            statement.setQueryTimeout(30); 

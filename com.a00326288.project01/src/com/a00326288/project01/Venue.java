@@ -401,7 +401,7 @@ public class Venue {
 		String SQL = ("UPDATE venues SET venue_name ='"+venuesmapUpdate.get(1)
 				+ "', venue_address='"+venuesmapUpdate.get(2)+"', city='"+venuesmapUpdate.get(3)+"',capacity="+Integer.parseInt(venuesmapUpdate.get(4))+"  WHERE venue_id="+venueSelection+";");
         try {
-        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
   		  	Statement statement = connection.createStatement();
             statement.executeUpdate(SQL);
             connection.close();
@@ -416,7 +416,7 @@ public class Venue {
 		
 		String SQL = ("DELETE FROM venues WHERE venue_id="+venueSelection+";");
         try {
-        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
   		  	Statement statement = connection.createStatement();
             statement.executeUpdate(SQL);
             connection.close();
@@ -430,7 +430,7 @@ public class Venue {
 		
 		String SQL = ("INSERT INTO venues (venue_name, venue_address, city, capacity) VALUES ('"+venueName+"','"+venueAddress+"','"+venueCity+"',"+capacity+");");
         try {
-        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
   		  	Statement statement = connection.createStatement();
             statement.executeUpdate(SQL);
             connection.close();
@@ -447,7 +447,7 @@ public class Venue {
 		ArrayList<Venue> venueList = new ArrayList<Venue>();
         String SQL = ("SELECT * from venues;");
         try {
-        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
   		  	Statement statement = connection.createStatement();
   		    statement.setQueryTimeout(30); 
   		  	ResultSet rs = statement.executeQuery(SQL);

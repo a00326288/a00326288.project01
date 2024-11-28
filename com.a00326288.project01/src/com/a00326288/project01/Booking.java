@@ -345,7 +345,7 @@ public class Booking {
 		String SQL = ("INSERT INTO bookings (booking_date,venue_id, event_id, user_id, num_of_tickets, cardNumber, booking_ref,event_date) VALUES ('"+booking_dte+"',"+venue_id+","+event_id+","+user_id+","+num_of_tickets+",'"+cardnumber+"','"+booking_ref+"','"+event_date+"');");
 		
 		try {
-        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
   		  	Statement statement = connection.createStatement();
             statement.executeUpdate(SQL);
             connection.close();
@@ -395,7 +395,7 @@ public class Booking {
 		// TODO Auto-generated method stub
 		String SQL = ("DELETE FROM bookings WHERE booking_id="+deleteOption+";");
         try {
-        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
   		  	Statement statement = connection.createStatement();
             statement.executeUpdate(SQL);
             connection.close();
@@ -557,7 +557,7 @@ public class Booking {
 		
 		String SQL = ("SELECT a.booking_id, a.booking_date,  a.booking_ref, a.num_of_tickets, a.venue_id, b.venue_name, a.event_date, a.event_id, d.event_name,  a.user_id, c.username  from bookings a left join venues b on a.venue_id = b.venue_id left join uam c on a.user_id  = c.user_id left join events d on a.event_id = d.event_id where a.event_id="+eventId+" AND a.venue_id="+venue_id+" AND a.event_date='"+eventDate+"';");
         try {
-        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
   		  	Statement statement = connection.createStatement();
   		    statement.setQueryTimeout(30); 
   		  	ResultSet rs = statement.executeQuery(SQL);
@@ -600,7 +600,7 @@ public class Booking {
 		
 		String SQL = ("SELECT a.booking_id, a.booking_date,  a.booking_ref, a.num_of_tickets, a.venue_id, b.venue_name, a.event_date, a.event_id, d.event_name,  a.user_id, c.username  from bookings a left join venues b on a.venue_id = b.venue_id left join uam c on a.user_id  = c.user_id left join events d on a.event_id = d.event_id where a.user_id='"+user_id+"';");
         try {
-        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
   		  	Statement statement = connection.createStatement();
   		    statement.setQueryTimeout(30); 
   		  	ResultSet rs = statement.executeQuery(SQL);
@@ -643,7 +643,7 @@ public class Booking {
 		
 		String SQL = ("select b.event_date, b.event_id,b.venue_id, c.capacity, sum(b.num_of_tickets) as ticket_count  from dates a left join bookings b on a.venue_id = b.venue_id and a.event_id = b.event_id and a.event_date = b.event_date left join venues c on a.venue_id = c.venue_id where a.event_id="+eventId+" AND a.venue_id="+venue_id+" AND a.event_date='"+eventDate+"' group by 1,2,3,4;");
         try {
-        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
   		  	Statement statement = connection.createStatement();
   		    statement.setQueryTimeout(30); 
   		  	ResultSet rs = statement.executeQuery(SQL);

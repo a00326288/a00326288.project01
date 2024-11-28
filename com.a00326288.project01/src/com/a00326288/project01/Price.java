@@ -6,31 +6,28 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Objects;
+import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Price {
 
 	private Integer priceId;
 	private Integer eventPrice;
-	private Integer eventId;
-	private Integer venueId;
-	private String eventDate;
-
 	
-	
+	private static Scanner sc = new Scanner(System.in);
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
 	}
 	
-	public Price(Integer priceId, Integer eventPrice, Integer eventId, Integer venueId, String eventDate) {
+	public Price(Integer priceId, Integer eventPrice) {
 
 		this.priceId = priceId;
 		this.eventPrice = eventPrice;
-		this.venueId = venueId;
-		this.eventId = eventId;
-		this.eventDate = eventDate;
 
 	}
 
@@ -50,29 +47,6 @@ public class Price {
 		this.eventPrice = eventPrice;
 	}
 
-	private Integer getEventId() {
-		return eventId;
-	}
-
-	private void setEventId(Integer eventId) {
-		this.eventId = eventId;
-	}
-
-	private Integer getVenueId() {
-		return venueId;
-	}
-
-	private void setVenueId(Integer venueId) {
-		this.venueId = venueId;
-	}
-
-	private String getEventDate() {
-		return eventDate;
-	}
-
-	private void setEventDate(String eventDate) {
-		this.eventDate = eventDate;
-	}
 
 	public static ArrayList<Price> getPrices() {
 	
@@ -80,7 +54,7 @@ public class Price {
 		
 		String SQL = ("SELECT * from prices;");
         try {
-        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
   		  	Statement statement = connection.createStatement();
   		    statement.setQueryTimeout(30); 
   		  	ResultSet rs = statement.executeQuery(SQL);
@@ -90,7 +64,7 @@ public class Price {
   		  	while(rs.next())
   		  	{
   		  
-  		  	Price price = new Price(rs.getInt("price_id"), rs.getInt("price"), rs.getInt("venue_id"), rs.getInt("event_id"), rs.getString("event_date"));
+  		  	Price price = new Price(rs.getInt("price_id"), rs.getInt("price"));
   	      
   		  	priceList.add(price);
   	
@@ -107,7 +81,7 @@ public class Price {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(eventDate, eventId, eventPrice, priceId, venueId);
+		return Objects.hash(eventPrice, priceId);
 	}
 
 	@Override
@@ -119,45 +93,199 @@ public class Price {
 		if (getClass() != obj.getClass())
 			return false;
 		Price other = (Price) obj;
-		return Objects.equals(eventDate, other.eventDate) && Objects.equals(eventId, other.eventId)
-				&& Objects.equals(eventPrice, other.eventPrice) && Objects.equals(priceId, other.priceId)
-				&& Objects.equals(venueId, other.venueId);
+		return Objects.equals(eventPrice, other.eventPrice) && Objects.equals(priceId, other.priceId);
 	}
 
 	@Override
 	public String toString() {
-		return "Price [priceId=" + priceId + ", eventPrice=" + eventPrice + ", eventId=" + eventId + ", venueId="
-				+ venueId + ", eventDate=" + eventDate + "]";
+		return "Price [priceId=" + priceId + ", eventPrice=" + eventPrice + "]";
 	}
 	
 	
-	
+	public static ArrayList<Price>  viewPrices() {
+		
+		ArrayList<Price> priceList = getPrices();
+		
+		System.out.println(String.format("%-10s %20s" , "Price ID","Price"));
+		
+		for(int i =0; i < priceList.size(); i++) {
 
+			System.out.printf("%-10s %20s\n" , priceList.get(i).getPriceId(),priceList.get(i).getEventPrice());
 
-	
-	
-
-}
-
-/*
-class Currency extends Price{
-	public Currency(int i, int j) {
-		super(priceId,eventPrice,eventId,venueId,eventDate);
-		// TODO Auto-generated constructor stub
-		this.euro();
-
-	}
-
-	void euro() {
-		System.out.println("In euro ");
-	}
-	
-	void gbp() {
-		System.out.println("The amount is $" );
+		}
+		UserAccessControl.returnMain();
+		return priceList;
 		
 	}
 	
+	
+	public static void addPrice() {
+		
+		Integer newPrice = null;
+		
+		while(true) {
+			
+			System.out.println("Please enter a new event price:");
+			try {
+				newPrice = sc.nextInt();
+				dbAddPrice(newPrice);
+				System.out.println("Price has been added.");
+				UserAccessControl.returnMain();
+				break;
+			}catch(InputMismatchException e) {
+				e.printStackTrace();
+				System.out.println("Please input a valid number for a price.");
+				sc.next();
+				
+			}
+			
+		}
+
+		
+	}
+	
+	public static void modifyPrice() {
+		
+		ArrayList<Price> priceList = viewPrices();
+		
+		List<Integer> priceLookup = priceList.stream()
+		  			.map(Price::getPriceId)
+		  			.collect(Collectors.toList());
+		
+		
+		Integer selectedPrice = null;
+		
+		while(true) {
+			
+			try {
+			System.out.println("Please specify the Price ID you wish to update.");
+		
+			selectedPrice = sc.nextInt();
+				
+			if(priceLookup.contains(selectedPrice)) {
+				
+				try {
+				
+				System.out.println("Please specify the updated price: ");
+				int updatedPrice = sc.nextInt();
+				
+				if(updatedPrice <=0) {
+					
+					System.out.println("Price cannot be less than 0.");
+				}else {
+					dbUpdatePrice(updatedPrice,selectedPrice);
+					System.out.println("Price has been updated");
+					UserAccessControl.returnMain();
+					break;
+				}
+				}catch(Exception e){
+					System.out.println("Invalid Input. Please specify a correct ID");
+					
+				}
+				
+				
+			}else {
+				
+				System.out.print("Price ID specified is not found. Please try again.");
+			}
+			
+			}catch(InputMismatchException e) {
+				e.printStackTrace();
+				System.out.println("Invalid Input. Please specify a correct ID.");
+				sc.next();
+			}
+			
+		}
+		
+		
+	}
+	
+
+	public static void deletePrice() {
+		// TODO Auto-generated method stub
+		
+		ArrayList<Price> priceList = viewPrices();
+		
+		List<Integer> priceLookup = priceList.stream()
+				.map(Price::getPriceId)
+				.collect(Collectors.toList());
+		
+		Integer priceSelection =null;
+		
+		while(true) {
+			
+			try {
+				System.out.println("Please input the ID of the price you wish to delete:");
+				
+				priceSelection = sc.nextInt();
+				
+				if(priceLookup.contains(priceSelection)) {
+					
+					dbDeletePrice(priceSelection);
+					System.out.println("Price has been deleted.");
+					UserAccessControl.returnMain();
+					break;
+				}else {
+					
+					System.out.println("Invalid Price ID input. Please try again.");
+				}
+				
+				
+			}catch(InputMismatchException e) {
+				e.printStackTrace();
+				System.out.println("Invalid Price ID input. Please try again.");
+				sc.next();
+			}
+			
+		}
+		
+		
+	}
+
+	private static void dbDeletePrice(Integer priceSelection) {
+		// TODO Auto-generated method stub
+		String SQL = ("DELETE FROM prices where price_id="+priceSelection+";");
+		try {	
+			Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
+			Statement statement = connection.createStatement();
+			statement.executeUpdate(SQL);
+			 connection.close();
+			}catch (SQLException e) {
+	        // TODO Auto-generated catch block
+	        e.printStackTrace();
+			} 	
+	}
+
+	private static void dbUpdatePrice(int updatedPrice,int selectedPrice) {
+		// TODO Auto-generated method stub
+		String SQL = ("UPDATE prices set price="+updatedPrice+" where price_id="+selectedPrice+";");
+		try {	
+			Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
+			Statement statement = connection.createStatement();
+			statement.executeUpdate(SQL);
+			 connection.close();
+			}catch (SQLException e) {
+	        // TODO Auto-generated catch block
+	        e.printStackTrace();
+			} 	
+	}
+
+	private static void dbAddPrice(Integer newPrice) {
+		// TODO Auto-generated method stub
+	
+		String SQL = ("INSERT into prices (price) values("+newPrice+");");
+	try {	
+		Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
+		Statement statement = connection.createStatement();
+		statement.executeUpdate(SQL);
+		 connection.close();
+		}catch (SQLException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+		} 	
+		
+		
+	}
+
+
 }
-
-*/
-

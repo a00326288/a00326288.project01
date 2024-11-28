@@ -613,7 +613,7 @@ public class Event {
 		
 		String SQL = ("DELETE FROM events WHERE event_id="+eventSelection+";");
         try {
-        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
   		  	Statement statement = connection.createStatement();
             statement.executeUpdate(SQL);
             connection.close();
@@ -628,7 +628,7 @@ public class Event {
 		
 		String SQL = ("DELETE FROM dates WHERE event_id="+eventSelection+" and venue_id="+venueOption+" and event_date='"+eventDate+"';");
         try {
-        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
   		  	Statement statement = connection.createStatement();
             statement.executeUpdate(SQL);
             connection.close();
@@ -645,7 +645,7 @@ public class Event {
 		
         String SQL = ("SELECT * FROM events;");
         try {
-        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
   		  	Statement statement = connection.createStatement();
   		    statement.setQueryTimeout(30); 
   		  	ResultSet rs = statement.executeQuery(SQL);
@@ -686,7 +686,7 @@ public class Event {
 		
         String SQL = ("SELECT DISTINCT a.event_id, a.event_name, b.event_date,c.venue_id, c.venue_name, d.price_id, d.price  FROM events a left join dates b on a.event_id = b.event_id left join venues c on b.venue_id = c.venue_id left join prices d on b.price_id = d.price_id where a.event_id="+selection+";");
         try {
-        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
   		  	Statement statement = connection.createStatement();
   		    statement.setQueryTimeout(30); 
   		  	ResultSet rs = statement.executeQuery(SQL);
@@ -721,7 +721,7 @@ public class Event {
 		// TODO Auto-generated method stub
 		String SQL = ("INSERT INTO dates (event_date, event_id, venue_id, price_id) VALUES ('"+eventDate+"',"+eventId+","+venueId+","+priceId+");");
 		try {
-        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
   		  	Statement statement = connection.createStatement();
             statement.executeUpdate(SQL);
             connection.close();
@@ -735,7 +735,7 @@ public class Event {
 		
 		String SQL = ("INSERT INTO events (event_name, event_description) VALUES ('"+event.getEventName()+"','"+event.getEventDescription()+"');");
 		try {
-        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
   		  	Statement statement = connection.createStatement();
             statement.executeUpdate(SQL);
             connection.close();
@@ -752,7 +752,7 @@ public class Event {
 		String SQL = ("UPDATE events SET event_name ='"+eventmapUpdate.get(1)
 				+ "', event_description='"+eventmapUpdate.get(2)+"' WHERE event_id="+eventSelection+";");
         try {
-        	Connection connection = DriverManager.getConnection("jdbc:sqlite:db/a00326288.db");
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
   		  	Statement statement = connection.createStatement();
             statement.executeUpdate(SQL);
             connection.close();
