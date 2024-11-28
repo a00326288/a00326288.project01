@@ -4,6 +4,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.InputMismatchException;
@@ -160,11 +161,11 @@ public class Venue {
 		try {
 		capacity = sc.nextInt();
 		
-		if(capacity!=0) {
+		if(capacity>0) {
 			
 			break;
 		}else {
-			
+			System.out.println("Please ensure the value input is greater than 0.");
 		}
 		
 		}catch(InputMismatchException e) {
@@ -187,7 +188,7 @@ public class Venue {
 	public static ArrayList<Venue> viewVenues() {
 		// TODO Auto-generated method stub
 		
-		ArrayList<Venue> venueList = Venue.dbGetVenues();
+		ArrayList<Venue> venueList = dbGetVenues();
 		
 		System.out.println(String.format("%-15s %-25s %-70s %-20s %10s", "Venue ID", "Venue Name", "Venue Address", "City", "Capacity"));
 
@@ -204,11 +205,43 @@ public class Venue {
 	
 	public static void deleteVenue() {
 		// TODO Auto-generated method stub
-		dbGetVenues();
-		System.out.println("Enter the venue ID to delete: ");
-		int venueSelection = sc.nextInt();
-		dbDeleteVenue(venueSelection);
-		System.out.println("Delete Complete! Press enter to return to Main Menu.");
+		
+		ArrayList<Venue> venueList = viewVenues();
+		
+		List<Integer> venueIdLookup = venueList.stream()
+			  	.map(Venue::getVenueId)
+			  	.collect(Collectors.toList());
+		
+		Integer venueSelection = null;
+		
+		while(true) {
+			
+			try {
+			
+			System.out.println("Enter the venue ID to delete: ");
+			venueSelection = sc.nextInt();
+			
+			if(venueIdLookup.contains(venueSelection)) {
+				dbDeleteVenue(venueSelection);
+				System.out.println("Delete Complete! Press enter to return to Main Menu.");
+				break;
+			}else {
+				System.out.println("Please input a valid ID.");
+			}
+			
+			
+			}catch(InputMismatchException e) {
+			 e.printStackTrace();
+			 System.out.println("Please input a valid ID.");
+			 sc.next();
+			}
+			
+			
+		}
+		
+		
+		
+		
 		UserAccessControl.returnMain();
 	}
 	
@@ -313,47 +346,50 @@ public class Venue {
 		
 		while(true) {
 		
+
+				if(cursor==4) {
+					
+						try {
+							newval = sc.next();
+							Integer.parseInt(newval);
+							
+							if(Integer.parseInt(newval) >0) {
+							break;}
+							else {
+								System.out.println("Please ensure the value input is greater than 0.");
+							}
+						}catch(Exception e) {
+							e.printStackTrace();
+							System.out.println("Please input valid value for capacity.");
+						}
+					}else {
+						newval = sc.next();
+						break;
+					}
+		}
+		
+		while(true) {		
 			try {
 			
-				if(cursor==4) {
-				}else {
-				
-					/*Jody fill this in! */
-					
-				}
-				
-				newval = sc.next();
-			
-			
-				if(InputValidation.checkfieldNull(newval)==true) {
+			if(InputValidation.checkfieldNull(newval)==true) {
 				System.out.println("Field cannot be blank please add value.");
 				
-			}else {
-		
-				
+			}else{
 				break;
-				
 			}
-			;
 		
 			}catch(InputMismatchException e) {
 				e.printStackTrace();
+				System.out.println("Please input a valdi value.");
+				sc.next();
 				
 			}
 		
 		}
-		
-		
-		
-		
+	
 		
 		venuesmapUpdate.put(cursor, newval);
-		
-		
-		
-		
-		
-		
+				
 		dbUpdateVenue(venuesmapUpdate,venueSelection);
 		System.out.println("Update Complete! Press enter to return to Main Menu.");
 		UserAccessControl.returnMain();
