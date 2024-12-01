@@ -1,23 +1,17 @@
 package com.a00326288.project01;
-
 import java.util.InputMismatchException;
 import java.util.Scanner; 
 
- 
-
-public class launchpad  {
+public class launchpad {
 	
 	private static Scanner sc = new Scanner(System.in);
 	
 	public static void main(String[] args) {
-		sc.useDelimiter("\r?\n");
-		UserAccessControl.Logout();
-		menu();	
 		
-	}
-
-	
-	public static void menu() {
+		mainmenu();	
+		
+	}	
+	private static void mainmenu() {
         
 		int exit =0;
 		
@@ -33,48 +27,29 @@ public class launchpad  {
             System.out.println("2 - Register");
             System.out.println("3 - Quit");
         	
-            
-            
             Integer cursor = sc.nextInt();
           
             switch(cursor) {
       		  case 1:
-      			  
-      			UserAccessControl.Login();
-      			UserAccessControl.whichMenu();
-      			UserAccessControl.Logout();
+      			UAM.Login();
       			break;
-      			
-      			  
       		  case 2:
-      			
-      			if(UserAccessControl.checkLoggedIn()==false) {
-      				System.out.println("You are already logged in.");	
-      			}else
-      			{    
-      			  UserAccessControl.Register(); 
-      			}
+      			UAM.Register(); 
       			break;
-      			
       		  case 3:
-      			  System.out.println("Goodbye");
-      			  exit=1;
-      			  break;
+      			System.out.println("Goodbye");
+      			exit=1;
+      			break;
       		  default:
             	System.out.println("Please select a valid option");
             	break;
-            }
+            	}
             
-        }catch(InputMismatchException e){
+        	}catch(InputMismatchException e){
         	e.printStackTrace();
         	System.out.println("Please select a valid option");
         	sc.next();
-        }
-        
-        }
-  
-        
+        	}
+        }   
     }
-		
-	
 }

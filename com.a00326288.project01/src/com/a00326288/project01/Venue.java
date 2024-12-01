@@ -1,10 +1,4 @@
 package com.a00326288.project01;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.InputMismatchException;
@@ -112,7 +106,7 @@ public class Venue {
 	}
 	
 	
-	public static void createVenue() {
+	public void createVenue() {
 		// TODO Auto-generated method stub
 		sc.useDelimiter("\r?\n");		
 		
@@ -178,17 +172,17 @@ public class Venue {
  
 		
 		
-		dbCreateVenue(venueName,venueAddress,venueCity,capacity);
+		DBA.dbCreateVenue(venueName,venueAddress,venueCity,capacity);
 		
 		System.out.println("Venue Created! Press enter to return to Main Menu.");
-		UserAccessControl.returnMain();
+		UAM.returnMain();
 		
 	}
 	
-	public static ArrayList<Venue> viewVenues() {
+	public ArrayList<Venue> viewVenues() {
 		// TODO Auto-generated method stub
 		
-		ArrayList<Venue> venueList = dbGetVenues();
+		ArrayList<Venue> venueList = DBA.dbGetVenues();
 		
 		System.out.println(String.format("%-15s %-25s %-70s %-20s %10s", "Venue ID", "Venue Name", "Venue Address", "City", "Capacity"));
 
@@ -196,14 +190,14 @@ public class Venue {
 			System.out.format("%-15s %-25s %-70s %-20s %10s\n", venueList.get(i).getVenueId(),venueList.get(i).getVenueName(),venueList.get(i).getVenueAddress(),venueList.get(i).getVenueCity(),venueList.get(i).getCapacity());			
 		}
 	
-		UserAccessControl.returnMain();
+		UAM.returnMain();
 		return venueList;		
 	}
 	
 	
 	
 	
-	public static void deleteVenue() {
+	public void deleteVenue() {
 		// TODO Auto-generated method stub
 		
 		ArrayList<Venue> venueList = viewVenues();
@@ -222,7 +216,7 @@ public class Venue {
 			venueSelection = sc.nextInt();
 			
 			if(venueIdLookup.contains(venueSelection)) {
-				dbDeleteVenue(venueSelection);
+				DBA.dbDeleteVenue(venueSelection);
 				System.out.println("Delete Complete! Press enter to return to Main Menu.");
 				break;
 			}else {
@@ -238,16 +232,14 @@ public class Venue {
 			
 			
 		}
+	
 		
-		
-		
-		
-		UserAccessControl.returnMain();
+		UAM.returnMain();
 	}
 	
 	
 
-	public static void modifyVenue() {
+	public void modifyVenue() {
 		// TODO Auto-generated method stub
 		
 		sc.useDelimiter("\r?\n");
@@ -390,83 +382,12 @@ public class Venue {
 		
 		venuesmapUpdate.put(cursor, newval);
 				
-		dbUpdateVenue(venuesmapUpdate,venueSelection);
+		DBA.dbUpdateVenue(venuesmapUpdate,venueSelection);
 		System.out.println("Update Complete! Press enter to return to Main Menu.");
-		UserAccessControl.returnMain();
+		UAM.returnMain();
 	}
 
-	private static void dbUpdateVenue(HashMap<Integer, String> venuesmapUpdate,Integer venueSelection) {
-		// TODO Auto-generated method stub
-		
-		String SQL = ("UPDATE venues SET venue_name ='"+venuesmapUpdate.get(1)
-				+ "', venue_address='"+venuesmapUpdate.get(2)+"', city='"+venuesmapUpdate.get(3)+"',capacity="+Integer.parseInt(venuesmapUpdate.get(4))+"  WHERE venue_id="+venueSelection+";");
-        try {
-        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
-  		  	Statement statement = connection.createStatement();
-            statement.executeUpdate(SQL);
-            connection.close();
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } 
-	}
-
-	private static void dbDeleteVenue(Integer venueSelection) {
-		// TODO Auto-generated method stub
-		
-		String SQL = ("DELETE FROM venues WHERE venue_id="+venueSelection+";");
-        try {
-        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
-  		  	Statement statement = connection.createStatement();
-            statement.executeUpdate(SQL);
-            connection.close();
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } 	
-	}
 	
-	private static void dbCreateVenue(String venueName,String venueAddress, String venueCity, Integer capacity) {
-		
-		String SQL = ("INSERT INTO venues (venue_name, venue_address, city, capacity) VALUES ('"+venueName+"','"+venueAddress+"','"+venueCity+"',"+capacity+");");
-        try {
-        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
-  		  	Statement statement = connection.createStatement();
-            statement.executeUpdate(SQL);
-            connection.close();
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }   
-		
-	}
-	
- 
-	
-	public static ArrayList<Venue> dbGetVenues() {
-		ArrayList<Venue> venueList = new ArrayList<Venue>();
-        String SQL = ("SELECT * from venues;");
-        try {
-        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
-  		  	Statement statement = connection.createStatement();
-  		    statement.setQueryTimeout(30); 
-  		  	ResultSet rs = statement.executeQuery(SQL);
-  		  	
-  		  	venueList.clear();
-  		  	
-  		  	while(rs.next())
-  		  	{
-  		  	Venue venue = new Venue(rs.getInt("venue_id"), rs.getString("venue_name"), rs.getString("venue_address"), rs.getString("city"), rs.getInt("capacity"));
-  		  	venueList.add(venue);
-  		  	}
-  		  	connection.close();
-          }
-        catch(SQLException e)
-        {
-          e.printStackTrace(System.err);
-        }
-		return venueList;		
-	}
 
 	
 }

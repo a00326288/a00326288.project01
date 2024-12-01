@@ -12,7 +12,7 @@ import java.util.Objects;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
-public class Price {
+public class Price  {
 
 	private Integer priceId;
 	private Integer eventPrice;
@@ -24,12 +24,18 @@ public class Price {
 
 	}
 	
+	public Price() {
+		// TODO Auto-generated constructor stub
+	}
+	
 	public Price(Integer priceId, Integer eventPrice) {
 
 		this.priceId = priceId;
 		this.eventPrice = eventPrice;
 
 	}
+
+	
 
 	public Integer getPriceId() {
 		return priceId;
@@ -102,7 +108,7 @@ public class Price {
 	}
 	
 	
-	public static ArrayList<Price>  viewPrices() {
+	public ArrayList<Price>  viewPrices() {
 		
 		ArrayList<Price> priceList = getPrices();
 		
@@ -113,13 +119,13 @@ public class Price {
 			System.out.printf("%-10s %20s\n" , priceList.get(i).getPriceId(),priceList.get(i).getEventPrice());
 
 		}
-		UserAccessControl.returnMain();
+		UAM.returnMain();
 		return priceList;
 		
 	}
 	
 	
-	public static void addPrice() {
+	public void addPrice() {
 		
 		Integer newPrice = null;
 		
@@ -130,7 +136,7 @@ public class Price {
 				newPrice = sc.nextInt();
 				dbAddPrice(newPrice);
 				System.out.println("Price has been added.");
-				UserAccessControl.returnMain();
+				UAM.returnMain();
 				break;
 			}catch(InputMismatchException e) {
 				e.printStackTrace();
@@ -144,7 +150,7 @@ public class Price {
 		
 	}
 	
-	public static void modifyPrice() {
+	public void modifyPrice() {
 		
 		ArrayList<Price> priceList = viewPrices();
 		
@@ -175,7 +181,7 @@ public class Price {
 				}else {
 					dbUpdatePrice(updatedPrice,selectedPrice);
 					System.out.println("Price has been updated");
-					UserAccessControl.returnMain();
+					UAM.returnMain();
 					break;
 				}
 				}catch(Exception e){
@@ -201,7 +207,7 @@ public class Price {
 	}
 	
 
-	public static void deletePrice() {
+	public void deletePrice() {
 		// TODO Auto-generated method stub
 		
 		ArrayList<Price> priceList = viewPrices();
@@ -223,7 +229,7 @@ public class Price {
 					
 					dbDeletePrice(priceSelection);
 					System.out.println("Price has been deleted.");
-					UserAccessControl.returnMain();
+					UAM.returnMain();
 					break;
 				}else {
 					

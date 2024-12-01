@@ -30,6 +30,8 @@ public class Booking {
 	private String username;
 	private String event_date;
 	private String cardNumber;
+	private Integer price_id;
+	private Integer price;
 	
 	
 	public Booking() {
@@ -37,7 +39,7 @@ public class Booking {
 
 	}
 	
-	public Booking(int booking_id, String booking_ref, String booking_dte, int num_of_seats, int num_of_tickets, int event_id, String event_name, int venue_id, String venue_name, int user_id, String username, String event_date, String cardNumber) {
+	public Booking(int booking_id, String booking_ref, String booking_dte, int num_of_seats, int num_of_tickets, int event_id, String event_name, int venue_id, String venue_name, int user_id, String username, String event_date, String cardNumber, Integer price_id, Integer price) {
 		this.booking_id = booking_id;
 		this.booking_ref = booking_ref;
 		this.booking_dte = booking_dte;
@@ -49,8 +51,11 @@ public class Booking {
 		this.user_id = user_id;
 		this.username = username;
 		this.event_date = event_date;
+		this.price_id = price_id;
+		this.price = price;
 		this.cardNumber = cardNumber;
-			
+ 
+		
 	}
 	
 
@@ -94,6 +99,31 @@ public class Booking {
 		this.event_id = event_id;
 	}
 	
+	private int getVenue_id() {
+		return venue_id;
+	}
+
+	private void setVenue_id(int venue_id) {
+		this.venue_id = venue_id;
+	}
+	
+	private int getPrice_id() {
+		return price_id;
+	}
+
+	private void setPrice_id(int price_id) {
+		this.price_id = price_id;
+	}
+	
+	private int getPrice() {
+		return price;
+	}
+
+	private void setPrice(int price) {
+		this.price = price;
+	}
+	
+	
 	private String getEvent_name() {
 		return event_name;
 	}
@@ -111,6 +141,14 @@ public class Booking {
 		this.venue_name = venue_name;
 	}
 
+	private int getUser_id() {
+		return user_id;
+	}
+
+	private void setUser_id(int user_id) {
+		this.user_id = user_id;
+	}
+	
 	private String getUsername() {
 		return username;
 	}
@@ -147,7 +185,7 @@ public class Booking {
 		
 		System.out.println();
 		
-		List<Event> eventList = Event.dbGetEvents();
+		List<Event> eventList = DBA.dbGetEvents();
 		
 		System.out.println(String.format("%-10s %-40s %30s" , "Event ID", "Event Name", "Event Description" ));
 		
@@ -168,20 +206,27 @@ public class Booking {
 				System.out.println("Please input the ID of the event you wish to book:");
 				eventSelection = sc.nextInt();
 				
-				List<Integer> lookupEventList = Event.dbGetEvents().stream()
+				List<Integer> lookupEventList = DBA.dbGetEvents().stream()
 	  		  			.map(Event::getEventId)
 	  		  			.collect(Collectors.toList());
 				
 				if(lookupEventList.contains(eventSelection)) {
+					
+					int idx = lookupEventList.indexOf(eventSelection);
+					
+					
+					setEvent_id(eventList.get(idx).getEventId());
+					setEvent_name(eventList.get(idx).getEventName());
+					
 				
-					List<Event> list = Event.dbGetEventDates(eventSelection);
+					List<Event> list = DBA.dbGetEventDates(eventSelection);
 				
-					if(list.get(0).getEvent_date()==null) {
+					if(list.get(0).getEventDate()==null) {
 						System.out.println("Sorry no available dates currently for this event. Please try again.");
 					}else {
 						System.out.println();
 						for(int i = 0; i < list.size(); i++) {
-							System.out.println("Option "+i+ " : " + list.get(i).getEventName() + "\t" + list.get(i).getEvent_date() + "\t" + list.get(i).getVenue_name() + "\t" + list.get(i).getPrice());	
+							System.out.println("Option "+i+ " : " + list.get(i).getEventName() + "\t" + list.get(i).getEventDate() + "\t" + list.get(i).getVenueName() + "\t" + list.get(i).getPrice());	
 						}
 						break;
 					}
@@ -200,7 +245,7 @@ public class Booking {
 			
 			System.out.println("Please input the option number from the list above for the date and venue to book:");
 			
-			
+			/*
 			Integer eventId = null;
 			String eventName = null;
 			String eventDate = null;
@@ -209,6 +254,7 @@ public class Booking {
 			Integer price_id = null;
 			Integer price = null;
 			Integer userId = null;
+			*/
 			
 			Integer indexSelection = null;
 			
@@ -218,21 +264,26 @@ public class Booking {
 					
 					indexSelection = sc.nextInt();
 					
-					List<Event> list = Event.dbGetEventDates(eventSelection);
+					List<Event> list = DBA.dbGetEventDates(eventSelection);
 					
 					
 					
 					try {
 					if(list.get(indexSelection)!=null) {
 						
-						eventId = list.get(indexSelection).getEventId();
-						eventName = list.get(indexSelection).getEventName();
-						eventDate = list.get(indexSelection).getEvent_date();
-						venue_id = list.get(indexSelection).getVenue_id();
-						venueName = list.get(indexSelection).getVenue_name();
-						price_id = list.get(indexSelection).getPrice_id();
-						price = list.get(indexSelection).getPrice();
-						userId = User.userlist.get(0).getId();
+						//eventId = list.get(indexSelection).getEventId();
+						//eventName = list.get(indexSelection).getEventName();
+						//eventDate = list.get(indexSelection).getEventDate();
+						//venue_id = list.get(indexSelection).getVenueId();
+						
+						setEvent_date(list.get(indexSelection).getEventDate());
+						setVenue_id(list.get(indexSelection).getVenueId());
+						setVenue_name(list.get(indexSelection).getVenueName());
+						setPrice_id(list.get(indexSelection).getPriceId());
+						setPrice(list.get(indexSelection).getPrice());
+						setUser_id(DBA.UserSession.get(0).getId());
+						
+						
  
 						
 						break;	
@@ -260,13 +311,13 @@ public class Booking {
 					
 			System.out.println(String.format("%-25s %-15s %-30s %10s" , "Event Name", "Event Date", "Venue", "Price" ));
 			
-			System.out.printf("%-25s %-15s %-30s %10s",eventName, eventDate, venueName, price);
+			System.out.printf("%-25s %-15s %-30s %10s",getEvent_name(), getEvent_date(), getVenue_name(), getPrice());
 
 			System.out.println();
 			
 			//calculate total number of tickets per booking for date at venue and then minus that from total count for the venue.
 			
-			int remainingTickets = numOfTickets(eventId,venue_id,eventDate);
+			int remainingTickets = numOfTickets(getEvent_id(),getVenue_id(),getEvent_date());
 			
 			System.out.println();
 			
@@ -277,16 +328,15 @@ public class Booking {
 			System.out.println("Please input the number of tickets you want : ");
 			
 			boolean checkRemainder=false;
-			Integer numoftickets = null;
 			
 			while(checkRemainder==false) {
 			
 				while(true) 
 				{
 					try {
-						numoftickets = sc.nextInt();
+						setNum_of_tickets(sc.nextInt());
 						
-						if(numoftickets<=0) {
+						if(getNum_of_tickets()<=0) {
 							System.out.println("Must purchase more than one ticket.");
 						}else {
 							break;
@@ -298,11 +348,11 @@ public class Booking {
 					}
 				}
 				
-				if(numoftickets>remainingTickets){
+				if(getNum_of_tickets()>remainingTickets){
 					System.out.println("Sorry not enough tickets. Please choose less or another date.");
 					checkRemainder=false;
 				}else{
-					System.out.println("The total cost of your booking is : " + (numoftickets *  price));	
+					System.out.println("The total cost of your booking is : " + (getNum_of_tickets() *  getPrice()));	
 					checkRemainder=true;
 			}
 			};
@@ -312,9 +362,9 @@ public class Booking {
 			
 			while(true) {
 				try {
-					String cardnumber = sc.next();
-					if(InputValidation.cardNumberVerification(cardnumber)==true) {
-						setCardNumber(cardnumber);
+					setCardNumber(sc.next());
+					if(InputValidation.cardNumberVerification(getCardNumber())==true) {
+						setCardNumber(getCardNumber());
 						break;
 					}else {
 						System.out.println("Invalid Input. Please ensure card number is at least 12 digits.");
@@ -327,12 +377,12 @@ public class Booking {
 			
 			StringBuilder bookref = new StringBuilder();
 			
-			bookref.append(LocalDateTime.now()+"-"+User.userlist.get(0).getUID()+"-"+eventId+venue_id);
+			bookref.append(LocalDateTime.now()+"-"+DBA.UserSession.get(0).getUID()+"-"+getEvent_id()+getVenue_id());
 			
 			
 			System.out.println("Thanks. Your booking reference is : " + bookref);
 			
-			dbCreateEventBooking(LocalDate.now(),eventId,venue_id,userId,getNum_of_tickets(),getCardNumber(),bookref,eventDate,price_id);
+			dbCreateEventBooking(LocalDate.now(),getEvent_id(),getVenue_id(),getUser_id(),getNum_of_tickets(),getCardNumber(),bookref,getEvent_date(),getPrice_id());
 			
 		}
 	
@@ -374,7 +424,7 @@ public class Booking {
 		int deleteOption = sc.nextInt();
 		
 		if(lookupDeleteList.contains(deleteOption)) {
-			dbCancelBooking(deleteOption);
+			DBA.dbCancelBooking(deleteOption);
 			System.out.println("Booking has been cancelled.");
 			break;
 		}else {
@@ -388,22 +438,10 @@ public class Booking {
 		}
 		}
 
-		UserAccessControl.returnMain();
+		UAM.returnMain();
 	}
 
-	private void dbCancelBooking(int deleteOption) {
-		// TODO Auto-generated method stub
-		String SQL = ("DELETE FROM bookings WHERE booking_id="+deleteOption+";");
-        try {
-        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
-  		  	Statement statement = connection.createStatement();
-            statement.executeUpdate(SQL);
-            connection.close();
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } 	
-	}
+	
 
 	public ArrayList<Booking> viewBookings() {
 		// TODO Auto-generated method stub
@@ -415,7 +453,7 @@ public class Booking {
 
 		System.out.println();
 		
-		List<Event> eventList = Event.dbGetEvents();
+		List<Event> eventList = DBA.dbGetEvents();
 		
 		System.out.println(String.format("%-10s %-40s %30s" , "Event ID", "Event Name", "Event Description" ));
 		
@@ -435,20 +473,20 @@ public class Booking {
 				
 				try {
 				
-				List<Event> list = Event.dbGetEventDates(getEvent_id());
+				List<Event> list = DBA.dbGetEventDates(getEvent_id());
 				
 				
-				List<Integer> lookupEventList = Event.dbGetEvents().stream()
+				List<Integer> lookupEventList = DBA.dbGetEvents().stream()
 	  		  			.map(Event::getEventId)
 	  		  			.collect(Collectors.toList());
 		
-				if(list.get(0).getEvent_date()==null) {
+				if(list.get(0).getEventDate()==null) {
 					System.out.println("Sorry no available booking dates currently for this event. Please try again.");
 				}else {
 				if(lookupEventList.contains(getEvent_id())){			
 					System.out.println();
 					for(int i = 0; i < list.size(); i++) {
-						System.out.println("Option "+i+ " : " + list.get(i).getEventName() + "\t" + list.get(i).getEvent_date() + "\t" + list.get(i).getVenue_name() + "\t" + list.get(i).getPrice());	
+						System.out.println("Option "+i+ " : " + list.get(i).getEventName() + "\t" + list.get(i).getEventDate() + "\t" + list.get(i).getVenueName() + "\t" + list.get(i).getPrice());	
 					}
 					break;
 				}else{
@@ -489,16 +527,16 @@ public class Booking {
 					
 					try {
 			
-					if(Event.dbGetEventDates(getEvent_id()).get(indexSelection).getEventId() != null) {
+					if(DBA.dbGetEventDates(getEvent_id()).get(indexSelection).getEventId() != null) {
 						
-						eventId = Event.dbGetEventDates(getEvent_id()).get(indexSelection).getEventId();
-						eventName = Event.dbGetEventDates(getEvent_id()).get(indexSelection).getEventName();
-						eventDate = Event.dbGetEventDates(getEvent_id()).get(indexSelection).getEvent_date();
-						venue_id = Event.dbGetEventDates(getEvent_id()).get(indexSelection).getVenue_id();
-						venueName = Event.dbGetEventDates(getEvent_id()).get(indexSelection).getVenue_name();
-						price_id = Event.dbGetEventDates(getEvent_id()).get(indexSelection).getPrice_id();
-						price = Event.dbGetEventDates(getEvent_id()).get(indexSelection).getPrice();
-						userId = User.userlist.get(0).getId();
+						eventId = DBA.dbGetEventDates(getEvent_id()).get(indexSelection).getEventId();
+						eventName = DBA.dbGetEventDates(getEvent_id()).get(indexSelection).getEventName();
+						eventDate = DBA.dbGetEventDates(getEvent_id()).get(indexSelection).getEventDate();
+						venue_id = DBA.dbGetEventDates(getEvent_id()).get(indexSelection).getVenueId();
+						venueName = DBA.dbGetEventDates(getEvent_id()).get(indexSelection).getVenueName();
+						price_id = DBA.dbGetEventDates(getEvent_id()).get(indexSelection).getPriceId();
+						price = DBA.dbGetEventDates(getEvent_id()).get(indexSelection).getPrice();
+						userId = DBA.UserSession.get(0).getId();
 						break;	
 						
 					}else {
@@ -545,13 +583,13 @@ public class Booking {
 			
 			}
 		 	
-			UserAccessControl.returnMain();
+			UAM.returnMain();
 			
 			return bookingList;
 			
 	}
 	
-	private ArrayList<Booking> dbGetBookingList(Integer eventId, Integer venue_id, String eventDate ){
+	private static ArrayList<Booking> dbGetBookingList(Integer eventId, Integer venue_id, String eventDate ){
 
 		ArrayList<Booking> bookingList = new ArrayList<>();
 		
@@ -637,7 +675,7 @@ public class Booking {
 
 	}
 
-	private Integer numOfTickets(Integer eventId, Integer venue_id, String eventDate) {
+	private static Integer numOfTickets(Integer eventId, Integer venue_id, String eventDate) {
 		
 		Integer remainingTickets = null;
 		
@@ -668,10 +706,10 @@ public class Booking {
 		
 	}
 
-	public static void viewMyBookings() {
+	public void viewMyBookings() {
 		// TODO Auto-generated method stub
 		
-		ArrayList<Booking> mybookings = dbGetBookingList(User.userlist.get(0).getId());
+		ArrayList<Booking> mybookings = dbGetBookingList(DBA.UserSession.get(0).getId());
 
 		System.out.println(String.format("%-15s %-15s %-70s %-20s %-35s %-20s %-35s %10s", "Booking ID", "Booking Date", "Booking Reference", "Username", "Event Name", "Event Date", "Venue", "No. of Tickets"));
 		 
@@ -684,5 +722,6 @@ public class Booking {
 
 		
 	}
+ 	
 	
 }

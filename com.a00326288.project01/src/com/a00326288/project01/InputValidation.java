@@ -6,46 +6,26 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 enum validation {
-TOOMANYCHAR,TOOFEWCHAR,NOSPECIALCHAR,NOUPPERCHAR,NOLOWERCHAR,CONTAINSWHITEPACE,NODIGIT,SUCCESS,QUIT,USERALREADYTAKEN;
+TOOMANYCHAR,TOOFEWCHAR,NOSPECIALCHAR,NOUPPERCHAR,NOLOWERCHAR,CONTAINSWHITEPACE,NODIGIT,USERALREADYTAKEN,NOUPPERCHARS,NOLOWERCHARS,SUCCESS,QUIT;
 }
 
 public class InputValidation {
 
-	public static boolean cardNumberVerification(String cardNumber) {
-		
-		if(cardNumber.length()>=12 && cardNumber.matches("[0-9]+")) {
-			return true;
-		}else {
-		return false;
-		}
-	}
-	
-	public static Date StringToDate(String dob) throws ParseException {
-	      SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-	      Date date = formatter.parse(dob);
-	      return date;
-	   }
-	
-	
-	public static boolean checkfieldNull(String input) {
-		if(input.isBlank()||input.isEmpty()||input==null) {
-			return true;
-		}else {
-			return false;
-		}
-	}
-	
 
 	public static int validateInput(String input) {
 		
 		
 		try {
 			
-			final int minimum_chars = 10;
-		    final int maximum_chars= 15;
+			//Setting the limits as final because they aren't going to change. 
+			
+			final int minChars = 10;
+		    final int maxChars= 15;
 		    final int minSpecialChars= 1;
 		    final int minDigCount= 1;
 		    final int noWhiteSpace=0;
+		    final int minUpperChars=1;
+		    final int minLowerChars=1;
 		    
 		    int upper_chars=0;
 		    int lower_chars=0;
@@ -54,27 +34,22 @@ public class InputValidation {
 		    int specialChar=0;
 		    
 			int InputLength = input.length();
-			int char_count = 0;
+
 			String SpecialChars="!@#$%&*()'+,-./:;<=>?[]^_`{|}";
 			
 			for(int i = 0;i<InputLength;i++) {
 				char inputchar= input.charAt(i);
 				String specialCharCheck = Character.toString(input.charAt(i));
 				if(Character.isLetterOrDigit(inputchar) && Character.isLowerCase(inputchar) ) {
-					char_count++;
 					lower_chars++;
 				}else if(Character.isLetterOrDigit(inputchar) && Character.isUpperCase(inputchar)) {
-					char_count++;
 					upper_chars++;	
 				}else if(Character.isDigit(inputchar)) {
 					digit_count++;
-					char_count++;
 				}else if(Character.isWhitespace(inputchar)) {
 					whitespace_cnt++;
-					char_count++;
 				}else if(SpecialChars.contains(specialCharCheck)) { 					
 					specialChar++;
-					char_count++;
 				}
 					
 			}
@@ -85,10 +60,14 @@ public class InputValidation {
 			
 			if(input.contentEquals("Quit")) {
 				Validation=validation.QUIT;}
-			else if(InputLength < minimum_chars) {
+			else if(InputLength < minChars) {
 				Validation=validation.TOOFEWCHAR;
-			}else if(InputLength > maximum_chars) {
+			}else if(InputLength > maxChars) {
 				Validation=validation.TOOMANYCHAR;
+			}else if(lower_chars < minLowerChars) {
+					Validation=validation.NOLOWERCHARS;
+			}else if(upper_chars < minUpperChars) {
+				Validation=validation.NOUPPERCHARS;
 			}else if(whitespace_cnt != noWhiteSpace) {
 				Validation=validation.CONTAINSWHITEPACE;
 			}else if(digit_count < minDigCount) {
@@ -107,6 +86,12 @@ public class InputValidation {
 				  return 0;
 			case TOOMANYCHAR:
 				  System.out.println("Your password has too many characters. Please try again or Type 'Quit' to finish.");
+				  return 0;
+			case NOUPPERCHARS:
+				  System.out.println("Your password has no uppercase characters. Please ensure to use mix-case and try again or Type 'Quit' to finish.");
+				  return 0;
+			case NOLOWERCHARS:
+				  System.out.println("Your password has no lowercase characters. Please ensure to use mix-case and try again or Type 'Quit' to finish.");
 				  return 0;
 			case CONTAINSWHITEPACE:
 				  System.out.println("Your password cannot contain white space. Please try again or Type 'Quit' to finish.");
@@ -137,6 +122,30 @@ public class InputValidation {
 		}
 		return false;
 		
+	}
+	
+	public static boolean cardNumberVerification(String cardNumber) {
+		
+		if(cardNumber.length()>=12 && cardNumber.matches("[0-9]+")) {
+			return true;
+		}else {
+		return false;
+		}
+	}
+	
+	public static Date StringToDate(String dob) throws ParseException {
+	      SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+	      Date date = formatter.parse(dob);
+	      return date;
+	   }
+	
+	
+	public static boolean checkfieldNull(String input) {
+		if(input.isBlank()||input.isEmpty()||input==null) {
+			return true;
+		}else {
+			return false;
+		}
 	}
 	
 	
