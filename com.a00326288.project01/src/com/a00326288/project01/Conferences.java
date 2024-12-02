@@ -16,6 +16,15 @@ public class Conferences extends AbstractEvent{
 	private String sponsor;
 	private int conference_id;
 	final private String eventType ="Conference";
+	private Integer eventId;
+	private String name;
+	private String description;
+	private String eventDate;
+	private Integer venueId;
+	private String venueName;
+	private Integer priceId;
+	private Integer price;
+	
 	
 	public Conferences(Integer event_id,String name, String description, int conferenceId, String conferenceSpeakers, String sponsor) {
 		super();
@@ -27,44 +36,113 @@ public class Conferences extends AbstractEvent{
 		this.sponsor = sponsor;
  
 	}
- 
-	public Conferences() {
- 	}
+	
+	public Conferences(Integer event_id, String name, String description, String eventDate, int venue_id, String venueName, int price_id, int price) {
+	
+	}
 
- 
+	public Conferences() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	
+	
+	
+
 	private int getConference_id() {
 		return conference_id;
 	}
  
-	private void setConference_id(int conference_id) {
+	void setConference_id(int conference_id) {
 		this.conference_id = conference_id;
 	}
 
-
-
-	private void setConferenceSpeakers(String conferenceSpeakers) {
+	public void setConferenceSpeakers(String conferenceSpeakers) {
 		this.conferenceSpeakers = conferenceSpeakers;
 	}
-
-	private String getConferenceSpeakers() {
+ 
+	public String getConferenceSpeakers() {
 		return conferenceSpeakers;
 	}
 
 	
-	private String getSponsor() {
+	public String getSponsor() {
 		return sponsor;
 	}
 
 
-	private void setSponsor(String sponsor) {
+	public void setSponsor(String sponsor) {
 		this.sponsor = sponsor;
 	}
- 
+	
+	public void setEventDate(String EventDate) {
+		this.eventDate = EventDate;
+	}
+
+
+	private Integer getEventId() {
+		return event_id;
+	}
+
+	void setEventId(Integer event_id) {
+		this.event_id = event_id;
+	}
+
+	private String getName() {
+		return name;
+	}
+
+	void setName(String name) {
+		this.name = name;
+	}
+
+	private String getDescription() {
+		return description;
+	}
+
+	void setDescription(String description) {
+		this.description = description;
+	}
+
+	private Integer getVenueId() {
+		return venueId;
+	}
+
+	void setVenueId(Integer venueId) {
+		this.venueId = venueId;
+	}
+
+	private String getVenueName() {
+		return venueName;
+	}
+
+	void setVenueName(String venueName) {
+		this.venueName = venueName;
+	}
+
+	private Integer getPriceId() {
+		return priceId;
+	}
+
+	void setPriceId(Integer priceId) {
+		this.priceId = priceId;
+	}
+
+	private Integer getPrice() {
+		return price;
+	}
+
+	void setPrice(Integer price) {
+		this.price = price;
+	}
+
+	private String getEventDate() {
+		return eventDate;
+	}
 
 	@Override
 	public String toString() {
-		return "Conference [conferenceSpeakers=" + conferenceSpeakers + ", sponsor=" + sponsor + ", conference_id="
-				+ conference_id + ", event_id=" + event_id + ", name=" + name + ", description=" + description + "]";
+		return "Conference [event_id=" + event_id + " name=" + name + ", description=" + description + " conferenceSpeakers=" + conferenceSpeakers + ", sponsor=" + sponsor + "]";
 	}
 
  
@@ -87,7 +165,7 @@ public class Conferences extends AbstractEvent{
 		System.out.println("Please specify the sponsor for the Conference.");
 		setSponsor(sc.next());
 		
-		String SQL1 = "INSERT INTO EVENTS (description, name) VALUES ('"+super.name+"','"+super.description+"');";
+		String SQL1 = "INSERT INTO EVENTS (name, description) VALUES ('"+super.name+"','"+super.description+"');";
 		String SQL2 = "INSERT INTO CONFERENCES (event_id, speakers, sponsor) VALUES ((SELECT MAX(event_id) from EVENTS), '"+getConferenceSpeakers()+"','"+getSponsor()+"');";
 		
 		DBA.create(SQL1, SQL2);
@@ -108,10 +186,14 @@ public class Conferences extends AbstractEvent{
 		String SQL = "SELECT a.event_id,a.name, a.description,b.conference_id, b.speakers,b.sponsor FROM events a inner join conferences b on a.event_id = b.event_id;";
 		
 		ArrayList<Conferences> list = DBA.conferenceList(SQL);
-		
+ 
+		if(list.size()<1) {
+			System.out.println("No conferences.");
+		}else {
 		for(Conferences i : list) {
-		 System.out.println(i.toString());
-	
+			System.out.println(i.toString());
+		 
+		}
 		}
 		
 	}
@@ -132,6 +214,8 @@ public class Conferences extends AbstractEvent{
 	public void delete() {
 		// TODO Auto-generated method stub
 		list();
+		
+		
 		
 		System.out.println("Please enter the Event ID for the Conference to delete.");
 		Integer ID = sc.nextInt();
@@ -161,20 +245,24 @@ public class Conferences extends AbstractEvent{
  
 		String Date = sc.next();
 		
-		Venue.viewVenues();
+		Venue venues = new Venue();
 		
-		System.out.println("Please specify a venue for the Concert.");
+		venues.viewVenues();
 		
-		sc.nextInt();
+		System.out.println("Please enter the venue ID for the Concert.");
 		
-		Price.getPrices();
+		String venue = sc.next();
 		
-		System.out.println("Please specify a price for the Concert.");
+		Price prices = new Price();
 		
-		sc.nextInt();
+		prices.viewPrices();
+		
+		System.out.println("Please specify a price ID for the Concert.");
+		
+		int price = sc.nextInt();
 		
 		
-		String SQL = "INSERT INTO DATES (event_date, event_id) VALUES ('"+Date+"',"+ID+");";
+		String SQL = "INSERT INTO DATES (event_date, event_id, venue_id, price_id) VALUES ('"+Date+"',"+ID+","+venue+","+price+");";
 
 		DBA.addDate(SQL);
 		
@@ -202,8 +290,9 @@ public class Conferences extends AbstractEvent{
 		String Date = sc.next();
 
 		String SQL = "DELETE FROM dates WHERE event_id = "+ID+" and event_date='"+Date+"';";
-		
+		String SQL1 = "DELETE FROM events WHERE event_id = "+ID+";";
 		DBA.removeDate(SQL);
+		DBA.removeDate(SQL1);
 		
 		StringBuilder msg = new StringBuilder();
 		
@@ -218,14 +307,27 @@ public class Conferences extends AbstractEvent{
 	public void listDates() {
 		// TODO Auto-generated method stub
 		
-		String SQL = "SELECT a.event_id, a.id, a.event_date, b.name FROM dates a inner join events b on a.event_id = b.event_id inner join conferences c on a.event_id = c.event_id;"; 
 		
-		 ArrayList<CustomType> pairs = DBA.dblistDates(SQL);
-		
-		  for (CustomType pair : pairs) { 
-	            System.out.println("EventID: " + pair.getID() + " Date: " + pair.getDate() + " Name: " +pair.getName()); 
-	        } 
+		 String SQL = "SELECT a.event_id, a.name, a.description, c.event_date, d.venue_id,d.venue_name, e.price_id,e.price FROM events a INNER JOIN conferences b ON a.event_id  = b.event_id INNER JOIN dates c ON b.event_id = c.event_id INNER JOIN venues d ON c.venue_id = d.venue_id INNER JOIN prices e ON c.price_id = e.price_id;"; 
+			
+		 try {
+		 ArrayList<Conferences> list = DBA.conferencesDateList(SQL);
 		 
+		 if(list.get(0).getEventDate().isBlank()) 
+			{
+				System.out.println("No listing dates are available yet for this event - please check back soon.");
+			}else{
+				System.out.println(String.format("%-10s %-40s %-20s %-15s %-30s", "Option", "Event Name","Event Date", "Price", "Venue"));	
+				for(int i = 0;i < list.size();i++) 
+				{	
+				System.out.format("%-10s %-40s %-20s %-15s %-30s\n",i,list.get(i).getName(),list.get(i).getEventDate(),list.get(i).getPrice(),list.get(i).getVenueName());
+				}	
+			}
+		 }catch(IndexOutOfBoundsException e) {
+			 System.out.println("No dates available yet.");
+		
+		 } 
+
+	 
 	}
- 
 }

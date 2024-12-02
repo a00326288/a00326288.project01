@@ -3,7 +3,7 @@ package com.a00326288.project01;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class Customer extends Person implements BookingInterface {
+public class Customer extends Person implements UserMenuInterface {
 
 	private static Scanner sc = new Scanner(System.in);
 	private Integer user_id;
@@ -48,19 +48,8 @@ public class Customer extends Person implements BookingInterface {
 
 
 	private void menuSelector(Integer selector, String type) {	
-		
-	
-		if(type =="Bookings") {
-			Booking booking = new Booking();
-			if(selector ==1) {
-			booking.createBooking(user_id);
-			}else if(selector ==2) {
-			booking.viewBookings(user_id);	
-			}else if (selector==3) {
-			booking.cancelBooking(user_id);
-			
-			}	
-		}else if(type =="Conferences") {
+ 
+		if(type =="Conferences") {
 			Conferences conference = new Conferences();
 			if(selector ==1) {
 				int selection = AbstractEvent.menu(type, usertype);
@@ -68,11 +57,21 @@ public class Customer extends Person implements BookingInterface {
 					conference.list();
 				}else if(selection==2) {
 					conference.listDates();
+					}else if(selection==3) {
+						Booking booking = new Booking();
+						booking.createBooking(getUser_id(), "Conferences");
+					}else if(selection==4) {
+						Booking booking = new Booking();
+						booking.viewBookings(getUser_id(),"Conferences");
+					}else if(selection==5) {
+						Booking booking = new Booking();
+						booking.cancelBooking(getUser_id(),"Conferences");	
+					}
 					
-
-				}
 			}
-		}else if(type =="Concerts") {
+
+		}
+		else if(type =="Concerts") {
 			Concerts concert = new Concerts();
 			if(selector ==2) {
 				int selection = AbstractEvent.menu(type, usertype);
@@ -80,6 +79,15 @@ public class Customer extends Person implements BookingInterface {
 					concert.list();
 				}else if(selection==2) {
 					concert.listDates();
+				}else if(selection==3) {
+					Booking booking = new Booking();
+					booking.createBooking(getUser_id(), "Concerts");
+				}else if(selection==4) {
+					Booking booking = new Booking();
+					booking.viewBookings(getUser_id(),"Concerts");
+				}else if(selection==5) {
+					Booking booking = new Booking();
+					booking.cancelBooking(getUser_id(),"Concerts");	
 				}
 			}
 		}	
@@ -166,49 +174,15 @@ public class Customer extends Person implements BookingInterface {
 	}
 
 
-	@Override
-	public void UpdatePassword() {
-		// TODO Auto-generated method stub
-		
+	public Integer getUser_id() {
+		return user_id;
 	}
 
 
-
-	@Override
-	public void viewAccount() {
-		// TODO Auto-generated method stub
-		
+	public void setUser_id(Integer user_id) {
+		this.user_id = user_id;
 	}
 
 
-
-	@Override
-	public void editAccount() {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-
-	@Override
-	public void deleteAccount() {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public void makeBooking() {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public void getBookingDetails() {
-		// TODO Auto-generated method stub
-		
-	}
-
-
+ 
 }

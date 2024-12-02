@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class UAM   {
+public class UAM  {
 
 	private static Scanner sc = new Scanner(System.in);
 	static Console cnsl = System.console();
@@ -27,6 +27,7 @@ public class UAM   {
 	
 		 		
 		try {
+			
 			
 			
 			//Get the Username and Password from Scanner
@@ -50,9 +51,24 @@ public class UAM   {
 	        Integer uac = DBA.dbCheckUserType(username, password)   ; 
 	          
 	        
-	        
-			whichUser(uac);
+	        try {
+				if(uac==1) {
+					Admin admin = new Admin();
+					admin.setUser_id(1);
+					admin.Menu();					
+				}else if(uac==0) {
+					Customer customer = new Customer();
+					customer.setUser_id(2);
 					
+					
+					customer.Menu();
+				}
+				}catch(Exception e) {
+					e.printStackTrace();
+					System.out.println("Cannot determine user.");
+				}
+	        
+	       	
 					
 			}else {
 					System.out.println("Invalid details or User does not Exists");
@@ -131,25 +147,6 @@ public class UAM   {
 		
 	}
 		
-	
-	
-	private static void whichUser(Integer uac) {
-		// TODO Auto-generated method stub
-		
-			try {
-			if(uac==1) {
-				Admin admin = new Admin();
-				admin.Menu();					
-			}else if(uac==0) {
-				Customer customer = new Customer();
-				customer.Menu();
-			}
-			}catch(Exception e) {
-				e.printStackTrace();
-				System.out.println("Cannot determine user.");
-			}
-	}
-
 	
     
 	

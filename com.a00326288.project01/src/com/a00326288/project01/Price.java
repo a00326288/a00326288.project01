@@ -24,9 +24,6 @@ public class Price  {
 
 	}
 	
-	public Price() {
-		// TODO Auto-generated constructor stub
-	}
 	
 	public Price(Integer priceId, Integer eventPrice) {
 
@@ -35,77 +32,22 @@ public class Price  {
 
 	}
 
-	
 
-	public Integer getPriceId() {
+	public Price() {
+		// TODO Auto-generated constructor stub
+	}
+
+
+	private Integer getPriceId() {
 		return priceId;
 	}
 
-	private void setPriceId(Integer priceId) {
-		this.priceId = priceId;
-	}
+ 
 
 	public Integer getEventPrice() {
 		return eventPrice;
 	}
-
-	private void setEventPrice(Integer eventPrice) {
-		this.eventPrice = eventPrice;
-	}
-
-
-	public static ArrayList<Price> getPrices() {
-	
-		ArrayList<Price> priceList = new ArrayList<Price>();
-		
-		String SQL = ("SELECT * from prices;");
-        try {
-        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
-  		  	Statement statement = connection.createStatement();
-  		    statement.setQueryTimeout(30); 
-  		  	ResultSet rs = statement.executeQuery(SQL);
-  		  	
-  		  	priceList.clear();
-  		  	
-  		  	while(rs.next())
-  		  	{
-  		  
-  		  	Price price = new Price(rs.getInt("price_id"), rs.getInt("price"));
-  	      
-  		  	priceList.add(price);
-  	
-  
-  		  	}
-  		  	connection.close();
-          }
-        catch(SQLException e)
-        {
-          e.printStackTrace(System.err);
-        }	
-		return priceList;	
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(eventPrice, priceId);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Price other = (Price) obj;
-		return Objects.equals(eventPrice, other.eventPrice) && Objects.equals(priceId, other.priceId);
-	}
-
-	@Override
-	public String toString() {
-		return "Price [priceId=" + priceId + ", eventPrice=" + eventPrice + "]";
-	}
+ 
 	
 	
 	public ArrayList<Price>  viewPrices() {
@@ -119,10 +61,10 @@ public class Price  {
 			System.out.printf("%-10s %20s\n" , priceList.get(i).getPriceId(),priceList.get(i).getEventPrice());
 
 		}
-		UAM.returnMain();
 		return priceList;
 		
 	}
+	
 	
 	
 	public void addPrice() {
@@ -150,63 +92,8 @@ public class Price  {
 		
 	}
 	
-	public void modifyPrice() {
-		
-		ArrayList<Price> priceList = viewPrices();
-		
-		List<Integer> priceLookup = priceList.stream()
-		  			.map(Price::getPriceId)
-		  			.collect(Collectors.toList());
-		
-		
-		Integer selectedPrice = null;
-		
-		while(true) {
-			
-			try {
-			System.out.println("Please specify the Price ID you wish to update.");
-		
-			selectedPrice = sc.nextInt();
-				
-			if(priceLookup.contains(selectedPrice)) {
-				
-				try {
-				
-				System.out.println("Please specify the updated price: ");
-				int updatedPrice = sc.nextInt();
-				
-				if(updatedPrice <=0) {
-					
-					System.out.println("Price cannot be less than 0.");
-				}else {
-					dbUpdatePrice(updatedPrice,selectedPrice);
-					System.out.println("Price has been updated");
-					UAM.returnMain();
-					break;
-				}
-				}catch(Exception e){
-					System.out.println("Invalid Input. Please specify a correct ID");
-					
-				}
-				
-				
-			}else {
-				
-				System.out.print("Price ID specified is not found. Please try again.");
-			}
-			
-			}catch(InputMismatchException e) {
-				e.printStackTrace();
-				System.out.println("Invalid Input. Please specify a correct ID.");
-				sc.next();
-			}
-			
-		}
-		
-		
-	}
 	
-
+	
 	public void deletePrice() {
 		// TODO Auto-generated method stub
 		
@@ -247,6 +134,38 @@ public class Price  {
 		
 		
 	}
+	
+	private static ArrayList<Price> getPrices() {
+		
+		ArrayList<Price> priceList = new ArrayList<Price>();
+		
+		String SQL = ("SELECT * from prices;");
+        try {
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
+  		  	Statement statement = connection.createStatement();
+  		    statement.setQueryTimeout(30); 
+  		  	ResultSet rs = statement.executeQuery(SQL);
+  		  	
+  		  	priceList.clear();
+  		  	
+  		  	while(rs.next())
+  		  	{
+  		  
+  		  	Price price = new Price(rs.getInt("price_id"), rs.getInt("price"));
+  	      
+  		  	priceList.add(price);
+  	
+  
+  		  	}
+  		  	connection.close();
+          }
+        catch(SQLException e)
+        {
+          e.printStackTrace(System.err);
+        }	
+		return priceList;	
+	}
+	
 
 	private static void dbDeletePrice(Integer priceSelection) {
 		// TODO Auto-generated method stub
@@ -262,19 +181,6 @@ public class Price  {
 			} 	
 	}
 
-	private static void dbUpdatePrice(int updatedPrice,int selectedPrice) {
-		// TODO Auto-generated method stub
-		String SQL = ("UPDATE prices set price="+updatedPrice+" where price_id="+selectedPrice+";");
-		try {	
-			Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
-			Statement statement = connection.createStatement();
-			statement.executeUpdate(SQL);
-			 connection.close();
-			}catch (SQLException e) {
-	        // TODO Auto-generated catch block
-	        e.printStackTrace();
-			} 	
-	}
 
 	private static void dbAddPrice(Integer newPrice) {
 		// TODO Auto-generated method stub
@@ -292,6 +198,8 @@ public class Price  {
 		
 		
 	}
+	
+
 
 
 }

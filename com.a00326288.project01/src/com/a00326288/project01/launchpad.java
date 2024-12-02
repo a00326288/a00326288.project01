@@ -18,7 +18,6 @@ public class launchpad  {
         while(exit==0) {
         	
         try {
-        	/***************************************************/
             
             System.out.println("---------------------------");
             System.out.println("-Main Menu -");

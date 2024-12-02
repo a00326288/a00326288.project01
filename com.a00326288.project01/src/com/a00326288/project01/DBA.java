@@ -1,12 +1,8 @@
 package com.a00326288.project01;
-
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+ 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -246,8 +242,60 @@ public class DBA  {
 	}
 	
 	
+
+	
 	
 	/**** EVENTS *****/
+	
+	
+	static ArrayList<CustomType> dbGetEvents(String eventType) {
+		// TODO Auto-generated method stub
+		
+		ArrayList<CustomType> eventList = new ArrayList<CustomType>();
+		
+		String SQL = "";
+		
+		if(eventType=="Conferences") {
+			SQL = ("SELECT a.event_id, a.name, a.description FROM events a inner join conferences b on a.event_id = b.event_id;");
+		}else {
+			SQL = ("SELECT a.event_id, a.name, a.description FROM events a inner join concerts b on a.event_id = b.event_id;");
+		}
+		
+        
+        try {
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
+  		  	Statement statement = connection.createStatement();
+  		    statement.setQueryTimeout(30); 
+  		  	ResultSet rs = statement.executeQuery(SQL);
+  		  	
+  		  	eventList.clear();
+  		  	
+  		  	
+  		  	while(rs.next())
+  		  	{
+  		  		
+  		  		
+  		  		CustomType custom = new CustomType();
+  		  		
+  		  		custom.setEvent_id(rs.getInt("event_id"));
+  		  		custom.setEvent_name(rs.getString("name"));
+  		  		custom.setEvent_description(rs.getString("description"));
+  		  				
+ 
+  		  		eventList.add(custom);
+  		  	}
+ 
+			
+            connection.close();
+          }
+        catch(SQLException e)
+        {
+          e.printStackTrace(System.err);
+        }
+		
+		return eventList;
+		
+	}
 	
 	static void dbDeleteEvent(Integer eventSelection) {
 		// TODO Auto-generated method stub
@@ -280,48 +328,13 @@ public class DBA  {
         } 	
 	}
 
-
-
-	static ArrayList<Event> dbGetEvents() {
-		// TODO Auto-generated method stub
-		
-		ArrayList<Event> eventList = new ArrayList<Event>();
-		
-        String SQL = ("SELECT * FROM events;");
-        try {
-        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
-  		  	Statement statement = connection.createStatement();
-  		    statement.setQueryTimeout(30); 
-  		  	ResultSet rs = statement.executeQuery(SQL);
-  		  	
-  		  	eventList.clear();
-  		  	
-  		  	
-  		  	while(rs.next())
-  		  	{
-  		  		Event event = new Event(rs.getInt("event_id"),rs.getString("name"),rs.getString("description"));
-  		  		
-  		  		eventList.add(event);
-  		  	}
+	
  
-			
-            connection.close();
-          }
-        catch(SQLException e)
-        {
-          e.printStackTrace(System.err);
-        }
-		
-		return eventList;
-		
-	}
 	
-	
-	
-	static ArrayList<Event> dbGetEventDates(Integer selection) {
+	static ArrayList<CustomType> dbGetEventDates(Integer selection) {
 		// TODO Auto-generated method stub
 		
-		ArrayList<Event> eventDateList = new ArrayList<Event>();
+		ArrayList<CustomType> eventDateList = new ArrayList<CustomType>();
 		
         String SQL = ("SELECT DISTINCT a.event_id, a.name, a.description, b.event_date,c.venue_id, c.venue_name, d.price_id, d.price  FROM events a left join dates b on a.event_id = b.event_id left join venues c on b.venue_id = c.venue_id left join prices d on b.price_id = d.price_id where a.event_id="+selection+";");
         try {
@@ -335,8 +348,19 @@ public class DBA  {
   		  	while(rs.next())
   		  	{	
   		  		
-  		  		Event event = new Event(rs.getInt("event_id"),rs.getString("name"),rs.getString("description"), rs.getString("event_date"),rs.getInt("venue_id"),rs.getString("venue_name"),rs.getInt("price_id"), rs.getInt("price"));			
-  		  		eventDateList.add(event);
+  		  		CustomType custom = new CustomType();
+  		  		
+  		  		custom.setEvent_id(rs.getInt("event_id"));
+  		  		custom.setEvent_name(rs.getString("name"));
+  		  		custom.setEvent_description(rs.getString("description"));
+  		  		custom.setEvent_date(rs.getString("event_date"));
+  		  		custom.setVenue_id(rs.getInt("venue_id"));	
+  		  		custom.setVenue_name(rs.getString("venue_name"));	
+  		  		custom.setPrice_id(rs.getInt("price_id"));	
+  		  		custom.setPrice(rs.getInt("price"));	
+  		  	
+  		 
+  		  		eventDateList.add(custom);
   		  	}
  
   		  	
@@ -348,6 +372,8 @@ public class DBA  {
         }
 		return eventDateList;
 	}
+	 
+	
 
 	static void dbCreateEventDate(Integer eventId, String eventDate, Integer venueId, Integer priceId) {
 		// TODO Auto-generated method stub
@@ -363,19 +389,10 @@ public class DBA  {
         }   
 	}
 
-	static void dbCreateEvent(Event createEvent) {
-		
-		String SQL = ("INSERT INTO events (name, description) VALUES ('"+createEvent.getEventName()+"','"+createEvent.getEventDescription()+"');");
-		try {
-        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
-  		  	Statement statement = connection.createStatement();
-            statement.executeUpdate(SQL);
-            connection.close();
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }   
-	}
+	
+	
+ 
+	 
 	
 	static void dbUpdateEvent(HashMap<Integer, String> eventmapUpdate,Integer eventSelection) {
 		// TODO Auto-generated method stub
@@ -423,13 +440,22 @@ public class DBA  {
 		  	
 		  	list.clear();
 		  	
+ 
+		  	
 		  	while(rs.next())
 		  	{	
+		  		Concerts concert = new Concerts();
 		  		
-		  		Concerts concert = new Concerts(rs.getInt("event_id"),rs.getString("name"),rs.getString("description"), rs.getInt("concert_id"),rs.getString("band_name"),rs.getString("band_members"),rs.getString("genre") );
+		  		concert.setEventId(rs.getInt("event_id"));
+		  		concert.setName(rs.getString("name"));
+		  		concert.setDescription(rs.getString("description"));
+		  		concert.setConcertId(rs.getInt("concert_id"));
+		  		concert.setBandName(rs.getString("band_name"));
+		  		concert.setBandMembers(rs.getString("band_members"));
+		  		concert.setBandMembers(rs.getString("genre"));
+		  		
 		  		list.add(concert);
 		  	}
-
 		  	
           connection.close();
         } catch (SQLException e) {
@@ -440,7 +466,46 @@ public class DBA  {
 		
 	}
 	
+	
 	public static ArrayList<Conferences> conferenceList(String SQL) {
+		
+		ArrayList<Conferences> list = new ArrayList<Conferences>();
+		
+        try {
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
+  		  	Statement statement = connection.createStatement();
+  		 	ResultSet rs = statement.executeQuery(SQL);
+		  	
+		  	list.clear();
+
+		  	while(rs.next())
+		  	{	
+		  
+		  		Conferences conference = new Conferences();
+		  		
+		  		conference.setEventId(rs.getInt("event_id"));
+		  		conference.setName(rs.getString("name"));
+		  		conference.setDescription(rs.getString("description"));
+		  		conference.setConference_id(rs.getInt("conference_id"));
+		  		conference.setConferenceSpeakers(rs.getString("speakers"));
+		  		conference.setSponsor(rs.getString("sponsor"));
+		  		
+		  		
+		  		list.add(conference);
+		  		
+		  	}
+		  	
+          connection.close();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } 	
+        return list;
+		
+	}
+	
+	
+	public static ArrayList<Conferences> conferencesDateList(String SQL) {
 		
 		ArrayList<Conferences> list = new ArrayList<Conferences>();
 		
@@ -454,14 +519,80 @@ public class DBA  {
 		  	while(rs.next())
 		  	{	
 		  		
-		  		Conferences conference = new Conferences(rs.getInt("event_id"),rs.getString("name"),rs.getString("description"), rs.getInt("conference_id"),rs.getString("speakers"),rs.getString("sponsor"));
- 
+		  	
+
+		  		
+		  		Conferences conference = new Conferences();
+
+		  		
+		  		conference.setEventId(rs.getInt("event_id"));
+		  		
+		  		conference.setName(rs.getString("name"));
+		  		
+		  		conference.setDescription(rs.getString("description"));
+		  		
+		  		conference.setEventDate(rs.getString("event_date"));
+		  		
+		  		conference.setVenueId(rs.getInt("venue_id"));
+		  		
+		  		conference.setVenueName(rs.getString("venue_name"));
+		  		
+		  		conference.setPriceId(rs.getInt("price_id"));
+		  		
+		  		conference.setPrice(rs.getInt("price"));
+		  		
+		  		
 		  		list.add(conference);
 		  	}
 
 		  	
           connection.close();
-            connection.close();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } 	
+        return list;
+		
+	}
+	
+
+	public static ArrayList<Concerts> concertDateList(String SQL) {
+		
+		ArrayList<Concerts> list = new ArrayList<Concerts>();
+		
+        try {
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
+  		  	Statement statement = connection.createStatement();
+  		 	ResultSet rs = statement.executeQuery(SQL);
+		  	
+		  	list.clear();
+		  	
+		  	while(rs.next())
+		  	{	
+		  		
+		  		Concerts concert = new Concerts();
+		  		
+		  		concert.setEventId(rs.getInt("event_id"));
+		  		
+		  		concert.setName(rs.getString("name"));
+		  		
+		  		concert.setDescription(rs.getString("description"));
+		  		
+		  		concert.setEventDate(rs.getString("event_date"));
+		  		
+		  		concert.setVenueId(rs.getInt("venue_id"));
+		  		
+		  		concert.setVenueName(rs.getString("venue_name"));
+		  		
+		  		concert.setPriceId(rs.getInt("price_id"));
+		  		
+		  		concert.setPrice(rs.getInt("price"));
+		  	 
+		  		list.add(concert);
+		  	}
+
+		  	
+          connection.close();
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -483,32 +614,7 @@ public class DBA  {
             e.printStackTrace();
         } 
 	}
-
-	public static ArrayList<CustomType> dblistDates(String SQL) {
-		// TODO Auto-generated method stub
-		
-		 ArrayList<CustomType> pairs = new ArrayList<>(); 
  
-        try {
-        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
-  		  	Statement statement = connection.createStatement();
-  		 	ResultSet rs = statement.executeQuery(SQL);
-		  	
-  		 	pairs.clear();
-		  	
-		  	while(rs.next())
-		  	{	
-		  		pairs.add(new CustomType(rs.getInt("event_id"), rs.getString("event_date"),rs.getString("name"))); 
-		  		
-		  	}
-		  	
-		  	connection.close();
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } 	
-        return pairs;
-	}
  
 	public static void addDate(String SQL) {
 		// TODO Auto-generated method stub
@@ -548,6 +654,15 @@ public class DBA  {
             e.printStackTrace();
         } 
 	}
+
+ 
+	
+	
+	
+	
+	
+ 
+
 
 	
 

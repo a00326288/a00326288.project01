@@ -4,7 +4,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
  
 
-public class Admin extends Person implements UserManagementInterface{
+public class Admin extends Person implements UserMenuInterface{
 
 	private static Integer user_id;
 	private static String username;
@@ -19,7 +19,7 @@ public class Admin extends Person implements UserManagementInterface{
 	
 	Admin() {
 		super();
-		super.user_id = user_id;
+		super.user_id = getUser_id();
 		super.username = username;
 		super.password = password;
 		super.acc_type = acc_type;
@@ -42,12 +42,21 @@ public class Admin extends Person implements UserManagementInterface{
 	}
 
 	
-	
+	public static Integer getUser_id() {
+		return user_id;
+	}
+
+	public void setUser_id(Integer user_id) {
+		Admin.user_id = user_id;
+	}
+
 	
 	private void menuSelector(Integer selector, String type) {	
 		
 		
-
+ 
+	 
+		
 		if(type=="Venues") {
 			Venue venue = new Venue();
 			if(selector ==1) {
@@ -62,25 +71,14 @@ public class Admin extends Person implements UserManagementInterface{
 			
 		}else if(type =="Prices") {
 			Price price = new Price();
-			
 			if(selector ==1) {
 			price.addPrice();
 			}else if(selector ==2) {
 			price.viewPrices();	
 			}else if(selector ==3) {
-			price.modifyPrice();	
-			}else if(selector ==4) {
-			price.deletePrice();	
+			price.deletePrice();
 			}
-		}else if(type =="Bookings") {
-			Booking booking = new Booking();
-			if(selector ==1) {
-			booking.createBooking(user_id);
-			}else if(selector ==2) {
-			booking.viewBookings();	
-			}else if (selector==3) {
-			booking.cancelBooking();
-			}	
+			
 		}else if(type =="Conferences") {
 			Conferences conference = new Conferences();
 			if(selector ==1) {
@@ -99,7 +97,17 @@ public class Admin extends Person implements UserManagementInterface{
 					conference.addDate();
 				}else if(selection==7) {
 					conference.removeDate();
+				}else if(selection==8) {
+					Booking booking = new Booking();
+					booking.createBooking(getUser_id(),"Conferences");
+				}else if(selector ==9) {
+					Booking booking = new Booking();
+					booking.viewBookings(getUser_id(),"Conferences");	
+				}else if (selector==10) {
+					Booking booking = new Booking();
+					booking.cancelBooking(getUser_id(),"Conferences");
 				}
+				
 			}
 
 		}else if(type =="Concerts") {
@@ -120,11 +128,20 @@ public class Admin extends Person implements UserManagementInterface{
 					concert.addDate();
 				}else if(selection==7) {
 					concert.removeDate();
+				}else if(selection==8);
 				}
-			}
-		}	
-
+				Booking booking = new Booking();
+				booking.createBooking(getUser_id(),"Concerts");
+				}else if(selector ==9) {
+				Booking booking = new Booking();
+				booking.viewBookings(getUser_id(),"Concerts");	
+				}else if (selector==10) {
+				Booking booking = new Booking();
+				booking.cancelBooking(getUser_id(),"Concerts");
+				}
 	}
+									
+	 
 	
 	@Override
 	public void Menu() {
@@ -138,12 +155,11 @@ public class Admin extends Person implements UserManagementInterface{
 			System.out.println("---------------------------");
 	 	    System.out.println("-Choose from the following options -");
 	 	    System.out.println("---------------------------\n");
-	 	    System.out.println("1 - Manage Events");
-	 	    System.out.println("2 - Manage Bookings");
-	 	    System.out.println("3 - Manage Venues"); 
-	 	    System.out.println("4 - Manage Users"); 
-	 	    System.out.println("5 - Manage Prices");
-	 	    System.out.println("6 - Log Out");
+	 	    System.out.println("1 - Manage Events & Bookings");
+	 	    System.out.println("2 - Manage Venues"); 
+	 	    System.out.println("3 - Manage Users"); 
+	 	    System.out.println("4 - Manage Prices");
+	 	    System.out.println("5 - Log Out");
 			
 			try {     
 	     	    setMenu_cursor(sc.nextInt());
@@ -175,33 +191,6 @@ public class Admin extends Person implements UserManagementInterface{
 	     	    		
 	     	    		break;
 	     	    	case 2:
-		
-	     	    		System.out.println("---------------------------");
-	     	    		System.out.println("-Choose from the following options -");
-	     	    		System.out.println("---------------------------\n");
-	     	    		System.out.println("1 - Make a Booking");
-	     	    		System.out.println("2 - View Bookings");
-	     	    		System.out.println("3 - Cancel a Booking");
-	     	    		System.out.println("4 - Main Menu");
-	     	      
-	     	    		setMenu_cursor(sc.nextInt());
-	     	    		switch(getMenu_cursor()) {
-	     	    			case 1:
-	     	    				menuSelector(getMenu_cursor(),"Bookings");
-	     	    				break;
-	     	    			case 2:
-	     	    				menuSelector(getMenu_cursor(),"Bookings");
-	     	    				break;
-	     	    			case 3:;
-	     	    				menuSelector(getMenu_cursor(),"Bookings");;
-	     	    				break;
-	     	    			case 4:
-	     	    				break;
-	     	    			default:
-	     	    				System.out.println("Input a valid option.");
-	     	    		}
-	     	    		break;
-	     	    	case 3:
 				
 	     	    		System.out.println("---------------------------");
 	     	    		System.out.println("-Choose from the following options -");
@@ -232,7 +221,7 @@ public class Admin extends Person implements UserManagementInterface{
 	     	    				System.out.println("Input a valid option.");
 	     	    		}
 	     	    		break;
-	     	    	case 4:
+	     	    	case 3:
 				  
 	     	    		System.out.println("---------------------------");
 	     	    		System.out.println("-Choose from the following options -");
@@ -263,14 +252,13 @@ public class Admin extends Person implements UserManagementInterface{
 	     	    				System.out.println("Input a valid option.");
 	     	    			}
 	     	    		break;
-	     	    	case 5:
+	     	    	case 4:
 	     	    		System.out.println("---------------------------");
 	     	    		System.out.println("-Choose from the following options -");
 	     	    		System.out.println("---------------------------\n");
 	     	    		System.out.println("1 - Add a Price");
 	     	    		System.out.println("2 - View Prices");
-	     	    		System.out.println("3 - Update a Price");
-	     	    		System.out.println("4 - Delete a Price");
+	     	    		System.out.println("3 - Delete a Price");
 	     	    		System.out.println("5 - Main Menu");
 	     	      
 	     	    		setMenu_cursor(sc.nextInt());
@@ -285,9 +273,6 @@ public class Admin extends Person implements UserManagementInterface{
 	     	    				menuSelector(getMenu_cursor(),"Prices");
 	     	    				break;
 	     	    			case 4:
-	     	    				menuSelector(getMenu_cursor(),"Prices");
-	     	    				break;
-	     	    			case 5:
 	     	    				break;
 	     	    			default:
 	     	    				System.out.println("Input a valid option.");
@@ -308,34 +293,6 @@ public class Admin extends Person implements UserManagementInterface{
 	       }
 		}
 	}
-
-
-	@Override
-	public void UpdatePassword() {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public void viewAccount() {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public void editAccount() {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public void deleteAccount() {
-		// TODO Auto-generated method stub
-		
-	}	 
-		
- 
+	
+	
 }

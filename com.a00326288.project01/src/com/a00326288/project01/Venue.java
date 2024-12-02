@@ -78,26 +78,6 @@ public class Venue {
 	}
 
 
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(venueAddress, venueCity, venueId, venueName,capacity);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Venue other = (Venue) obj;
-		return Objects.equals(venueAddress, other.venueAddress) && Objects.equals(venueCity, other.venueCity)
-				&& Objects.equals(venueId, other.venueId) && Objects.equals(venueName, other.venueName) && Objects.equals(capacity, other.capacity);
-	}
-
-
 	@Override
 	public String toString() {
 		
@@ -179,7 +159,7 @@ public class Venue {
 		
 	}
 	
-	public static ArrayList<Venue> viewVenues() {
+	public ArrayList<Venue> viewVenues() {
 		// TODO Auto-generated method stub
 		
 		ArrayList<Venue> venueList = DBA.dbGetVenues();
@@ -189,8 +169,6 @@ public class Venue {
 		for(int i=0;i < venueList.size();i++) {	
 			System.out.format("%-15s %-25s %-70s %-20s %10s\n", venueList.get(i).getVenueId(),venueList.get(i).getVenueName(),venueList.get(i).getVenueAddress(),venueList.get(i).getVenueCity(),venueList.get(i).getCapacity());			
 		}
-	
-		UAM.returnMain();
 		return venueList;		
 	}
 	
