@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class UAM {
+public class UAM   {
 
 	private static Scanner sc = new Scanner(System.in);
 	static Console cnsl = System.console();
@@ -24,7 +24,7 @@ public class UAM {
 
 	
 	static void Login() {
-		
+	
 		 		
 		try {
 			
@@ -47,9 +47,11 @@ public class UAM {
 	            System.out.println("-Hello " +user + "        -");
 	            System.out.println("---------------------------\n");
 					
-	        boolean checkPermissions = DBA.dbCheckUserPermission(username, password)   ; 
+	        Integer uac = DBA.dbCheckUserType(username, password)   ; 
 	          
-			whichMenu(checkPermissions);
+	        
+	        
+			whichUser(uac);
 					
 					
 			}else {
@@ -116,7 +118,7 @@ public class UAM {
 	private static Boolean validateUsername(String username) {
 		  
 		
-			if(DBA.dbCheckUser(username)==true) 
+			if(!DBA.dbCheckUser(username).isBlank() ) 
 			{
 			System.out.println("Username " + username + " is already taken. Please try again.");
 			return true;
@@ -131,19 +133,16 @@ public class UAM {
 		
 	
 	
-	private static void whichMenu(boolean checkPermissions) {
+	private static void whichUser(Integer uac) {
 		// TODO Auto-generated method stub
 		
 			try {
-				
-			
-			if(checkPermissions==true) {
-				
+			if(uac==1) {
 				Admin admin = new Admin();
 				admin.Menu();					
-			}else {
-				User user = new User();
-				user.Menu();
+			}else if(uac==0) {
+				Customer customer = new Customer();
+				customer.Menu();
 			}
 			}catch(Exception e) {
 				e.printStackTrace();
@@ -163,8 +162,7 @@ public class UAM {
 		
 		
 	}
-    
-    
-		
+
+ 
 	
 }

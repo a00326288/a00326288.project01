@@ -2,17 +2,17 @@ package com.a00326288.project01;
 import java.util.InputMismatchException;
 import java.util.Scanner; 
 
-public class launchpad {
+public class launchpad  {
 	
 	private static Scanner sc = new Scanner(System.in);
 	
 	public static void main(String[] args) {
 		
-		mainmenu();	
-		
+		Menu();
 	}	
-	private static void mainmenu() {
-        
+	 
+	public static void Menu() {
+		// TODO Auto-generated method stub
 		int exit =0;
 		
         while(exit==0) {
@@ -50,6 +50,7 @@ public class launchpad {
         	System.out.println("Please select a valid option");
         	sc.next();
         	}
-        }   
-    }
+        }  
+		
+	}
 }

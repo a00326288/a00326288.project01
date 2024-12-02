@@ -36,15 +36,15 @@ DROP TABLE events;
 
 CREATE TABLE events(
 event_id INTEGER,
-event_name VARCHAR(100),
-event_description VARCHAR(500),
+name VARCHAR(100),
+description VARCHAR(500),
 event_start_date DATE,
 event_end_date DATE
 );
 
-INSERT INTO events (event_id,event_name, event_description, event_start_date, event_end_date) SELECT 1,'Snow White', 'Snow white and 7 dwarfs is a classic', '15/07/2023', '20/09/2023';
+INSERT INTO events (event_id,name, description, event_start_date, event_end_date) SELECT 1,'Snow White', 'Snow white and 7 dwarfs is a classic', '15/07/2023', '20/09/2023';
 
-INSERT INTO events (event_id,event_name, event_description, event_start_date, event_end_date) SELECT 2,'Lion King', 'Follow Simba on his epic adventure', '27/09/2023', '20/11/2023';
+INSERT INTO events (event_id,name, description, event_start_date, event_end_date) SELECT 2,'Lion King', 'Follow Simba on his epic adventure', '27/09/2023', '20/11/2023';
 
 SELECT * FROM events;
 
@@ -87,7 +87,7 @@ INSERT INTO venues (venue_id,venue_name, venue_address,city) values(4,'Town Hall
 
 
 
-SELECT a.event_id,a.event_name,a.event_description,a.event_start_date,a.event_end_date,b.venue_id,c.venue_name,c.venue_address,c.city,d.price_id, d.price FROM events a inner JOIN events_x_venue_x_price b on a.event_id=b.event_id INNER JOIN venues c ON b.venue_id = c.venue_id INNER JOIN prices d ON b.price_id = d.price_id where a.event_id=1;
+SELECT a.event_id,a.name,a.description,a.event_start_date,a.event_end_date,b.venue_id,c.venue_name,c.venue_address,c.city,d.price_id, d.price FROM events a inner JOIN events_x_venue_x_price b on a.event_id=b.event_id INNER JOIN venues c ON b.venue_id = c.venue_id INNER JOIN prices d ON b.price_id = d.price_id where a.event_id=1;
      
 DROP TABLE prices;
 

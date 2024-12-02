@@ -1,19 +1,13 @@
 package com.a00326288.project01;
 
-public abstract class Person {
+public abstract class Person implements UserManagementInterface {
 
 	public Person() {
-		// TODO Auto-generated constructor stub
-		int id;
-		String name;
 	}
 	
-	public abstract void viewEvents();
-	
-	public abstract void viewBooking();
-	
-	public abstract void makeBooking(); 
-	
-	
+	Integer user_id;
+	String username;
+	String password;
+	Integer acc_type;
 
 }

@@ -4,15 +4,31 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
  
 
-public class Admin {
+public class Admin extends Person implements UserManagementInterface{
 
-	public Admin() {
-		// TODO Auto-generated constructor stub
+	private static Integer user_id;
+	private static String username;
+	private static String password;
+	private static Integer acc_type;
+	
+	
+	public static void main(String[] args) {	
+		  
+		 
+	}
+	
+	Admin() {
+		super();
+		super.user_id = user_id;
+		super.username = username;
+		super.password = password;
+		super.acc_type = acc_type;
 	}
 	
 	
 	private Integer menu_cursor;
-	 
+
+	final private String usertype = "Admin";
 	private static Scanner sc = new Scanner(System.in);
 	
 
@@ -26,31 +42,13 @@ public class Admin {
 	}
 
 	
-	public static void main(String[] args) {	
-			
-		
-	}
- 
 	
-	private static void menuSelector(Integer selector, String type) {	
+	
+	private void menuSelector(Integer selector, String type) {	
 		
-		if(type=="Events"){
-			Event event = new Event();
-			if(selector ==1) {
-			event.createEvent();
-			}else if(selector ==2) {
-			event.createEventDate();	
-			}else if (selector==3) {
-			event.viewEvents();
-			}else if(selector ==4) {
-			event.modifyEvent();	
-			}else if (selector==5) {
-			event.deleteEvent();
-			}else if (selector==5) {
-			event.deleteEventDate();	
-			}
-			
-		}else if(type=="Venues") {
+		
+
+		if(type=="Venues") {
 			Venue venue = new Venue();
 			if(selector ==1) {
 			venue.createVenue();
@@ -61,16 +59,6 @@ public class Admin {
 			}else if(selector ==4) {
 			venue.deleteVenue();	
 			} 
-	
-		}else if(type=="Users") {
-			User user = new User();
-			if(selector ==2) {
-			user.viewUserProfile();
-			}else if(selector ==3) {
-			user.modifyUserProfile();	
-			}else if(selector ==4) {
-			user.deleteUserProfile();	
-			}
 			
 		}else if(type =="Prices") {
 			Price price = new Price();
@@ -87,20 +75,61 @@ public class Admin {
 		}else if(type =="Bookings") {
 			Booking booking = new Booking();
 			if(selector ==1) {
-			booking.createBooking();
+			booking.createBooking(user_id);
 			}else if(selector ==2) {
 			booking.viewBookings();	
 			}else if (selector==3) {
 			booking.cancelBooking();
+			}	
+		}else if(type =="Conferences") {
+			Conferences conference = new Conferences();
+			if(selector ==1) {
+				int selection = AbstractEvent.menu(type,usertype);
+				if(selection==1) {
+					conference.list();
+				}else if(selection==2) {
+					conference.create();
+				}else if(selection==3) {
+					conference.edit();
+				}else if(selection==4) {
+					conference.delete();
+				}else if(selection==5) {
+					conference.listDates();
+				}else if(selection==6) {
+					conference.addDate();
+				}else if(selection==7) {
+					conference.removeDate();
+				}
 			}
-			
-		}
-		
+
+		}else if(type =="Concerts") {
+			Concerts concert = new Concerts();
+			if(selector ==2) {
+				int selection = AbstractEvent.menu(type,usertype);
+				if(selection==1) {
+					concert.list();
+				}else if(selection==2) {
+					concert.create();
+				}else if(selection==3) {
+					concert.edit();
+				}else if(selection==4) {
+					concert.delete();
+				}else if(selection==5) {
+					concert.listDates();
+				}else if(selection==6) {
+					concert.addDate();
+				}else if(selection==7) {
+					concert.removeDate();
+				}
+			}
+		}	
 
 	}
 	
-	
+	@Override
 	public void Menu() {
+		
+		
 
 		setMenu_cursor(0);
 	
@@ -122,43 +151,27 @@ public class Admin {
 	     	    switch(getMenu_cursor()) {  
 	     	    	case 1:
 	     	    		
+	     
 	     	    		System.out.println("---------------------------");
 	     	    		System.out.println("-Choose from the following options -");
 	     	    		System.out.println("---------------------------\n");
-	     	    		System.out.println("1 - Add an Event");
-	     	    		System.out.println("2 - Add Event Dates");
-	     	    		System.out.println("3 - View Event and Dates");
-	     	    		System.out.println("4 - Modify an Event");
-	     	    		System.out.println("5 - Delete an Event");
-	     	    		System.out.println("6 - Delete Event Dates");
-	     	    		System.out.println("7 - Main Menu");
+	     	    		System.out.println("1 - Conferences");
+	     	    		System.out.println("2 - Concerts");
+	     	    		System.out.println("3 - Main Menu"); 
 	     	     
-	     	    		menu_cursor = sc.nextInt();
-	     	    		switch(menu_cursor) {
+	     	    		setMenu_cursor(sc.nextInt());
+	     	    		switch(getMenu_cursor()) {
 	     	    			case 1:
-	     	    				menuSelector(getMenu_cursor(),"Events");
+	     	    				menuSelector(getMenu_cursor(),"Conferences");
 	     	    				break;
 	     	    			case 2:
-	     	    				menuSelector(getMenu_cursor(),"Events");
+	     	    				menuSelector(getMenu_cursor(),"Concerts");
 	     	    				break;
 	     	    			case 3:
-	     	    				menuSelector(getMenu_cursor(),"Events");
-	     	    				break;
-	     	    			case 4:
-	     	    				menuSelector(getMenu_cursor(),"Events");
-	     	    				break;
-	     	    			case 5:
-	     	    				menuSelector(getMenu_cursor(),"Events");
-	     	    				break;
-	     	    			case 6:
-	     	    				menuSelector(getMenu_cursor(),"Events");
-	     	    				break;
-	     	    			case 7:
 	     	    				break;
 	     	    			default:
 	     	    				System.out.println("Input a valid option.");
 	     	    		}
-	     	    		
 	     	    		
 	     	    		break;
 	     	    	case 2:
@@ -295,5 +308,34 @@ public class Admin {
 	       }
 		}
 	}
-	
+
+
+	@Override
+	public void UpdatePassword() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void viewAccount() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void editAccount() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void deleteAccount() {
+		// TODO Auto-generated method stub
+		
+	}	 
+		
+ 
 }

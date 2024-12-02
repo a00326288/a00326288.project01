@@ -179,7 +179,7 @@ public class Venue {
 		
 	}
 	
-	public ArrayList<Venue> viewVenues() {
+	public static ArrayList<Venue> viewVenues() {
 		// TODO Auto-generated method stub
 		
 		ArrayList<Venue> venueList = DBA.dbGetVenues();
