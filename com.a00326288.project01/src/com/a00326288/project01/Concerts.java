@@ -2,7 +2,7 @@ package com.a00326288.project01;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Concerts extends AbstractEvent {
+public class Concerts extends Events {
 
 	final private String eventType ="Concert";
 	private Integer concertId;

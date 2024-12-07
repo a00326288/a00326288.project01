@@ -1,17 +1,14 @@
 package com.a00326288.project01;
 
-import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-
-
-public abstract class AbstractEvent {
+public abstract class Events {
 
 	private static Scanner sc = new Scanner(System.in);
-	int event_id;
-	String name;
-	String description;
+	protected int event_id;
+	protected String name;
+	protected String description;
 	
 	
 	public static Integer menu(String type, String usertype) {
@@ -80,12 +77,12 @@ public abstract class AbstractEvent {
 
  
 	public abstract void list();
-	public abstract void create();
-	public abstract void edit();
-	public abstract void delete();
+	protected abstract void create();
+	protected abstract void edit();
+	protected abstract void delete();
 	public abstract void listDates();
-	public abstract void addDate();
-	public abstract void removeDate();
+	protected abstract void addDate();
+	protected abstract void removeDate();
  
 
 }

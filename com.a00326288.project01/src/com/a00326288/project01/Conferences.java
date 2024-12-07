@@ -1,10 +1,9 @@
 package com.a00326288.project01;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
-public class Conferences extends AbstractEvent{
+public class Conferences extends Events{
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -45,13 +44,6 @@ public class Conferences extends AbstractEvent{
 		// TODO Auto-generated constructor stub
 	}
 	
-	
-	
-	
-
-	private int getConference_id() {
-		return conference_id;
-	}
  
 	void setConference_id(int conference_id) {
 		this.conference_id = conference_id;
@@ -80,9 +72,6 @@ public class Conferences extends AbstractEvent{
 	}
 
 
-	private Integer getEventId() {
-		return event_id;
-	}
 
 	void setEventId(Integer event_id) {
 		this.event_id = event_id;
@@ -96,16 +85,9 @@ public class Conferences extends AbstractEvent{
 		this.name = name;
 	}
 
-	private String getDescription() {
-		return description;
-	}
 
 	void setDescription(String description) {
 		this.description = description;
-	}
-
-	private Integer getVenueId() {
-		return venueId;
 	}
 
 	void setVenueId(Integer venueId) {
@@ -120,9 +102,6 @@ public class Conferences extends AbstractEvent{
 		this.venueName = venueName;
 	}
 
-	private Integer getPriceId() {
-		return priceId;
-	}
 
 	void setPriceId(Integer priceId) {
 		this.priceId = priceId;
@@ -187,13 +166,13 @@ public class Conferences extends AbstractEvent{
 		
 		ArrayList<Conferences> list = DBA.conferenceList(SQL);
  
-		if(list.size()<1) {
+		if(list.size()<=0) {
 			System.out.println("No conferences.");
 		}else {
-		for(Conferences i : list) {
-			System.out.println(i.toString());
-		 
-		}
+			for(Conferences i : list) {
+				System.out.println(i.toString());
+			}
+		
 		}
 		
 	}
@@ -201,11 +180,14 @@ public class Conferences extends AbstractEvent{
 
 	@Override
 	public void edit() {
-		// TODO Auto-generated method stub
+
 		list();
 		
 		System.out.println("Please enter the Event ID for the Conference to edit.");
+		
 		Integer ID = sc.nextInt();
+		
+		
  
 	}
 
@@ -214,8 +196,6 @@ public class Conferences extends AbstractEvent{
 	public void delete() {
 		// TODO Auto-generated method stub
 		list();
-		
-		
 		
 		System.out.println("Please enter the Event ID for the Conference to delete.");
 		Integer ID = sc.nextInt();

@@ -11,6 +11,7 @@ public class UAM  {
 
 	private static Scanner sc = new Scanner(System.in);
 	static Console cnsl = System.console();
+	private static Integer user_id;
 	private static String username;
 	private static String password;
 	
@@ -21,16 +22,13 @@ public class UAM  {
         System.exit(0);
     }
 	}
+	
+	
 
 	
 	static void Login() {
-	
-		 		
+		
 		try {
-			
-			
-			
-			//Get the Username and Password from Scanner
 			username = cnsl.readLine( 
 					"Enter username : ");
 			
@@ -39,43 +37,16 @@ public class UAM  {
 			
 			password = String.valueOf(consolePass);
 			
-			String user = DBA.dbCheckUser(username,password); 
+			user_id = DBA.dbCheckUser(username,password); 
 			
-	
-			if(user!=null) {
+			if(user_id!=0) {
 				
-				System.out.println("---------------------------");
-	            System.out.println("-Hello " +user + "        -");
-	            System.out.println("---------------------------\n");
-					
-	        Integer uac = DBA.dbCheckUserType(username, password)   ; 
-	          
-	        
-	        try {
-				if(uac==1) {
-					Admin admin = new Admin();
-					admin.setUser_id(1);
-					admin.Menu();					
-				}else if(uac==0) {
-					Customer customer = new Customer();
-					customer.setUser_id(2);
-					
-					
-					customer.Menu();
-				}
-				}catch(Exception e) {
-					e.printStackTrace();
-					System.out.println("Cannot determine user.");
-				}
-	        
-	       	
-					
+	            Person.NewSession(user_id,username);
+	            
 			}else {
 					System.out.println("Invalid details or User does not Exists");
- 
-			}
-			
-			
+ 			}
+		
 		}catch(Exception e){
 			System.out.println("Invalid Username or Password.");
 			e.printStackTrace();	
@@ -85,8 +56,6 @@ public class UAM  {
 	
 	static void Register() {
 		
-
-		// TODO Auto-generated method stub
 		System.out.println("Register");
 				
 		String regUsername ="";
@@ -147,16 +116,12 @@ public class UAM  {
 		
 	}
 		
-	
-    
-	
-	public static void returnMain() {
+	static void returnMain() {
 		// TODO Auto-generated method stub
 		
 		System.out.println();
 		System.out.println("Please hit enter to continue.");
 		sc.nextLine();
-		
 		
 	}
 

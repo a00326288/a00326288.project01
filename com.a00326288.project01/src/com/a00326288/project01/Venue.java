@@ -9,24 +9,24 @@ import java.util.stream.Collectors;
 
 public class Venue {
 	
+	private static Scanner sc = new Scanner(System.in);
+
 	private Integer venueId;
 	private String venueName;
 	private String venueAddress;
 	private String venueCity;
 	private Integer capacity;
-	private static Scanner sc = new Scanner(System.in);
-
-	public Venue() {
-		// TODO Auto-generated constructor stub
-		
-	}
-
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
+	}	
+	
+	public Venue() {
+		
 	}
 
-
+	
 	public Venue(Integer venueId, String venueName, String venueAddress, String venueCity, Integer capacity) {
 		this.venueId = venueId;
 		this.venueName = venueName;
@@ -36,36 +36,35 @@ public class Venue {
 	}
 
 
-
-	public Integer getVenueId() {
+	private Integer getVenueId() {
 		return venueId;
 	}
 
-	public void setVenueId(Integer venueId) {
+	private void setVenueId(Integer venueId) {
 		this.venueId = venueId;
 	}
 
-	public String getVenueName() {
+	private String getVenueName() {
 		return venueName;
 	}
 
-	public void setVenueName(String venueName) {
+	private void setVenueName(String venueName) {
 		this.venueName = venueName;
 	}
 
-	public String getVenueAddress() {
+	private String getVenueAddress() {
 		return venueAddress;
 	}
 
-	public void setVenueAddress(String venueAddress) {
+	private void setVenueAddress(String venueAddress) {
 		this.venueAddress = venueAddress;
 	}
 
-	public String getVenueCity() {
+	private String getVenueCity() {
 		return venueCity;
 	}
 
-	public void setVenueCity(String venueCity) {
+	private void setVenueCity(String venueCity) {
 		this.venueCity = venueCity;
 	}
 	

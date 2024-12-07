@@ -63,10 +63,10 @@ public class DBA  {
         return user;
     }
 	
-    public static String dbCheckUser(String username,String password) {
+    public static Integer dbCheckUser(String username,String password) {
     			    	
-        String SQL = ("SELECT * FROM uam where username='"+username+"' and password='"+encode(password)+"';");
-        String user = null;
+        String SQL = ("SELECT user_id FROM uam where username='"+username+"' and password='"+encode(password)+"';");
+        int user =0;
         try {
   		  	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
         	//Connection connection = DriverManager.getConnection("jdbc:sqlite::resource:com/a00326288/project01/db/a00326288.db"); 
@@ -75,7 +75,7 @@ public class DBA  {
             statement.setQueryTimeout(30); 
             while (rs.next()) 
             {
-            	user = rs.getString("username");
+            	user = rs.getInt("user_id");
             }
             statement.closeOnCompletion();
             connection.close();
@@ -86,9 +86,9 @@ public class DBA  {
         return user;
     }
     
-    static Integer dbCheckUserType(String username,String password) {
-        String SQL = ("SELECT * FROM uam where username='"+username+"' and password='"+encode(password)+"';");
-        Integer uac = 0;
+    static Boolean dbCheckUserType(Integer user_id) {
+        String SQL = ("SELECT * FROM uam where user_id="+user_id+";");
+        boolean uac = false;
         try {
   		  	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
         	//Connection connection = DriverManager.getConnection("jdbc:sqlite::resource:com/a00326288/project01/db/a00326288.db");
@@ -97,7 +97,7 @@ public class DBA  {
             statement.setQueryTimeout(30); 
             while (rs.next()) 
             {
-            	uac = rs.getInt("acc_type");
+            	uac = rs.getBoolean("acc_type");
             }
             connection.close();
         } catch (SQLException e) {
@@ -655,15 +655,5 @@ public class DBA  {
         } 
 	}
 
- 
-	
-	
-	
-	
-	
- 
-
-
-	
 
 }

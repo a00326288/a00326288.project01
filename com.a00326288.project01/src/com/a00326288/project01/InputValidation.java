@@ -3,7 +3,7 @@ package com.a00326288.project01;
 import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+
 
 enum validation {
 TOOMANYCHAR,TOOFEWCHAR,NOSPECIALCHAR,NOUPPERCHAR,NOLOWERCHAR,CONTAINSWHITEPACE,NODIGIT,USERALREADYTAKEN,NOUPPERCHARS,NOLOWERCHARS,SUCCESS,QUIT;

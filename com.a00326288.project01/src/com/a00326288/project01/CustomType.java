@@ -11,15 +11,16 @@ public class CustomType {
 	private Integer price_id;
 	private Integer price;
 
+	//Constructor for summary of event dates
+	
 	public CustomType(Integer event_id, String event_name, String event_description){
 		this.event_id = event_id;
 		this.event_name = event_name;
 		this.event_date = event_description;
- 
-		
-		
+	
 	}
- 
+
+	//Constructor for all event data
 	
 	public CustomType(Integer event_id, String event_name, String event_description, String event_date, Integer venue_id, String venue_name, Integer price_id, Integer price){
 		this.event_id = event_id;
@@ -32,11 +33,9 @@ public class CustomType {
 		this.price = price;
 	}
 
-
 	public CustomType() {
 	
 	}
-
 
 	public int getEvent_id() {
 		return event_id;
