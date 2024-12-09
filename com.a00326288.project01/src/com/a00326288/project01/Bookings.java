@@ -35,6 +35,9 @@ public class Bookings {
 	private Integer price_id;
 	private Integer price;
 	
+	Bookings(){
+
+	}
 	
 	Bookings(Integer userId, String username){
 		this.user_id = userId;
@@ -381,27 +384,47 @@ public class Bookings {
 	
 	
 	
-	public static void viewBookings(Integer userId, String EventType) {
+	public static void viewBookings(Integer userId, String EventType, String Usertype) {
 		// TODO Auto-generated method stub
 		
-	 
-	
 		sc.useDelimiter("\r?\n");		
 		
 		
+		if(Usertype=="User") {
+			
+			final ArrayList<Bookings> bookingList = dbGetBookingList(userId,EventType,Usertype);
+			
+			if(bookingList.size()<=0) {
+				System.out.println("You have no bookings!");
+			}else {
+				
+				System.out.format("%-15s | %-15s | %-70s | %-20s | %-45s | %-20s | %-20s | %-10s\n" , "Booking ID", "Booking Date", "Booking Reference", "Username", "Event Name", "Event Date", "Venue", "Num of Tickets"); 	
+				
+				for(Bookings booking : bookingList)
+				{
+					System.out.format("%-15s | %-15s | %-70s | %-20s | %-45s | %-20s | %-20s | %-10s\n", booking.booking_id, booking.booking_dte , booking.booking_ref, booking.username, booking.eventname, booking.event_date, booking.venue_name, booking.num_of_tickets);
+	  				
+				}
+			}
+			
+		}else {
+		
 		System.out.println();
+		
+		
 		
 		List<CustomType> eventList = dbGetEvents(EventType);
 		
-		System.out.println(String.format("%-10s %-40s %20s" , "Event ID", "Event Name", "Event Description" ));
 		
+		System.out.println(String.format("%-10s | %-40s | %-20s" , "Event ID", "Event Name", "Event Description" ));
+ 
 		for(CustomType event : eventList)
 		 {
-			System.out.format("%-10s %-40s %20s\n",event.event_id,event.event_name,event.event_description);
+			System.out.format("%-10s | %-40s | %-20s\n",event.event_id,event.event_name,event.event_description);
 			
 		}
 		
-	
+		System.out.println();
 		System.out.println("Please input the ID for the event you wish to view bookings:");
 		
 		Integer eventSelection;
@@ -428,9 +451,12 @@ public class Bookings {
 				}else {
 				if(lookupEventList.contains(eventSelection)){			
 					System.out.println();
-					for(int i = 0; i < list.size(); i++) {
-						System.out.println("Option "+i+ " : " + list.get(i).getEvent_name() + "\t" + list.get(i).getEvent_date() + "\t" + list.get(i).getVenue_name() + "\t" + list.get(i).getPrice());	
+					System.out.println(String.format("%-15s | %-15s | %-15s | %-40s | %-20s" , "Option", "Event ID", "Event Date","Venue", "Price (€)" )); 
+					for(CustomType event: list) {
+						System.out.printf("%-15s | %-15s | %-15s | %-40s | %-20s\n", "Option "+ list.indexOf(event) +" : " ,event.event_id,event.event_date, event.venue_name, event.price);	
+					 
 					}
+					System.out.println();
 					break;
 				}else{
 					System.out.println("Invalid Event ID specified");
@@ -483,10 +509,10 @@ public class Bookings {
 						break;	
 						
 					}else {
-						System.out.println("ID is not found");	
+						System.out.println("Option is not found");	
 					}
 					}catch(Exception e) {
-						System.out.println("ID is not found");
+						System.out.println("Option is not found");
 						
 					}
 					
@@ -501,41 +527,44 @@ public class Bookings {
 			
 			System.out.println("Option selected:");
 			
-			System.out.println(eventName + "\t" + eventDate + "\t" + venueName + "\t" + price);
+			System.out.println();
+			
+			System.out.format("%-25s | %-20s | %-30s | %-20s\n" , "Event Name", "Event Date", "Venue" , "Price (€)" );
+			 
+			System.out.format("%-25s | %-20s | %-30s | %-20s\n" ,eventName , eventDate ,   venueName, price);
+
+			System.out.println();
 	
 			System.out.println("Bookings:");
 			
 			System.out.println();
 			
-		
 			ArrayList<Bookings> bookingList = dbGetBookingList(eventId,venue_id,eventDate);
-
-			
+ 
 			if(bookingList.size()==0) {
-				System.out.println("No bookings yet!");
-				
+ 
+				System.out.println("No bookings for this event yet!");
+ 		
 			}else {
 			
-			System.out.println(String.format("%-15s %-15s %-70s %-20s %-45s %-20s %-20s %10s", "Booking ID", "Booking Date", "Booking Reference", "Username", "Event Name", "Event Date", "Venue", "No. of Tickets"));
+			 
+				
+			System.out.format("%-15s | %-15s | %-70s | %-20s | %-45s | %-20s | %-20s | %-10s\n" , "Booking ID", "Booking Date", "Booking Reference", "Username", "Event Name", "Event Date", "Venue", "Num of Tickets"); 	
 			
- 
-			for(int i = 0; i < bookingList.size(); i++) {
-				System.out.format("%-15s %-15s %-70s %-20s %-45s %-20s %-20s %10s\n", bookingList.get(i).getBooking_id(), bookingList.get(i).getBooking_dte(), bookingList.get(i).getBooking_ref(), bookingList.get(i).getUsername(), bookingList.get(i).getEventName(), bookingList.get(i).getEvent_date(), bookingList.get(i).getVenue_name(), bookingList.get(i).getNum_of_tickets());
+			for(Bookings booking : bookingList)
+			{
+				System.out.format("%-15s | %-15s | %-70s | %-20s | %-45s | %-20s | %-20s | %-10s\n", booking.booking_id, booking.booking_dte , booking.booking_ref, booking.username, booking.eventname, booking.event_date, booking.venue_name, booking.num_of_tickets);
   				
 			}
 			
 			}
-		 	
- 
+		}
+
 			
 	}
 	
 	
-	
-	
-	
-	
-	 
+ 
  
 	private static ArrayList<CustomType> dbGetEvents(String eventType) {
 		// TODO Auto-generated method stub
@@ -548,7 +577,7 @@ public class Bookings {
 			SQL = ("SELECT a.event_id, a.name, a.description FROM events a inner join conferences b on a.event_id = b.event_id;");
 		}else {
 			SQL = ("SELECT a.event_id, a.name, a.description FROM events a inner join concerts b on a.event_id = b.event_id;");
-		}
+		} 
  
         try {
         	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
@@ -673,7 +702,7 @@ public class Bookings {
 	}
 	
 
-	public static void cancelBooking(Integer user_id, String eventType) {
+	public static void cancelBooking(Integer user_id, String eventType, String type) {
 		// TODO Auto-generated method stub
 
 		ArrayList<Bookings> bookingList = dbGetBookingList(user_id, user_id, eventType);
@@ -707,12 +736,14 @@ public class Bookings {
 	
 	
 	
-	private static ArrayList<Bookings> dbGetBookingList(Integer eventId, Integer venue_id, String eventDate ){
+	private static ArrayList<Bookings> dbGetBookingList(Integer eventId, Integer venue_id, String eventDate){
 
 		ArrayList<Bookings> bookingList = new ArrayList<>();
 		
 		String SQL = ("SELECT a.booking_id, a.booking_date,  a.booking_ref, a.num_of_tickets, a.venue_id, b.venue_name, a.event_date, a.event_id, d.name,  a.user_id, c.username  from bookings a left join venues b on a.venue_id = b.venue_id left join uam c on a.user_id  = c.user_id left join events d on a.event_id = d.event_id where a.event_id="+eventId+" AND a.venue_id="+venue_id+" AND a.event_date='"+eventDate+"';");
-        try {
+		
+		
+		try {
         	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
   		  	Statement statement = connection.createStatement();
   		    statement.setQueryTimeout(30); 
@@ -723,7 +754,7 @@ public class Bookings {
    		  	while(rs.next())
   		  	{
    		  		
-   		  		Bookings booking = new Bookings(venue_id, SQL);
+   		  		Bookings booking = new Bookings();
    		  		
    		  		booking.setBooking_id(rs.getInt("booking_id"));
    		  		booking.setBooking_ref(rs.getString("booking_ref"));
@@ -747,6 +778,55 @@ public class Bookings {
 		return bookingList;
 
 	}
+	
+	private static ArrayList<Bookings> dbGetBookingList(Integer userId, String EventType, String Usertype){
+
+		ArrayList<Bookings> bookingList = new ArrayList<>();
+		
+		String SQL = new String();
+		
+		if(EventType=="Concerts") {
+		 SQL = ("SELECT a.booking_id, a.booking_date,  a.booking_ref, a.num_of_tickets, a.venue_id, b.venue_name, a.event_date, a.event_id, d.name,  a.user_id, c.username  from bookings a inner join venues b on a.venue_id = b.venue_id inner join uam c on a.user_id  = c.user_id inner join events d on a.event_id = d.event_id inner join concerts e on a.event_id = e.event_id where a.user_id="+userId+";");
+		}else {
+		 SQL = ("SELECT a.booking_id, a.booking_date,  a.booking_ref, a.num_of_tickets, a.venue_id, b.venue_name, a.event_date, a.event_id, d.name,  a.user_id, c.username  from bookings a inner join venues b on a.venue_id = b.venue_id inner join uam c on a.user_id  = c.user_id inner join events d on a.event_id = d.event_id inner join conferences e on a.event_id = e.event_id where a.user_id="+userId+";");
+		}
+		
+		try {
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
+  		  	Statement statement = connection.createStatement();
+  		    statement.setQueryTimeout(30); 
+  		  	ResultSet rs = statement.executeQuery(SQL);
+  		  	
+  		  	bookingList.clear();
+
+   		  	while(rs.next())
+  		  	{
+   		  		
+   		  		Bookings booking = new Bookings();
+   		  		
+   		  		booking.setBooking_id(rs.getInt("booking_id"));
+   		  		booking.setBooking_ref(rs.getString("booking_ref"));
+   		  		booking.setBooking_dte(rs.getString("booking_date"));
+   		  		booking.setUsername(rs.getString("username"));
+   		  		booking.setEventName(rs.getString("name"));
+   		  		booking.setEvent_date(rs.getString("event_date"));
+   		  		booking.setVenue_name(rs.getString("venue_name"));
+   		  		booking.setNum_of_tickets(rs.getInt("num_of_tickets"));
+   		  		
+   		  		bookingList.add(booking);
+   		  		
+  		  	}
+  		  	
+            connection.close();
+          }
+        catch(SQLException e)
+        {
+          e.printStackTrace(System.err);
+        }	
+		return bookingList;
+
+	}
+	
 	
 	private static void dbCancelBooking(int deleteOption) {
 		// TODO Auto-generated method stub

@@ -46,7 +46,7 @@ public class Price  {
 		if(priceList.isEmpty()) {
 			System.out.println("No prices exist");
 		}else {
-			System.out.println(String.format("%-10s %20s" , "Price ID","Price"));
+			System.out.println(String.format("%-10s %20s" , "Price ID","Price (€)"));
 
 			for(Price price: priceList) {
 

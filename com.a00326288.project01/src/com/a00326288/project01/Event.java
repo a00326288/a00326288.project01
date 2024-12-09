@@ -34,11 +34,10 @@ public abstract class Event {
 				System.out.println("1 - List "+type);
 				System.out.println("2 - List Dates for "+type);
 				System.out.println("3 - Make Bookings for "+type);
-				System.out.println("4 - View Bookings for "+type);
-				System.out.println("5 - Cancel Bookings for "+type);
-				System.out.println("6 - Return to Main Menu");
+				System.out.println("4 - View My Bookings for "+type);
+				System.out.println("5 - Return to Main Menu");
 				selection = sc.nextInt();
-				if(selection < 1 || selection > 6) {
+				if(selection < 1 || selection > 5) {
 					System.out.println("Please input value between valid range.");
 				}else {
 					return selection;

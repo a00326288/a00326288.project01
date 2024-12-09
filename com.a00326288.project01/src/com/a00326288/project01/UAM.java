@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -240,6 +241,21 @@ public class UAM  {
         }   	
     }
     
+    
+    public static void viewProfile(Integer userId, String Usertype) {
+    	
+    	ArrayList<Person> userlist = getUsers(userId,Usertype);
+    	
+    	for(Person person : userlist) {
+    		person.toString();
+
+    		
+    	}
+    	
+    }
+     
+   
+    
 	private static void dbUpdateUser(HashMap<Integer, String> usermapUpdate, int userSelection) {
 		// TODO Auto-generated method stub
 		
@@ -270,8 +286,53 @@ public class UAM  {
             e.printStackTrace();
         } 		
 	}
+
+
+	public static void modifyUser(Integer userID, String userType) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public static void deleteUser(Integer userID, String userType) {
+		// TODO Auto-generated method stub
+		 
+		
+		
+	}
 	
-    
+	private static ArrayList<Person> getUsers(Integer userId, String userType) {
+		// TODO Auto-generated method stub
+
+		String SQL = new String();
+		
+		if(userType=="Admin") {
+		SQL = ("SELECT * FROM uam;");
+		}else {
+		SQL = ("SELECT * FROM uam WHERE user_id="+userId+";");
+		}
+		
+		final ArrayList<Person> personList = new ArrayList<>();
+		
+		try {
+  		  	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
+        	//Connection connection = DriverManager.getConnection("jdbc:sqlite::resource:com/a00326288/project01/db/a00326288.db"); 
+        	Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery(SQL);
+            statement.setQueryTimeout(30); 
+            while (rs.next()) 
+            {
+            	 Person newPerson = new Person(rs.getInt("user_id"), rs.getString("username"), rs.getString("password"), rs.getString("userType"), rs.getString("Address"), rs.getString("Email"), rs.getString("DOB"), rs.getString("gender"),rs.getString("last_login"));
+            	 personList.add(newPerson);
+            }
+            statement.closeOnCompletion();
+            connection.close();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+		return personList;
+	}
 	
 	
  

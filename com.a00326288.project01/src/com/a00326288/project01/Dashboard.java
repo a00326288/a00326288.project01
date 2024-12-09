@@ -123,7 +123,7 @@ class UserDashboard extends Dashboard {
 		     	    		}
 		     	    		break;
 		     	    	case 2:
-		     	    		
+		     	    		UAM.viewProfile(getUserID(), getUserType());
 		     	    		System.out.println("View my profile.");
 		     	    		break;
 		     	    	case 3:
@@ -158,10 +158,8 @@ class UserDashboard extends Dashboard {
 						}else if(selection==3) {
 							Bookings.makeBooking(getUserID(), getUserName(), getUserType(), getSession(), type);
 						}else if(selection==4) {
-							Bookings.viewBookings(getUserID(),type);
-						}else if(selection==5) {
-							Bookings.cancelBooking(getUserID(),type);	
-						}
+							Bookings.viewBookings(getUserID(),type,getUserType());
+						} 
 						
 				}
 
@@ -177,10 +175,8 @@ class UserDashboard extends Dashboard {
 					}else if(selection==3) {
 						Bookings.makeBooking(getUserID(), getUserName(), getUserType(), getSession(), type);
 					}else if(selection==4) {
-						Bookings.viewBookings(getUserID(),type);
-					}else if(selection==5) {
-						Bookings.cancelBooking(getUserID(),type);	
-					}
+						Bookings.viewBookings(getUserID(),type,getUserType());
+					} 
 				}
 			}	
 		}
@@ -401,8 +397,21 @@ class AdminDashboard extends Dashboard implements UserMenuInterface{
 			}else if(selector ==4) {
 			Venue.deleteVenue();	
 			} 
+	
+		}else if(type =="Users") {
+			if(selector ==2) {
+			UAM.viewProfile(getUserID(), getUserType());	
+			}else if(selector ==3) {
+			UAM.modifyUser(getUserID(), getUserType());
+			}else if(selector ==3) {
+			UAM.deleteUser(getUserID(), getUserType());
+			}
 			
-		}else if(type =="Prices") {
+		}
+		
+		
+		
+		else if(type =="Prices") {
 			if(selector ==1) {
 			Price.addPrice();
 			}else if(selector ==2) {
@@ -432,9 +441,9 @@ class AdminDashboard extends Dashboard implements UserMenuInterface{
 				}else if(selection==8) {
 					Bookings.makeBooking(getUserID(), getUserName(), getUserType(), getSession(), type);
 				}else if(selection==9) {
-					Bookings.viewBookings(getUserID(),type);
+					Bookings.viewBookings(getUserID(),type,getUserType());
 				}else if (selection==10) {
-					Bookings.cancelBooking(getUserID(),type);	
+					Bookings.cancelBooking(getUserID(),type,getUserType());	
 				}
 				
 			}
@@ -458,11 +467,11 @@ class AdminDashboard extends Dashboard implements UserMenuInterface{
 				}else if(selection==7) {
 					concert.removeDate();
 				}else if(selection==8){
-				Bookings.makeBooking(getUserID(), getUserName(), getUserType(), getSession(), type);
+				Bookings.makeBooking(getUserID(), getUserName(), getUserType(), getSession(),type);
 				}else if(selection ==9) {
-				Bookings.viewBookings(getUserID(),type);
+				Bookings.viewBookings(getUserID(),type,getUserType());
 				}else if (selection==10) {
-				Bookings.cancelBooking(getUserID(),type);	
+				Bookings.cancelBooking(getUserID(),type,getUserType());	
 			}
 		}
 		}
