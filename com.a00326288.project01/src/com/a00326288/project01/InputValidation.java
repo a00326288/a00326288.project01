@@ -133,14 +133,15 @@ public class InputValidation {
 		}
 	}
 	
-	public static Date StringToDate(String dob) throws ParseException {
+	public static String StringToDate(String date) throws ParseException {
 	      SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-	      Date date = formatter.parse(dob);
-	      return date;
+	      Date date_out = formatter.parse(date);
+	      String formattedDate = formatter.format(date_out);
+	      return formattedDate;
 	   }
 	
 	
-	public static boolean checkfieldNull(String input) {
+	public static boolean checkfornull(String input) {
 		if(input.isBlank()||input.isEmpty()||input==null) {
 			return true;
 		}else {

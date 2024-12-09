@@ -1,92 +1,113 @@
 package com.a00326288.project01;
 
 import java.io.Console;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Base64;
+import java.util.HashMap;
 import java.util.Scanner;
+import java.util.UUID;
 
 public class UAM  {
 
-	private static Scanner sc = new Scanner(System.in);
+	static Scanner sc = new Scanner(System.in);
 	static Console cnsl = System.console();
-	private static Integer user_id;
-	private static String username;
-	private static String password;
 	
-	
-	public static void Main(String[] args) {
-	if (cnsl == null) {
-        System.out.println("No console available");
-        System.exit(0);
-    }
+	// Make a Session ID
+	private static UUID getRandomUUID() {
+		return UUID.randomUUID();
 	}
-	
-	
 
-	
-	static void Login() {
+
+	public static void Login() {
 		
-		try {
-			username = cnsl.readLine( 
+		//Console used for password echoing.
+		
+		if (cnsl == null) {
+	        System.out.println("No console available");
+	        System.exit(0);
+	    }
+
+			
+			String username = cnsl.readLine( 
 					"Enter username : ");
 			
 			char[] consolePass = cnsl.readPassword( 
 					"Enter password : ");
 			
-			password = String.valueOf(consolePass);
+			String password = String.valueOf(consolePass);
 			
-			user_id = DBA.dbCheckUser(username,password); 
 			
-			if(user_id!=0) {
+			//Check if Username and Password are Correct
+			Integer userId = dbCheckUser(username,password); 
+			
+			//If user returned then print users username and create dashboard, else print Invalid Details and return to main menu.
+			if(userId!=0) {
+ 	            
+				System.out.println("---------------------------");
+		        System.out.println("-Welcome " +username + "        -");
+		        System.out.println("---------------------------\n");
+			
+		        Boolean uac = dbCheckUserType(userId)   ;
+		        UserMenuInterface umi;
+		        if(uac==false) {
+		        		final String userType = "User";
+		        		umi = new UserDashboard(userId, username, userType, getRandomUUID());		
+		        }else {
+		        		final String userType = "Admin";
+		        		umi = new AdminDashboard(userId, username, userType, getRandomUUID());
+		        }	
+				umi.Menu();
 				
-	            Person.NewSession(user_id,username);
-	            
 			}else {
 					System.out.println("Invalid details or User does not Exists");
+					username = null;
+					password = null;
  			}
-		
-		}catch(Exception e){
-			System.out.println("Invalid Username or Password.");
-			e.printStackTrace();	
-		}
 	}
-	
-	
-	static void Register() {
+
+
+	public static void Register() {
 		
 		System.out.println("Register");
 				
-		String regUsername ="";
-		
+		String username ="";
 		
 		while(true) {
 			  try {
 				  System.out.println("Enter a username:");
-				  regUsername = sc.next();
-				  if(validateUsername(regUsername)==false) {;	
+				  username = sc.next();
+				  
+				  // check if username is already in use, if false then its not and we break the loop and continue.
+				  if(validateUsername(username)==false) {;	
 				  break;
 				  }
 			  }catch(Exception e) {
-				  e.printStackTrace();
-				  
-			  }
-			  
-			  
+				  e.printStackTrace();  
+			  }			  
 		}
 		
 		while(true) {
 		
+				
 				System.out.println("Enter a password:");
-				password = sc.next();
-		 
+				String password = sc.next();
+				
+				//check the password is valid and conforms to a given set of standards - see InputValidation.java. 
 				int flag = InputValidation.validateInput(password);
 				
+				//if password valid then create the user and break the loop. If input -1 then allow user to abort the register process.
 				if(flag==1)
 				{
-					DBA.dbCreateUser(regUsername, password);
+					final String userType = "User";
+					Person newPerson = new Person(0, username, password, userType);
+					dbCreateUser(newPerson.username(),newPerson.password());	
 					System.out.println("User registered. Please login.");
+					username = null;
+					password = null;
 					break;
 					
 				}else
@@ -101,9 +122,8 @@ public class UAM  {
 	}
 	
 	private static Boolean validateUsername(String username) {
-		  
-		
-			if(!DBA.dbCheckUser(username).isBlank() ) 
+
+			if(!dbCheckUser(username).isEmpty() ) 
 			{
 			System.out.println("Username " + username + " is already taken. Please try again.");
 			return true;
@@ -112,19 +132,147 @@ public class UAM  {
 			System.out.println("Username "+ username + " is accepted.");
 			return false;
 			}
- 
 		
 	}
-		
-	static void returnMain() {
-		// TODO Auto-generated method stub
-		
-		System.out.println();
-		System.out.println("Please hit enter to continue.");
-		sc.nextLine();
-		
+	
+	static String encode(String username, String password) {
+		String Input = username + password;
+		String hashString = Base64.getEncoder().encodeToString(Input.getBytes());
+		return hashString;
 	}
 
- 
+	static String encode(String password) {
+		String hashString = Base64.getEncoder().encodeToString(password.getBytes());
+		return hashString;
+	}
 	
+	static String encode(Integer id, String UID, String username, String password, String role, String last_login, Integer acc_type) {
+		String Input = id.toString()+UID+username+password+role+acc_type.toString()+last_login;
+		String hashString = Base64.getEncoder().encodeToString(Input.getBytes());
+		return hashString;
+	}
+
+	
+	public static StringBuilder dbCheckUser(String username) {
+    	
+        String SQL = ("SELECT * FROM uam where username='"+username+"';");
+        
+        StringBuilder user = new StringBuilder();
+        try {
+  		  	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
+        	//Connection connection = DriverManager.getConnection("jdbc:sqlite::resource:com/a00326288/project01/db/a00326288.db"); 
+        	Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery(SQL);
+            statement.setQueryTimeout(30); 
+            while (rs.next()) 
+            {
+            	user.append(rs.getString("username"));
+            }
+            statement.closeOnCompletion();
+            connection.close();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return user;
+    }
+	
+    private static Integer dbCheckUser(String username,String password) {
+    			    	
+        String SQL = ("SELECT user_id FROM uam where username='"+username+"' and password='"+encode(password)+"';");
+        int user =0;
+        try {
+  		  	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
+        	//Connection connection = DriverManager.getConnection("jdbc:sqlite::resource:com/a00326288/project01/db/a00326288.db"); 
+        	Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery(SQL);
+            statement.setQueryTimeout(30); 
+            while (rs.next()) 
+            {
+            	user = rs.getInt("user_id");
+            }
+            statement.closeOnCompletion();
+            connection.close();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return user;
+    }
+    
+    private static Boolean dbCheckUserType(Integer user_id) {
+        String SQL = ("SELECT * FROM uam where user_id="+user_id+";");
+        boolean uac = false;
+        try {
+  		  	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
+        	//Connection connection = DriverManager.getConnection("jdbc:sqlite::resource:com/a00326288/project01/db/a00326288.db");
+        	Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery(SQL);
+            statement.setQueryTimeout(30); 
+            while (rs.next()) 
+            {
+            	uac = rs.getBoolean("acc_type");
+            }
+            connection.close();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return uac;
+        
+    }
+    
+    private static void dbCreateUser(String username, String password) {
+    	
+
+        String SQL = ("INSERT INTO uam (uid,username,password,last_login,acc_type) VALUES ('"+encode(username,password)+"','"+username+"','"+encode(password)+"','"+null+"',"+0+");");
+        
+        try {
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
+  		  	Statement statement = connection.createStatement();
+            statement.executeUpdate(SQL);
+            connection.close();
+            {
+            }
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }   	
+    }
+    
+	private static void dbUpdateUser(HashMap<Integer, String> usermapUpdate, int userSelection) {
+		// TODO Auto-generated method stub
+		
+		String SQL = ("UPDATE uam SET acc_type='"+ Integer.parseInt(usermapUpdate.get(1))+"' WHERE user_id="+userSelection+";");
+		try {
+			Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
+			Statement statement = connection.createStatement();
+			statement.executeUpdate(SQL);
+			connection.close();
+		} 
+		catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 		
+	}
+	
+	private void dbDeleteUser(int userSelection) {
+		// TODO Auto-generated method stub
+
+		String SQL = ("DELETE FROM uam WHERE user_id="+userSelection+";");
+        try {
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
+  		  	Statement statement = connection.createStatement();
+            statement.executeUpdate(SQL);
+            connection.close();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } 		
+	}
+	
+    
+	
+	
+ 
 }

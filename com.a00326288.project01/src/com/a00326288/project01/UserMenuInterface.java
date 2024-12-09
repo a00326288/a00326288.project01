@@ -2,5 +2,5 @@ package com.a00326288.project01;
 
 @FunctionalInterface
 public interface UserMenuInterface {
-	public abstract void Menu();
+	void Menu();
 }

@@ -3,19 +3,28 @@ package com.a00326288.project01;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public abstract class Events {
+public abstract class Event {
 
 	private static Scanner sc = new Scanner(System.in);
-	protected int event_id;
-	protected String name;
-	protected String description;
+	int event_id;
+	String name="";
+	String description="";
+
+	Event() {	
+	}
 	
-	
+	Event(Integer event_id, String name, String description) {
+		 this.event_id = event_id;
+		 this.name = name;
+		 this.description = description;
+		 
+	}
+
 	public static Integer menu(String type, String usertype) {
 	 
 		while(true) {
  
-		if(usertype == "Customer") {
+		if(usertype == "User") {
 			
 			try {
 			 	int selection = 0;
@@ -29,7 +38,7 @@ public abstract class Events {
 				System.out.println("5 - Cancel Bookings for "+type);
 				System.out.println("6 - Return to Main Menu");
 				selection = sc.nextInt();
-				if(selection < 1 || selection > 5) {
+				if(selection < 1 || selection > 6) {
 					System.out.println("Please input value between valid range.");
 				}else {
 					return selection;
@@ -75,14 +84,13 @@ public abstract class Events {
 		}
 	}
 
- 
 	public abstract void list();
-	protected abstract void create();
-	protected abstract void edit();
-	protected abstract void delete();
+	public abstract void create();
+	public abstract void edit();
+	public abstract void delete();
 	public abstract void listDates();
-	protected abstract void addDate();
-	protected abstract void removeDate();
+	public abstract void addDate();
+	public abstract void removeDate();
  
 
 }

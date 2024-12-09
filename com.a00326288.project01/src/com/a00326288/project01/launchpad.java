@@ -7,6 +7,7 @@ public class launchpad  {
 	private static Scanner sc = new Scanner(System.in);
 	
 	public static void main(String[] args) {
+ 
 		Menu();
 	}	
 	 
@@ -28,7 +29,7 @@ public class launchpad  {
             Integer cursor = sc.nextInt();
           
             switch(cursor) {
-      		  case 1:
+      		  case 1:     			  
       			UAM.Login();
       			break;
       		  case 2:
