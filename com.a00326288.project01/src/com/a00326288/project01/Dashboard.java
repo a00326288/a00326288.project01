@@ -82,9 +82,7 @@ class UserDashboard extends Dashboard {
 		
 	@Override
 	public void Menu() {
-		
-		System.out.println(getUserID()+ " " + getUserName() + " " +getUserType()+ " "+ getSession() );
- 
+		 
 			setMenu_cursor(0);
 			
 			while(getMenu_cursor()!=-1) {
@@ -123,8 +121,9 @@ class UserDashboard extends Dashboard {
 		     	    		}
 		     	    		break;
 		     	    	case 2:
-		     	    		UAM.viewProfile(getUserID(), getUserType());
 		     	    		System.out.println("View my profile.");
+		     	    		System.out.println();
+		     	    		UAM.viewProfile(getUserID(), getUserType());
 		     	    		break;
 		     	    	case 3:
 		     	    		setMenu_cursor(-1);
@@ -235,11 +234,12 @@ class AdminDashboard extends Dashboard implements UserMenuInterface{
 	@Override
 	public void Menu() {
 
-		System.out.println(getUserID()+ " " + getUserName() + " " +getUserType()+ " "+ getSession() );
+	 
 		
 		setMenu_cursor(0);
 	
 		while(getMenu_cursor()!=-1) {
+				
 			
 			System.out.println("---------------------------");
 	 	    System.out.println("-Choose from the following options -");
@@ -255,8 +255,6 @@ class AdminDashboard extends Dashboard implements UserMenuInterface{
 	     	    
 	     	    switch(getMenu_cursor()) {  
 	     	    	case 1:
-	     	    		
-	     
 	     	    		System.out.println("---------------------------");
 	     	    		System.out.println("-Choose from the following options -");
 	     	    		System.out.println("---------------------------\n");
@@ -403,7 +401,7 @@ class AdminDashboard extends Dashboard implements UserMenuInterface{
 			UAM.viewProfile(getUserID(), getUserType());	
 			}else if(selector ==3) {
 			UAM.modifyUser(getUserID(), getUserType());
-			}else if(selector ==3) {
+			}else if(selector ==4) {
 			UAM.deleteUser(getUserID(), getUserType());
 			}
 			

@@ -704,8 +704,17 @@ public class Bookings {
 
 	public static void cancelBooking(Integer user_id, String eventType, String type) {
 		// TODO Auto-generated method stub
-
-		ArrayList<Bookings> bookingList = dbGetBookingList(user_id, user_id, eventType);
+	 
+		ArrayList<Bookings> bookingList = dbGetBookingList(user_id, eventType,type);
+		
+		System.out.format("%-15s | %-15s | %-70s | %-20s | %-45s | %-20s | %-20s | %-10s\n" , "Booking ID", "Booking Date", "Booking Reference", "Username", "Event Name", "Event Date", "Venue", "Num of Tickets"); 	
+		
+		for(Bookings booking : bookingList)
+		{
+			System.out.format("%-15s | %-15s | %-70s | %-20s | %-45s | %-20s | %-20s | %-10s\n", booking.booking_id, booking.booking_dte , booking.booking_ref, booking.username, booking.eventname, booking.event_date, booking.venue_name, booking.num_of_tickets);
+				
+		}
+		
 
 		List<Integer> lookupDeleteList = bookingList.stream()
 		  			.map(Bookings::getBooking_id)
@@ -785,11 +794,16 @@ public class Bookings {
 		
 		String SQL = new String();
 		
-		if(EventType=="Concerts") {
+		if(EventType=="Concerts" & Usertype=="Admin" ) {
+			SQL = ("SELECT a.booking_id, a.booking_date,  a.booking_ref, a.num_of_tickets, a.venue_id, b.venue_name, a.event_date, a.event_id, d.name,  a.user_id, c.username  from bookings a inner join venues b on a.venue_id = b.venue_id inner join uam c on a.user_id  = c.user_id inner join events d on a.event_id = d.event_id inner join concerts e on a.event_id = e.event_id;");
+		}else if(EventType=="Conferences" & Usertype=="Admin"){
+			SQL = ("SELECT a.booking_id, a.booking_date,  a.booking_ref, a.num_of_tickets, a.venue_id, b.venue_name, a.event_date, a.event_id, d.name,  a.user_id, c.username  from bookings a inner join venues b on a.venue_id = b.venue_id inner join uam c on a.user_id  = c.user_id inner join events d on a.event_id = d.event_id inner join conferences e on a.event_id = e.event_id;");
+		}else if (EventType=="Concerts") {
 		 SQL = ("SELECT a.booking_id, a.booking_date,  a.booking_ref, a.num_of_tickets, a.venue_id, b.venue_name, a.event_date, a.event_id, d.name,  a.user_id, c.username  from bookings a inner join venues b on a.venue_id = b.venue_id inner join uam c on a.user_id  = c.user_id inner join events d on a.event_id = d.event_id inner join concerts e on a.event_id = e.event_id where a.user_id="+userId+";");
 		}else {
 		 SQL = ("SELECT a.booking_id, a.booking_date,  a.booking_ref, a.num_of_tickets, a.venue_id, b.venue_name, a.event_date, a.event_id, d.name,  a.user_id, c.username  from bookings a inner join venues b on a.venue_id = b.venue_id inner join uam c on a.user_id  = c.user_id inner join events d on a.event_id = d.event_id inner join conferences e on a.event_id = e.event_id where a.user_id="+userId+";");
 		}
+		
 		
 		try {
         	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");

@@ -9,8 +9,11 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class UAM  {
 
@@ -104,8 +107,8 @@ public class UAM  {
 				if(flag==1)
 				{
 					final String userType = "User";
-					Person newPerson = new Person(0, username, password, userType);
-					dbCreateUser(newPerson.username(),newPerson.password());	
+					
+					dbCreateUser(username,password);	
 					System.out.println("User registered. Please login.");
 					username = null;
 					password = null;
@@ -153,6 +156,281 @@ public class UAM  {
 		return hashString;
 	}
 
+	
+	
+    
+    public static void viewProfile(Integer userId, String Usertype) {
+    	
+    	ArrayList<Person> userlist = getUsers(userId,Usertype);
+    	
+    	for(Person person : userlist) {
+    		
+    		System.out.println("User ID : " + person.userId());
+    		System.out.println("Username : " + person.username());
+    		System.out.println("User Type : " + person.userType());
+    		System.out.println("Address : " + person.Address());
+    		System.out.println("Email : " + person.Email());
+    		System.out.println("Date Of Birth : " + person.DOB());
+    		System.out.println("Gender : " + person.Gender());
+    		System.out.println("Last Login : " + person.LastLogin());
+    		System.out.println();
+    	 
+
+    		
+    	}
+    	
+    }
+     
+   
+    public static void deleteUser(Integer userID, String userType) {
+		// TODO Auto-generated method stub
+    	 
+    	 viewProfile(userID,userType);
+    	 
+    	 ArrayList<Person> personList = getUsers(userID,userType);
+		  
+		  final List<Integer> lookupUserList = personList.stream()
+		  			.map(Person->Person.userId())
+		  			.collect(Collectors.toList());
+		  
+		  System.out.println();
+		  System.out.println("Please enter user ID to delete.");
+		  
+		  Integer Selection;
+		  
+		  while(true) {
+		  
+		  try {
+		  
+		  Selection = sc.nextInt();
+		  
+		  if(lookupUserList.contains(Selection)) {;
+		  	dbDeleteUser(Selection);
+	  		System.out.println("User deleted.");
+	  		break;
+		  }else {
+			  System.out.println("Cannot find that user ID.");
+		  }
+		  
+		  }catch(InputMismatchException e) {
+			  e.printStackTrace();
+			  System.out.println("Invalid user ID. Please try again");
+			  sc.next();
+		  }
+		  
+		  }
+		
+	}
+	
+
+	public static void modifyUser(Integer userID, String userType) {
+		// TODO Auto-generated method stub
+		 
+		  viewProfile(userID,userType);
+		
+		  ArrayList<Person> personList = getUsers(userID,userType);
+		  
+		  final List<Integer> lookupUserList = personList.stream()
+		  			.map(Person->Person.userId())
+		  			.collect(Collectors.toList());
+		  
+		  System.out.println();
+		  System.out.println("Please enter user ID to update.");
+		  
+		  Integer Selection;
+		  
+		  while(true) {
+		  
+		  try {
+		  
+		  Selection = sc.nextInt();
+		  
+		  Integer PersonIdx;
+		  
+		  if(lookupUserList.contains(Selection)) {;
+		  	PersonIdx=lookupUserList.indexOf(Selection);
+		  	System.out.println("User ID : " + personList.get(PersonIdx).userId());
+	  		System.out.println("Username : " + personList.get(PersonIdx).username());
+	  		System.out.println("User Type : " + personList.get(PersonIdx).userType());
+	  		System.out.println("Address : " + personList.get(PersonIdx).Address());
+	  		System.out.println("Email : " + personList.get(PersonIdx).Email());
+	  		System.out.println("Date Of Birth : " + personList.get(PersonIdx).DOB());
+	  		System.out.println("Gender : " + personList.get(PersonIdx).Gender());
+	  		System.out.println("Last Login : " + personList.get(PersonIdx).LastLogin());
+
+	  		System.out.println();
+	  		break;
+		  }else {
+			  System.out.println("Cannot find that user ID.");
+		  }
+		  
+		  }catch(InputMismatchException e) {
+			  e.printStackTrace();
+			  System.out.println("Invalid user ID. Please try again");
+			  sc.next();
+		  }
+		  
+		  }
+		 
+		  System.out.println("Please enter the Option you wish to modify");
+		  
+		  System.out.println("1. Update User Type");
+		  System.out.println("2. Update Address");
+		  System.out.println("3. Update Email");
+		  System.out.println("4. Update Date of Birth");
+		  System.out.println("5. Update Gender");
+ 
+		  System.out.println();
+		  System.out.println("Option:");
+		  
+		  Integer option; 
+		  String update = new String(); 
+		   
+		  
+		  while(true) {
+		  try {
+		  option = sc.nextInt();
+		  if(option >=1 || option <=5)
+		  break;
+		  }catch(InputMismatchException e) {
+			  e.printStackTrace();
+			  System.out.println("Invalid entry. Please specify an option by Number.");
+			  sc.next();
+		  }
+		  }
+ 
+ 	  
+		  switch(option) {
+		  	case 1:
+		  		while(true) {
+		  		System.out.println("Enter either 'Admin' or 'User' : ");
+		  		update = sc.next();
+		  		if(update.equals("User")|| update.equals("Admin")) {
+		  			break;
+		  		}else {
+		  			System.out.println("Invalid input try again");
+		  			System.out.println(update);
+		  		}
+		  		}
+		  		break;
+		  	case 2:
+		  		System.out.println("Please enter a new Address: ");
+		  		update = sc.next();
+		  		 
+		  		break;
+		  	case 3:
+		  		System.out.println("Please enter a new Email Address: ");
+		  		update = sc.next();
+		  		 
+		  		break;
+		  	case 4:
+		  		System.out.println("Please enter a new Date of Birth: ");
+		  		update = sc.next();
+		  		 
+		  		break;
+		  	case 5:
+		  		System.out.println("Please enter Gender: ");
+		  		update = sc.next();
+		  		 
+		  		break;
+		  	default:
+		  		System.out.println("Please enter a valid option: ");
+		
+		  }
+		 
+		  updateUser( Selection,  option,  update );
+ 
+		  System.out.println("Update completed.");
+		  
+	}
+	
+	
+
+
+	private static void updateUser(Integer selection, Integer option, String update) {
+		// TODO Auto-generated method stub
+		
+		String SQL = new String();
+		
+		Integer acc_type;
+		if(option==1 && update.equals("Admin")) {
+			acc_type=1;
+		}else {
+			acc_type=0;
+		}
+		
+	 
+		
+		switch(option) {
+		  	case 1:
+		  		SQL = "UPDATE uam SET acc_type="+acc_type+",userType='"+update+"' where user_id="+selection+";"; 
+		  		break;
+		  	case 2:
+		  		SQL = "UPDATE uam SET Address='"+update+"' where user_id="+selection+";"; 
+		  		break;
+		  	case 3:
+		  		SQL = "UPDATE uam SET Email='"+update+"' where user_id="+selection+";";  		  		
+		  		break;
+		  	case 4:
+		  		SQL = "UPDATE uam SET DOB='"+update+"' where user_id="+selection+";"; 
+		  		break;
+		  	case 5:
+		  		SQL = "UPDATE uam SET gender='"+update+"' where user_id="+selection+";";  
+		  		break;
+		  	default:
+		  		System.out.println("Please enter a valid option: ");
+		  		break;
+		  }
+		
+		try {
+			Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
+			Statement statement = connection.createStatement();
+			statement.executeUpdate(SQL);
+			connection.close();
+		} 
+		catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 		
+			
+	}
+	
+
+
+	
+	
+	private static ArrayList<Person> getUsers(Integer userID, String userType) {
+		// TODO Auto-generated method stub
+
+		String SQL = new String();
+		
+		if(userType=="Admin") {
+		SQL = ("SELECT * FROM uam;");
+		}else {
+		SQL = ("SELECT * FROM uam WHERE user_id="+userID+";");
+		}
+		
+		final ArrayList<Person> personList = new ArrayList<>();
+		
+		try {
+  		  	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
+        	//Connection connection = DriverManager.getConnection("jdbc:sqlite::resource:com/a00326288/project01/db/a00326288.db"); 
+        	Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery(SQL);
+            statement.setQueryTimeout(30); 
+            while (rs.next()) 
+            {
+            	 Person newPerson = new Person(rs.getInt("user_id"), rs.getString("username"), rs.getString("password"), rs.getString("userType"), rs.getString("Address"), rs.getString("Email"), rs.getString("DOB"), rs.getString("gender"),rs.getString("last_login"));
+            	 personList.add(newPerson);
+            }
+            statement.closeOnCompletion();
+            connection.close();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+		return personList;
+	}
 	
 	public static StringBuilder dbCheckUser(String username) {
     	
@@ -241,22 +519,7 @@ public class UAM  {
         }   	
     }
     
-    
-    public static void viewProfile(Integer userId, String Usertype) {
-    	
-    	ArrayList<Person> userlist = getUsers(userId,Usertype);
-    	
-    	for(Person person : userlist) {
-    		person.toString();
-
-    		
-    	}
-    	
-    }
-     
-   
-    
-	private static void dbUpdateUser(HashMap<Integer, String> usermapUpdate, int userSelection) {
+    private static void dbUpdateUser(HashMap<Integer, String> usermapUpdate, int userSelection) {
 		// TODO Auto-generated method stub
 		
 		String SQL = ("UPDATE uam SET acc_type='"+ Integer.parseInt(usermapUpdate.get(1))+"' WHERE user_id="+userSelection+";");
@@ -272,7 +535,7 @@ public class UAM  {
 		} 		
 	}
 	
-	private void dbDeleteUser(int userSelection) {
+	private static void dbDeleteUser(int userSelection) {
 		// TODO Auto-generated method stub
 
 		String SQL = ("DELETE FROM uam WHERE user_id="+userSelection+";");
@@ -287,53 +550,6 @@ public class UAM  {
         } 		
 	}
 
-
-	public static void modifyUser(Integer userID, String userType) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	public static void deleteUser(Integer userID, String userType) {
-		// TODO Auto-generated method stub
-		 
-		
-		
-	}
-	
-	private static ArrayList<Person> getUsers(Integer userId, String userType) {
-		// TODO Auto-generated method stub
-
-		String SQL = new String();
-		
-		if(userType=="Admin") {
-		SQL = ("SELECT * FROM uam;");
-		}else {
-		SQL = ("SELECT * FROM uam WHERE user_id="+userId+";");
-		}
-		
-		final ArrayList<Person> personList = new ArrayList<>();
-		
-		try {
-  		  	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
-        	//Connection connection = DriverManager.getConnection("jdbc:sqlite::resource:com/a00326288/project01/db/a00326288.db"); 
-        	Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery(SQL);
-            statement.setQueryTimeout(30); 
-            while (rs.next()) 
-            {
-            	 Person newPerson = new Person(rs.getInt("user_id"), rs.getString("username"), rs.getString("password"), rs.getString("userType"), rs.getString("Address"), rs.getString("Email"), rs.getString("DOB"), rs.getString("gender"),rs.getString("last_login"));
-            	 personList.add(newPerson);
-            }
-            statement.closeOnCompletion();
-            connection.close();
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-		return personList;
-	}
-	
 	
  
 }
