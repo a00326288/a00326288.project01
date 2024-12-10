@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
@@ -28,7 +27,7 @@ public class UAM  {
 
 	public static void Login() {
 		
-		//Console used for password echoing.
+		sc.useDelimiter("\r?\n");
 		
 		if (cnsl == null) {
 	        System.out.println("No console available");
@@ -76,6 +75,8 @@ public class UAM  {
 
 	public static void Register() {
 		
+		sc.useDelimiter("\r?\n");
+		
 		System.out.println("Register");
 				
 		String username ="";
@@ -106,8 +107,6 @@ public class UAM  {
 				//if password valid then create the user and break the loop. If input -1 then allow user to abort the register process.
 				if(flag==1)
 				{
-					final String userType = "User";
-					
 					dbCreateUser(username,password);	
 					System.out.println("User registered. Please login.");
 					username = null;
@@ -125,43 +124,11 @@ public class UAM  {
 		
 	}
 	
-	private static Boolean validateUsername(String username) {
-
-			if(!dbCheckUser(username).isEmpty() ) 
-			{
-			System.out.println("Username " + username + " is already taken. Please try again.");
-			return true;
-			}
-			else{
-			System.out.println("Username "+ username + " is accepted.");
-			return false;
-			}
-		
-	}
-	
-	static String encode(String username, String password) {
-		String Input = username + password;
-		String hashString = Base64.getEncoder().encodeToString(Input.getBytes());
-		return hashString;
-	}
-
-	static String encode(String password) {
-		String hashString = Base64.getEncoder().encodeToString(password.getBytes());
-		return hashString;
-	}
-	
-	static String encode(Integer id, String UID, String username, String password, String role, String last_login, Integer acc_type) {
-		String Input = id.toString()+UID+username+password+role+acc_type.toString()+last_login;
-		String hashString = Base64.getEncoder().encodeToString(Input.getBytes());
-		return hashString;
-	}
-
-	
 	
     
     public static void viewProfile(Integer userId, String Usertype) {
     	
-    	ArrayList<Person> userlist = getUsers(userId,Usertype);
+    	ArrayList<Person> userlist = dbGetUsers(userId,Usertype);
     	
     	for(Person person : userlist) {
     		
@@ -180,55 +147,15 @@ public class UAM  {
     	}
     	
     }
-     
-   
-    public static void deleteUser(Integer userID, String userType) {
-		// TODO Auto-generated method stub
-    	 
-    	 viewProfile(userID,userType);
-    	 
-    	 ArrayList<Person> personList = getUsers(userID,userType);
-		  
-		  final List<Integer> lookupUserList = personList.stream()
-		  			.map(Person->Person.userId())
-		  			.collect(Collectors.toList());
-		  
-		  System.out.println();
-		  System.out.println("Please enter user ID to delete.");
-		  
-		  Integer Selection;
-		  
-		  while(true) {
-		  
-		  try {
-		  
-		  Selection = sc.nextInt();
-		  
-		  if(lookupUserList.contains(Selection)) {;
-		  	dbDeleteUser(Selection);
-	  		System.out.println("User deleted.");
-	  		break;
-		  }else {
-			  System.out.println("Cannot find that user ID.");
-		  }
-		  
-		  }catch(InputMismatchException e) {
-			  e.printStackTrace();
-			  System.out.println("Invalid user ID. Please try again");
-			  sc.next();
-		  }
-		  
-		  }
-		
-	}
-	
-
-	public static void modifyUser(Integer userID, String userType) {
+    
+    public static void modifyUser(Integer userID, String userType) {
 		// TODO Auto-generated method stub
 		 
+    	  sc.useDelimiter("\r?\n");
+    	
 		  viewProfile(userID,userType);
 		
-		  ArrayList<Person> personList = getUsers(userID,userType);
+		  ArrayList<Person> personList = dbGetUsers(userID,userType);
 		  
 		  final List<Integer> lookupUserList = personList.stream()
 		  			.map(Person->Person.userId())
@@ -267,18 +194,26 @@ public class UAM  {
 		  }catch(InputMismatchException e) {
 			  e.printStackTrace();
 			  System.out.println("Invalid user ID. Please try again");
-			  sc.next();
+			  sc.nextLine();
 		  }
 		  
 		  }
 		 
 		  System.out.println("Please enter the Option you wish to modify");
 		  
+		  if(userType=="Admin") {
 		  System.out.println("1. Update User Type");
 		  System.out.println("2. Update Address");
 		  System.out.println("3. Update Email");
 		  System.out.println("4. Update Date of Birth");
 		  System.out.println("5. Update Gender");
+		  }else {
+			  System.out.println("2. Update Address");
+			  System.out.println("3. Update Email");
+			  System.out.println("4. Update Date of Birth");
+			  System.out.println("5. Update Gender");  
+		  }
+		  
  
 		  System.out.println();
 		  System.out.println("Option:");
@@ -289,9 +224,19 @@ public class UAM  {
 		  
 		  while(true) {
 		  try {
+			
 		  option = sc.nextInt();
-		  if(option >=1 || option <=5)
-		  break;
+		  
+		  if(userType.equals("User") & (option >=2 & option <=5)) {
+			  break;
+		  }if(userType.equals("Admin") & (option >=1 & option <=5)) {
+			  break;
+		  }
+		  else {
+			  System.out.println("Invalid entry");
+		  }
+		  
+		
 		  }catch(InputMismatchException e) {
 			  e.printStackTrace();
 			  System.out.println("Invalid entry. Please specify an option by Number.");
@@ -338,22 +283,72 @@ public class UAM  {
 		
 		  }
 		 
-		  updateUser( Selection,  option,  update );
+		  dbUpdateUser( Selection,  option,  update );
+		  
+		  Selection =null;
+		  option = null;
+		  update = null;
  
 		  System.out.println("Update completed.");
 		  
 	}
+     
+   
+    public static void deleteUser(Integer userID, String userType) {
+		// TODO Auto-generated method stub
+    	
+    	 sc.useDelimiter("\r?\n");
+    	
+    	 viewProfile(userID,userType);
+    	 
+    	 ArrayList<Person> personList = dbGetUsers(userID,userType);
+		  
+		  final List<Integer> lookupUserList = personList.stream()
+		  			.map(Person->Person.userId())
+		  			.collect(Collectors.toList());
+		  
+		  System.out.println();
+		  System.out.println("Please enter user ID to delete.");
+		  
+		  Integer Selection;
+		  
+		  while(true) {
+		  
+		  try {
+		  
+		  Selection = sc.nextInt();
+		  
+		  if(lookupUserList.contains(Selection)) {;
+		  	dbDeleteUser(Selection);
+	  		System.out.println("User deleted.");
+	  		break;
+		  }else {
+			  System.out.println("Cannot find that user ID.");
+		  }
+		  
+		  }catch(InputMismatchException e) {
+			  e.printStackTrace();
+			  System.out.println("Invalid user ID. Please try again");
+			  sc.next();
+		  }
+		  
+		  }
+		
+	}
+	
+
+	
 	
 	
 
 
-	private static void updateUser(Integer selection, Integer option, String update) {
+	private static void dbUpdateUser(Integer selection, Integer option, String update) {
 		// TODO Auto-generated method stub
 		
 		String SQL = new String();
 		
 		Integer acc_type;
-		if(option==1 && update.equals("Admin")) {
+		if(option==1 & update.equals("Admin")) {
 			acc_type=1;
 		}else {
 			acc_type=0;
@@ -399,7 +394,7 @@ public class UAM  {
 
 	
 	
-	private static ArrayList<Person> getUsers(Integer userID, String userType) {
+	private static ArrayList<Person> dbGetUsers(Integer userID, String userType) {
 		// TODO Auto-generated method stub
 
 		String SQL = new String();
@@ -432,7 +427,7 @@ public class UAM  {
 		return personList;
 	}
 	
-	public static StringBuilder dbCheckUser(String username) {
+	private static StringBuilder dbCheckUser(String username) {
     	
         String SQL = ("SELECT * FROM uam where username='"+username+"';");
         
@@ -459,18 +454,21 @@ public class UAM  {
     private static Integer dbCheckUser(String username,String password) {
     			    	
         String SQL = ("SELECT user_id FROM uam where username='"+username+"' and password='"+encode(password)+"';");
+        String SQL2 = ("UPDATE uam SET last_login=DATE() where username='"+username+"' and password='"+encode(password)+"';");
         int user =0;
         try {
   		  	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
         	//Connection connection = DriverManager.getConnection("jdbc:sqlite::resource:com/a00326288/project01/db/a00326288.db"); 
         	Statement statement = connection.createStatement();
+        	Statement statement2 = connection.createStatement();
             ResultSet rs = statement.executeQuery(SQL);
+
             statement.setQueryTimeout(30); 
             while (rs.next()) 
             {
             	user = rs.getInt("user_id");
             }
-            statement.closeOnCompletion();
+            statement2.executeUpdate(SQL2);
             connection.close();
         } catch (SQLException e) {
             // TODO Auto-generated catch block
@@ -492,6 +490,8 @@ public class UAM  {
             {
             	uac = rs.getBoolean("acc_type");
             }
+            
+            
             connection.close();
         } catch (SQLException e) {
             // TODO Auto-generated catch block
@@ -504,7 +504,7 @@ public class UAM  {
     private static void dbCreateUser(String username, String password) {
     	
 
-        String SQL = ("INSERT INTO uam (uid,username,password,last_login,acc_type) VALUES ('"+encode(username,password)+"','"+username+"','"+encode(password)+"','"+null+"',"+0+");");
+        String SQL = ("INSERT INTO uam (uid,username,password,last_login,acc_type,userType) VALUES ('"+encode(username,password)+"','"+username+"','"+encode(password)+"',DATE(),"+0+", 'User');");
         
         try {
         	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
@@ -519,23 +519,7 @@ public class UAM  {
         }   	
     }
     
-    private static void dbUpdateUser(HashMap<Integer, String> usermapUpdate, int userSelection) {
-		// TODO Auto-generated method stub
-		
-		String SQL = ("UPDATE uam SET acc_type='"+ Integer.parseInt(usermapUpdate.get(1))+"' WHERE user_id="+userSelection+";");
-		try {
-			Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
-			Statement statement = connection.createStatement();
-			statement.executeUpdate(SQL);
-			connection.close();
-		} 
-		catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 		
-	}
-	
-	private static void dbDeleteUser(int userSelection) {
+    private static void dbDeleteUser(int userSelection) {
 		// TODO Auto-generated method stub
 
 		String SQL = ("DELETE FROM uam WHERE user_id="+userSelection+";");
@@ -550,6 +534,29 @@ public class UAM  {
         } 		
 	}
 
+	private static Boolean validateUsername(String username) {
+
+		if(!dbCheckUser(username).isEmpty() ) 
+		{
+		System.out.println("Username " + username + " is already taken. Please try again.");
+		return true;
+		}
+		else{
+		System.out.println("Username "+ username + " is accepted.");
+		return false;
+		}
 	
+	}
+
+	private static String encode(String username, String password) {
+	String Input = username + password;
+	String hashString = Base64.getEncoder().encodeToString(Input.getBytes());
+	return hashString;
+	}
+
+	private static String encode(String password) {
+	String hashString = Base64.getEncoder().encodeToString(password.getBytes());
+	return hashString;
+	}	
  
 }

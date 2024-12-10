@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public interface database {
+public sealed interface database permits Concerts,Conferences {
 	
 	public static void create(String SQL1, String SQL2) {
 		// TODO Auto-generated method stub

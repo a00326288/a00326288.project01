@@ -19,15 +19,22 @@ public abstract class Dashboard implements UserMenuInterface{
 	}
 	
 	
- 
-	abstract Integer getUserID();
-	abstract String getUserName();
-	abstract String getUserType();
-	abstract UUID getSession();
+	protected Integer getUserID() {
+		return userId;
+	}
+	protected String getUserName() {
+		return username;
+	}
+	
+	protected String getUserType() {
+		return userType;
+	}
+	
+	protected UUID getSession() {
+		return session;
+	}
 
-
-
-	public void setUserType(String userType) {
+	protected void setUserType(String userType) {
 		this.userType = userType;
 	}	
 }
@@ -36,42 +43,14 @@ class UserDashboard extends Dashboard {
  
 	private static Scanner sc = new Scanner(System.in);
 	private int Menu_cursor=0;
-	private Integer userId;
-	private String  username;
-	private String userType;
-	private UUID session;
-	
+ 
  
  
 	public UserDashboard(Integer userId, String username, String userType, UUID session) {
 		super(userId, userType, userType, session);
-		this.userId =userId;
-		this.username = username;
-		this.userType =userType;
-		this.session = session;
-	}
-
-	@Override
-	Integer getUserID() {
-		return userId;
-	}
-
-	@Override
-	String getUserName() {
-		return username;
+ 
 	}
  
-	@Override
-	String getUserType() {
-		return userType;
-	}
-
-	@Override
-	UUID getSession() {
-		return session;
-	}
-
-	
 	private int getMenu_cursor() {
 		return Menu_cursor;
 	}
@@ -82,6 +61,8 @@ class UserDashboard extends Dashboard {
 		
 	@Override
 	public void Menu() {
+		
+		sc.useDelimiter("\r?\n");
 		 
 			setMenu_cursor(0);
 			
@@ -91,8 +72,9 @@ class UserDashboard extends Dashboard {
 		        System.out.println("-Choose from the following options -");
 		        System.out.println("---------------------------\n");
 		        System.out.println("1 - View Events & Bookings");
-		        System.out.println("2 - My Profile"); 
-		        System.out.println("3 - Log Out");
+		        System.out.println("2 - My Profile");
+		        System.out.println("3 - Edit Profile");
+		        System.out.println("4 - Log Out");
 				
 				try {     
 		     	    setMenu_cursor(sc.nextInt());
@@ -126,6 +108,11 @@ class UserDashboard extends Dashboard {
 		     	    		UAM.viewProfile(getUserID(), getUserType());
 		     	    		break;
 		     	    	case 3:
+		     	    		System.out.println("Edit my profile.");
+		     	    		System.out.println();
+		     	    		UAM.modifyUser(getUserID(), getUserType());
+		     	    		break;
+		     	    	case 4:
 		     	    		setMenu_cursor(-1);
 		     	    		System.out.println("You have logged out.");
 		     	    		break;
@@ -183,43 +170,16 @@ class UserDashboard extends Dashboard {
  
 }
 
-class AdminDashboard extends Dashboard implements UserMenuInterface{
+class AdminDashboard extends Dashboard {
 
 	private static Scanner sc = new Scanner(System.in);
 	private Integer menu_cursor;
-	private Integer userId;
-	private String  username;
-	private String userType;
-	private UUID session;
-
+ 
 	public AdminDashboard(Integer userId, String username, String userType, UUID session) {
 		super(userId,username,userType,session);
-		this.userId = userId;
-		this.username = username;
-		this.userType = userType;
-		this.session = session;
-	}
-
-	@Override
-	Integer getUserID() {
-		return userId;
-	}
-
-	@Override
-	String getUserName() {
-		return username;
+ 
 	}
  
-	@Override
-	String getUserType() {
-		return userType;
-	}
-
-	@Override
-	UUID getSession() {
-		return session;
-	}
-	
 	private Integer getMenu_cursor() {
 		return menu_cursor;
 	}
@@ -234,7 +194,7 @@ class AdminDashboard extends Dashboard implements UserMenuInterface{
 	@Override
 	public void Menu() {
 
-	 
+		sc.useDelimiter("\r?\n");
 		
 		setMenu_cursor(0);
 	

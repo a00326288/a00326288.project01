@@ -31,7 +31,7 @@ public class Price  {
 		return priceId;
 	}
 
-	public Integer getEventPrice() {
+	private Integer getEventPrice() {
 		return eventPrice;
 	}
 	
@@ -59,6 +59,7 @@ public class Price  {
  
 	public static void addPrice() {
 		
+		sc.useDelimiter("\r?\n");
 		
 		System.out.println("Existing Price List:");
 		
@@ -88,6 +89,7 @@ public class Price  {
 	
 	public static void deletePrice() {
 		// TODO Auto-generated method stub
+		sc.useDelimiter("\r?\n");
 		
 		System.out.println("Existing Price List:");
 		

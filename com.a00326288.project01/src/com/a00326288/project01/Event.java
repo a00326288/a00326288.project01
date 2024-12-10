@@ -22,6 +22,8 @@ public abstract class Event {
 
 	public static Integer menu(String type, String usertype) {
 	 
+		sc.useDelimiter("\r?\n");
+		
 		while(true) {
  
 		if(usertype == "User") {

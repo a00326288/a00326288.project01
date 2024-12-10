@@ -13,23 +13,18 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
-class Conferences extends Event implements database{
+non-sealed class Conferences extends Event implements database{
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		
-	 
-	}
-	
+ 
 	private static Scanner sc = new Scanner(System.in);
-	private String conferenceSpeakers;
-	private String sponsor;
-	private int conference_id;
-	final private String eventType ="Conference";
 	private Integer event_id;
+	private String eventDate;
 	private String name;
 	private String description;
-	private String eventDate;
+	final private String eventType ="Conference";
+	private int conference_id;
+	private String conferenceSpeakers;
+	private String sponsor;
 	private Integer venueId;
 	private String venueName;
 	private Integer priceId;
@@ -47,16 +42,14 @@ class Conferences extends Event implements database{
  
 	}	
  
-  
-	Conferences(Integer event_id,String name, String description) {
-		super(event_id, name, description);
-	}
- 
- 
-	public Conferences() {
+	Conferences() {
 		// TODO Auto-generated constructor stub
 	}
 
+  
+	Conferences(Integer event_id,String name, String description) {
+		super(event_id, name, description);
+	}	
 
 	private int getEventId() {
 		// TODO Auto-generated method stub
@@ -609,6 +602,12 @@ class Conferences extends Event implements database{
 		database.create(SQL1, SQL2);
 	}
 	
+	private void deleteConference(Integer ID) {
+		String SQL = "DELETE FROM CONFERENCES WHERE event_id="+ID+";";
+		database.delete(SQL);
+		
+	}
+	
 	private void newDate(String date, Integer ID, Integer venue_id, Integer price_id) {
 		String SQL = "INSERT INTO DATES (event_date, event_id, venue_id, price_id) VALUES ('"+date+"',"+ID+","+venue_id+","+price_id+");";
 		database.addDate(SQL);
@@ -721,11 +720,7 @@ class Conferences extends Event implements database{
 	        } 
 	}
 	
-	private void deleteConference(Integer ID) {
-		String SQL = "DELETE FROM CONFERENCES WHERE event_id="+ID+";";
-		database.delete(SQL);
-		
-	}
+
 	
 private static ArrayList<Integer> dbGetVenues() {
 		

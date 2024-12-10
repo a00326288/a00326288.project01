@@ -16,9 +16,9 @@ public class launchpad  {
 	public static void Menu() {
 		// TODO Auto-generated method stub
 		
-		 
+		sc.useDelimiter("\r?\n");
 		
-		int exit =0;
+		var exit =0;
 		
         while(exit==0) {
         	
@@ -40,7 +40,7 @@ public class launchpad  {
       		  case 2:
       			UAM.Register(); 
       			break;
-      		  case 3:
+      		  case 3: 
       			System.out.println("Goodbye");
       			exit=1;
       			break;

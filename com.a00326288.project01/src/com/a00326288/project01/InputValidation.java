@@ -13,8 +13,7 @@ public class InputValidation {
 
 
 	public static int validateInput(String input) {
-		
-		
+ 
 		try {
 			
 			//Setting the limits as final because they aren't going to change. 
@@ -40,9 +39,9 @@ public class InputValidation {
 			for(int i = 0;i<InputLength;i++) {
 				char inputchar= input.charAt(i);
 				String specialCharCheck = Character.toString(input.charAt(i));
-				if(Character.isLetterOrDigit(inputchar) && Character.isLowerCase(inputchar) ) {
+				if(Character.isLetterOrDigit(inputchar) & Character.isLowerCase(inputchar) ) {
 					lower_chars++;
-				}else if(Character.isLetterOrDigit(inputchar) && Character.isUpperCase(inputchar)) {
+				}else if(Character.isLetterOrDigit(inputchar) & Character.isUpperCase(inputchar)) {
 					upper_chars++;	
 				}else if(Character.isDigit(inputchar)) {
 					digit_count++;
@@ -116,22 +115,16 @@ public class InputValidation {
 		
 	}
 	
-	public boolean quit(String input) {
-		if(input=="Quit") {
-			return true;
-		}
-		return false;
-		
-	}
+
 	
 	public static boolean cardNumberVerification(String cardNumber) {
 		
-		if(cardNumber.length()>=12 && cardNumber.matches("[0-9]+")) {
+		if(cardNumber.length()>=12 & cardNumber.matches("[0-9]+")) {
 			return true;
 		}else {
 		return false;
 		}
-	}
+	}	
 	
 	public static String StringToDate(String date) throws ParseException {
 	      SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -140,14 +133,7 @@ public class InputValidation {
 	      return formattedDate;
 	   }
 	
-	
-	public static boolean checkfornull(String input) {
-		if(input.isBlank()||input.isEmpty()||input==null) {
-			return true;
-		}else {
-			return false;
-		}
-	}
+ 
 	
 	
 }

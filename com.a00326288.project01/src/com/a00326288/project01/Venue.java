@@ -84,53 +84,29 @@ public class Venue {
 	
 	public static void createVenue() {
 		// TODO Auto-generated method stub
+		sc.useDelimiter("\r?\n");	
 		
-		Venue venue = new Venue();
-		
-		sc.useDelimiter("\r?\n");		
- 
-		
-		while(true) {
-		
+		Venue venue = new Venue();	
+ 		
+	 
 		System.out.println("Input the name of the Venue:");		
 		venue.setVenueName(sc.next());
-		if(InputValidation.checkfornull(venue.getVenueName())==true) {
-			System.out.println("Please input a value");
-		}else {
-			break;	
-			}
-		}
-		
-		while(true) {
-		
+  
 		System.out.println("Input the address of the Venue:");
 		venue.setVenueAddress(sc.next());
-		if(InputValidation.checkfornull(venue.getVenueAddress())==true) {
-			System.out.println("Please input a value");
-		}else {
-			break;	
-			}
-		}
+		 
 		
-		while(true) {
-			
+		 
 		System.out.println("Input the city of the Venue:");
 		venue.setVenueCity(sc.next());
-		if(InputValidation.checkfornull(venue.getVenueCity())==true) {
-			System.out.println("Please input a value");
-		}else {
-			break;	
-			}
-		}
+		 
 		
-		while(true) {
-		
+		while(true) { 
 		System.out.println("Please input the capacity of the venue:");
 		try {
 			venue.setCapacity(sc.nextInt());
 		
 		if(venue.getCapacity()>0) {
-			
 			break;
 		}else {
 			System.out.println("Please ensure the value input is greater than 0.");
@@ -144,7 +120,7 @@ public class Venue {
 		
 		}
  		
-		venue.dbCreateVenue(venue.getVenueName(),venue.getVenueAddress(),venue.getVenueCity(),venue.getCapacity());
+		Venue.dbCreateVenue(venue.getVenueName(),venue.getVenueAddress(),venue.getVenueCity(),venue.getCapacity());
 
 		System.out.println("Venue Created! Press enter to return to Main Menu.");
  
@@ -175,6 +151,8 @@ public class Venue {
 	
 	public static void deleteVenue() {
 		// TODO Auto-generated method stub
+		
+		sc.useDelimiter("\r?\n");
 		
 		System.out.println("Existing Venue List:");
 		
@@ -326,7 +304,7 @@ public class Venue {
  
 	}
 	
-	private void dbCreateVenue(String venueName,String venueAddress, String venueCity, Integer capacity) {
+	private static void dbCreateVenue(String venueName,String venueAddress, String venueCity, Integer capacity) {
 		
 		String SQL = ("INSERT INTO venues (venue_name, venue_address, city, capacity) VALUES ('"+venueName+"','"+venueAddress+"','"+venueCity+"',"+capacity+");");
         try {

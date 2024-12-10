@@ -13,24 +13,29 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
-class Concerts extends Event implements database {
+non-sealed class Concerts extends Event implements database {
 
 	private static Scanner sc = new Scanner(System.in);
+	private Integer event_id;
+	private String name;
+	private String description;
+	private String eventDate;
 	final private String eventType ="Concert";
 	private Integer concertId;
 	private String bandName;
 	private String bandMembers;
 	private String genre;
-	private Integer event_id;
-	private String name;
-	private String description;
-	private String eventDate;
 	private Integer venueId;
 	private String venueName;
 	private Integer priceId;
 	private Integer price;
 	
 	Concerts() {
+	}
+	
+	Concerts(Integer event_id, String name, String description) {
+		// TODO Auto-generated constructor stub
+		super(event_id,name,description);
 	}
 	
 	Concerts(int event_id, String name, String description, Integer concertId, String bandName, String bandMembers, String genre) {
@@ -43,15 +48,6 @@ class Concerts extends Event implements database {
 	this.bandMembers = bandMembers; 
 	this.genre = genre; 
 	}
- 
-	 
- 
-
-	public Concerts(Integer event_id, String name, String description) {
-		// TODO Auto-generated constructor stub
-		super(event_id,name,description);
-	}
-
 
 
 	private void setConcertId(Integer concertId) {

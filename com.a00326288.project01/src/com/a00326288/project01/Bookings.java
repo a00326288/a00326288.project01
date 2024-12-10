@@ -175,14 +175,6 @@ public class Bookings {
 	private void setPrice(Integer price) {
 		this.price = price;
 	}
-
-	public static void main(String[] args) {
-		
-		//makeBooking(0, "jmclaugh", "Admin", UUID.randomUUID(), "Conferences");
-		
-		
-		
-	}
 	
 
 	@Override
@@ -564,6 +556,115 @@ public class Bookings {
 	}
 	
 	
+	
+	
+	public static void cancelBooking(Integer user_id, String eventType, String type) {
+		// TODO Auto-generated method stub
+	 
+		sc.useDelimiter("\r?\n");
+		
+		ArrayList<Bookings> bookingList = dbGetBookingList(user_id, eventType,type);
+		
+		System.out.format("%-15s | %-15s | %-70s | %-20s | %-45s | %-20s | %-20s | %-10s\n" , "Booking ID", "Booking Date", "Booking Reference", "Username", "Event Name", "Event Date", "Venue", "Num of Tickets"); 	
+		
+		for(Bookings booking : bookingList)
+		{
+			System.out.format("%-15s | %-15s | %-70s | %-20s | %-45s | %-20s | %-20s | %-10s\n", booking.booking_id, booking.booking_dte , booking.booking_ref, booking.username, booking.eventname, booking.event_date, booking.venue_name, booking.num_of_tickets);
+				
+		}
+		
+
+		List<Integer> lookupDeleteList = bookingList.stream()
+		  			.map(Bookings::getBooking_id)
+		  			.collect(Collectors.toList());
+		
+		
+		System.out.println("Please enter the ID of the booking to delete");
+		while(true) {
+		try {
+		int deleteOption = sc.nextInt();
+		
+		if(lookupDeleteList.contains(deleteOption)) {
+			dbCancelBooking(deleteOption);
+			System.out.println("Booking has been cancelled.");
+			break;
+		}else {
+			System.out.println("Cannot find that Booking ID");
+		}
+		
+		}catch(InputMismatchException e) {
+			e.printStackTrace();
+			System.out.println("Invalid input. Please enter a correct ID");
+			sc.next();
+		}
+		}
+ 
+	}
+	
+
+	private static Integer numOfTickets(Integer eventId, Integer venue_id, String eventDate) {
+		
+		Integer remainingTickets = null;
+		
+		String SQL = ("select b.event_date, b.event_id,b.venue_id, c.capacity, sum(b.num_of_tickets) as ticket_count  from dates a left join bookings b on a.venue_id = b.venue_id and a.event_id = b.event_id and a.event_date = b.event_date left join venues c on a.venue_id = c.venue_id where a.event_id="+eventId+" AND a.venue_id="+venue_id+" AND a.event_date='"+eventDate+"' group by 1,2,3,4;");
+        try {
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
+  		  	Statement statement = connection.createStatement();
+  		    statement.setQueryTimeout(30); 
+  		  	ResultSet rs = statement.executeQuery(SQL);
+  		  	
+   		  	while(rs.next())
+  		  	{
+   		  		//Incase their has been no bookings then exit.
+   		  		try {
+   		  			remainingTickets=(rs.getInt("capacity") - rs.getInt("ticket_count"));  		  
+   		  		}catch(Exception e) {
+   		  			remainingTickets=rs.getInt("capacity");
+   		  		}
+  		  	}
+  		  	
+            connection.close();
+          }
+        catch(SQLException e)
+        {
+          e.printStackTrace(System.err);
+        }
+		return remainingTickets;
+		
+	}
+	
+	private static void dbCreateEventBooking(LocalDate booking_dte, Integer event_id, Integer venue_id, Integer user_id,Integer num_of_tickets, String cardnumber, StringBuilder booking_ref, String event_date, Integer price_id   ) {
+		// TODO Auto-generated method stub
+
+		
+		String SQL = ("INSERT INTO bookings (booking_date,venue_id, event_id, user_id, num_of_tickets, cardNumber, booking_ref,event_date) VALUES ('"+booking_dte+"',"+venue_id+","+event_id+","+user_id+","+num_of_tickets+",'"+cardnumber+"','"+booking_ref+"','"+event_date+"');");
+		
+		try {
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
+  		  	Statement statement = connection.createStatement();
+            statement.executeUpdate(SQL);
+            connection.close();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }   
+	
+	
+	}
+	
+	private static void dbCancelBooking(int deleteOption) {
+		// TODO Auto-generated method stub
+		String SQL = ("DELETE FROM bookings WHERE booking_id="+deleteOption+";");
+        try {
+        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
+  		  	Statement statement = connection.createStatement();
+            statement.executeUpdate(SQL);
+            connection.close();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } 	
+	}
  
  
 	private static ArrayList<CustomType> dbGetEvents(String eventType) {
@@ -649,99 +750,14 @@ public class Bookings {
 	}
 	
 	
-	private static Integer numOfTickets(Integer eventId, Integer venue_id, String eventDate) {
-		
-		Integer remainingTickets = null;
-		
-		String SQL = ("select b.event_date, b.event_id,b.venue_id, c.capacity, sum(b.num_of_tickets) as ticket_count  from dates a left join bookings b on a.venue_id = b.venue_id and a.event_id = b.event_id and a.event_date = b.event_date left join venues c on a.venue_id = c.venue_id where a.event_id="+eventId+" AND a.venue_id="+venue_id+" AND a.event_date='"+eventDate+"' group by 1,2,3,4;");
-        try {
-        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
-  		  	Statement statement = connection.createStatement();
-  		    statement.setQueryTimeout(30); 
-  		  	ResultSet rs = statement.executeQuery(SQL);
-  		  	
-   		  	while(rs.next())
-  		  	{
-   		  		//Incase their has been no bookings then exit.
-   		  		try {
-   		  			remainingTickets=(rs.getInt("capacity") - rs.getInt("ticket_count"));  		  
-   		  		}catch(Exception e) {
-   		  			remainingTickets=rs.getInt("capacity");
-   		  		}
-  		  	}
-  		  	
-            connection.close();
-          }
-        catch(SQLException e)
-        {
-          e.printStackTrace(System.err);
-        }
-		return remainingTickets;
-		
-	}
+	
 
  
 	
-	private static void dbCreateEventBooking(LocalDate booking_dte, Integer event_id, Integer venue_id, Integer user_id,Integer num_of_tickets, String cardnumber, StringBuilder booking_ref, String event_date, Integer price_id   ) {
-		// TODO Auto-generated method stub
-
-		
-		String SQL = ("INSERT INTO bookings (booking_date,venue_id, event_id, user_id, num_of_tickets, cardNumber, booking_ref,event_date) VALUES ('"+booking_dte+"',"+venue_id+","+event_id+","+user_id+","+num_of_tickets+",'"+cardnumber+"','"+booking_ref+"','"+event_date+"');");
-		
-		try {
-        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
-  		  	Statement statement = connection.createStatement();
-            statement.executeUpdate(SQL);
-            connection.close();
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }   
 	
 	
-	}
+
 	
-
-	public static void cancelBooking(Integer user_id, String eventType, String type) {
-		// TODO Auto-generated method stub
-	 
-		ArrayList<Bookings> bookingList = dbGetBookingList(user_id, eventType,type);
-		
-		System.out.format("%-15s | %-15s | %-70s | %-20s | %-45s | %-20s | %-20s | %-10s\n" , "Booking ID", "Booking Date", "Booking Reference", "Username", "Event Name", "Event Date", "Venue", "Num of Tickets"); 	
-		
-		for(Bookings booking : bookingList)
-		{
-			System.out.format("%-15s | %-15s | %-70s | %-20s | %-45s | %-20s | %-20s | %-10s\n", booking.booking_id, booking.booking_dte , booking.booking_ref, booking.username, booking.eventname, booking.event_date, booking.venue_name, booking.num_of_tickets);
-				
-		}
-		
-
-		List<Integer> lookupDeleteList = bookingList.stream()
-		  			.map(Bookings::getBooking_id)
-		  			.collect(Collectors.toList());
-		
-		
-		System.out.println("Please enter the ID of the booking to delete");
-		while(true) {
-		try {
-		int deleteOption = sc.nextInt();
-		
-		if(lookupDeleteList.contains(deleteOption)) {
-			dbCancelBooking(deleteOption);
-			System.out.println("Booking has been cancelled.");
-			break;
-		}else {
-			System.out.println("Cannot find that Booking ID");
-		}
-		
-		}catch(InputMismatchException e) {
-			e.printStackTrace();
-			System.out.println("Invalid input. Please enter a correct ID");
-			sc.next();
-		}
-		}
- 
-	}
 	
 	
 	
@@ -842,19 +858,7 @@ public class Bookings {
 	}
 	
 	
-	private static void dbCancelBooking(int deleteOption) {
-		// TODO Auto-generated method stub
-		String SQL = ("DELETE FROM bookings WHERE booking_id="+deleteOption+";");
-        try {
-        	Connection connection = DriverManager.getConnection("jdbc:sqlite:src/com/a00326288/project01/db/a00326288.db");
-  		  	Statement statement = connection.createStatement();
-            statement.executeUpdate(SQL);
-            connection.close();
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } 	
-	}
+	
 
 	
 }
