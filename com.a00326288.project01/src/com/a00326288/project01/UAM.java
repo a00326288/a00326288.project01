@@ -24,6 +24,8 @@ public class UAM  {
 		return UUID.randomUUID();
 	}
 
+	
+	
 
 	public static void Login() {
 		
@@ -558,5 +560,6 @@ public class UAM  {
 	String hashString = Base64.getEncoder().encodeToString(password.getBytes());
 	return hashString;
 	}	
- 
+
+	
 }
